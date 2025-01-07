@@ -6,20 +6,11 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/06 17:54:03 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/07 14:48:08 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
-
-			// if (data->str[i] == 34 && double_quote > 0)
-			// 	double_quote++;
-			// if (data->str[i] == 39 && quote > 0)
-			// 	quote++;
-			// if (data->str[i] == 34)
-			// 	double_quote++;
-			// if (data->str[i] == 39)
-			// 	quote++;
 
 t_token	*ft_lstnew2(void *content)
 {
@@ -50,17 +41,32 @@ void	ft_lstadd_back2(t_token **lst, t_token *new)
 	temp->next = new;
 }
 
-int		get_token_len(char *str)
+int	get_token_len(char *str)
 {
 	int	i;
 
 	i = 0;
-	while (str[i] && str[i] != ' ')
+	if (str[i] == 34)
+	{
 		i++;
+		while (str[i] && str[i] != 34)
+			i++;
+	}
+	else if (str[i] == 39)
+	{
+		i++;
+		while (str[i] && str[i] != 39)
+			i++;
+	}
+	else
+	{
+		while (str[i] && str[i] != ' ')
+			i++;
+	}
 	return (i);
 }
 
-char *find_path(char *str)
+char	*find_path(char *str)
 {
 	char	*path;
 	char	**path_split;
@@ -82,44 +88,94 @@ char *find_path(char *str)
 			ft_free_tab(path_split);
 			return ("good");
 		}
+		free(pathname);
 		i++;
 	}
-	free(pathname);
 	ft_free_tab(path_split);
 	return (NULL);
 }
 
 void	get_token(char *str, t_token *current)
 {
-	int	len;
+	int		len;
+	char	*only_token;
 
 	len = get_token_len(str);
-	if (!access(str, X_OK) || find_path(str))
+	only_token = ft_substr(str, 0, len);
+	if (!access(str, X_OK) || find_path(only_token))
 		current->type = CMD;
-	else if (ft_strnstr(str, "|", len) || ft_strnstr(str, "<", len)
-		|| ft_strnstr(str, ">", len) || ft_strnstr(str, ">>", len)
-		|| ft_strnstr(str, "<<", len))
-		current->type = OPERATOR;
+	else if (ft_strnstr(str, "|", len))
+		current->type = PIPE;
+	else if (ft_strnstr(str, "<<", len))
+		current->type = HEREDOC;
+	else if (ft_strnstr(str, "<", len))
+		current->type = INPUT;
+	else if (ft_strnstr(str, ">>", len))
+		current->type = APPEND;
+	else if (ft_strnstr(str, ">", len))
+		current->type = OVERWRITE;
 	else
 		current->type = ARG;
+	free(only_token);
 }
 
-void	add_token(t_data *data, int i)
+void	add_token(t_data *data, t_token *current, int i)
 {
 	int		len;
 	char	*str;
 
 	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
-	data->token->str = str;
-	printf("%s|%d|\n", str, data->token->type);
+	if (str[0] == '\'')
+	{
+		current->str = ft_strtrim(str, "'");
+		free(str);
+	}
+	else if (str[0] == '"')
+	{
+		current->str = ft_strtrim(str, "\"");
+		free(str);
+	}
+	else
+		current->str = str;
+	ft_lstadd_back2(&(data->token), current);
 }
 
-void	parsing(t_data *data)
+int	check_quotes(t_data *data)
 {
-	int		i;
+	int	i;
 
 	i = 0;
+	while (data->line[i])
+	{
+		if (data->line[i] == '\'')
+		{
+			i++;
+			while (data->line[i] && data->line[i] != '\'')
+				i++;
+			if (data->line[i] != '\'')
+				return (-1);
+		}
+		if (data->line[i] == '"')
+		{
+			i++;
+			while (data->line[i] && data->line[i] != '"')
+				i++;
+			if (data->line[i] != '"')
+				return (-1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+void	tokenise(t_data *data)
+{
+	int		i;
+	t_token	*current;
+
+	i = 0;
+	current = data->token;
 	while (data->line)
 	{
 		while (data->line[i])
@@ -128,32 +184,43 @@ void	parsing(t_data *data)
 				i++;
 			if (data->line[i])
 			{
-				data->token = ft_lstnew2(NULL);
-				get_token(data->line + i, data->token);
-				add_token(data, i);
-				while (data->line[i] && data->line[i] != ' ')
-					i++;
+				current = ft_lstnew2(NULL);
+				get_token(data->line + i, current);
+				add_token(data, current, i);
+				i += get_token_len(data->line + i);
 			}
 			if (!data->line[i])
 				return ;
-			data->token = data->token->next;
+			current = current->next;
 		}
 	}
 }
 
-t_data	ft_init_data(void)
+void	parsing(t_data *data)
 {
-	t_data *data;
-
-	data = malloc(sizeof(t_data));
-	if (!data)
-		exit (1);
-	data->line = NULL;
-	data->token = NULL;
-	return (*data);
+	if (check_quotes(data) == -1)
+	{
+		printf("erreur quote");
+		exit(EXIT_FAILURE);
+	}
+	tokenise(data);
+	t_token *cur;
+	cur = data->token;
+	while (cur)
+	{
+		printf("%s | %d\n", cur->str, cur->type);
+		cur = cur->next;
+	}
 }
 
-void	get_prompt(t_data *data)
+void	ft_init_data(t_data *data)
+{
+	data->line = NULL;
+	data->token = NULL;
+	data->cmd = NULL;
+}
+
+void	prompt(t_data *data)
 {
 	char	*input;
 
@@ -168,6 +235,8 @@ void	get_prompt(t_data *data)
 			parsing(data);
 			free(input);
 		}
+		ft_free_lst(&(data->token));
+		data->token = NULL;
 	}
 }
 
@@ -181,7 +250,7 @@ int main(int argc, char **env)
 		printf("toooooo many arguments bro\n");
 		return (1);
 	}
-	data = ft_init_data();
-	get_prompt(&data);
+	ft_init_data(&data);
+	prompt(&data);
 	ft_free_lst(&(data.token));
 }

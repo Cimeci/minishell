@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/06 17:53:46 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/07 13:37:44 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,23 @@
 # include <term.h>
 # include <errno.h>
 
-// # define CMD 1
-// # define ARG 2
-// # define OPERATOR 3
-
 typedef enum e_type
 {
+	INPUT, //<
+	HEREDOC, //<<
+	OVERWRITE, //>
+	APPEND, //>>
+	PIPE,
 	CMD,
 	ARG,
-	OPERATOR
 }	t_type;
+
+typedef struct s_cmd
+{
+	char			*cmd;
+	char			**args;
+	struct s_cmd	*next;
+}	t_cmd;
 
 typedef struct s_token
 {
@@ -50,8 +57,9 @@ typedef struct s_token
 
 typedef struct s_data
 {
-	char *line;
-	t_token *token;
+	char	*line;
+	t_token	*token;
+	t_cmd	*cmd;
 }			t_data;
 
 
