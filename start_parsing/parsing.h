@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/07 13:37:44 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:28:56 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,18 @@ typedef struct s_token
 	struct s_token	*next;
 }			t_token;
 
+typedef struct s_lst
+{
+	char	*str;
+	struct s_lst	*next;
+}	t_lst;
+
 typedef struct s_data
 {
 	char	*line;
 	t_token	*token;
 	t_cmd	*cmd;
+	t_list	*env;
 }			t_data;
 
 

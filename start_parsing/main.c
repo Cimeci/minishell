@@ -6,21 +6,20 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/07 14:48:08 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/07 16:33:03 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-t_token	*ft_lstnew2(void *content)
+void	*ft_lstnew2(void *content, size_t content_size)
 {
-	t_token	*new;
+	void	*new;
 
-	new = malloc(sizeof(t_token));
+	new = malloc(content_size);
 	if (new == NULL)
 		return (NULL);
-	new->str = content;
-	new->next = NULL;
+	ft_memcpy(new, content, content_size);
 	return (new);
 }
 
@@ -41,6 +40,27 @@ void	ft_lstadd_back2(t_token **lst, t_token *new)
 	temp->next = new;
 }
 
+int	next_separator(char *str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] == ' ' || str[i] == '<' || str[i] == '|' || str[i] == '>')
+		{
+			if (i == 0)
+				i++;
+			if ((str[0] == '>' && str[i + 1] == '>')
+				|| (str[0] == '<' && str[i + 1] == '<'))
+				i++;
+			break ;
+		}
+		i++;
+	}
+	return (i);
+}
+
 int	get_token_len(char *str)
 {
 	int	i;
@@ -51,18 +71,17 @@ int	get_token_len(char *str)
 		i++;
 		while (str[i] && str[i] != 34)
 			i++;
+		i++;
 	}
 	else if (str[i] == 39)
 	{
 		i++;
 		while (str[i] && str[i] != 39)
 			i++;
+		i++;
 	}
 	else
-	{
-		while (str[i] && str[i] != ' ')
-			i++;
-	}
+		i = next_separator(str);
 	return (i);
 }
 
@@ -184,7 +203,7 @@ void	tokenise(t_data *data)
 				i++;
 			if (data->line[i])
 			{
-				current = ft_lstnew2(NULL);
+				current = ft_lstnew2(NULL, sizeof(t_token));
 				get_token(data->line + i, current);
 				add_token(data, current, i);
 				i += get_token_len(data->line + i);
@@ -213,8 +232,13 @@ void	parsing(t_data *data)
 	}
 }
 
-void	ft_init_data(t_data *data)
+void	init_data(t_data *data)
 {
+	int		i;
+	t_list	*dup;
+
+	i = 0;
+	dup = data->env;
 	data->line = NULL;
 	data->token = NULL;
 	data->cmd = NULL;
@@ -250,7 +274,7 @@ int main(int argc, char **env)
 		printf("toooooo many arguments bro\n");
 		return (1);
 	}
-	ft_init_data(&data);
+	init_data(&data);
 	prompt(&data);
 	ft_free_lst(&(data.token));
 }
