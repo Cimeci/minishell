@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 16:04:20 by ncharbog          #+#    #+#             */
-/*   Updated: 2024/10/16 11:12:18 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/07 09:09:51 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void		ft_putendl_fd(char *s, int fd);
 void		ft_putnbr_fd(int n, int fd);
 void		ft_putstr_fd(char *s, int fd);
 char		**ft_split(char const *s, char c);
+int			ft_words(char const *s, char c);
 char		*ft_strchr(const char *s, int c);
 char		*ft_strdup(const char *s);
 void		ft_striteri(char *s, void (*f)(unsigned int, char*));

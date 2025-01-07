@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 14:52:22 by noacharbogn       #+#    #+#             */
-/*   Updated: 2024/10/16 18:04:20 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/07 09:09:34 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	ft_free(char **dest, int j)
 	free(dest);
 }
 
-static int	ft_words(char const *s, char c)
+int	ft_words(char const *s, char c)
 {
 	int	i;
 	int	words;
