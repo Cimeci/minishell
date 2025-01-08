@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/07 16:28:56 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/08 13:39:36 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef enum e_type
 	PIPE,
 	CMD,
 	ARG,
+	VAR_ENV,
 }	t_type;
 
 typedef struct s_cmd
@@ -66,11 +67,13 @@ typedef struct s_data
 	char	*line;
 	t_token	*token;
 	t_cmd	*cmd;
-	t_list	*env;
+	t_lst	*env;
 }			t_data;
 
 
 void	ft_free_tab(char **table);
-void	ft_free_lst(t_token **head);
+void	free_token(t_token **head);
+void	free_env(t_lst **head);
+void	free_all(t_data *data);
 
 #endif

@@ -6,38 +6,29 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/07 16:33:03 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/08 14:20:04 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	*ft_lstnew2(void *content, size_t content_size)
+void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset)
 {
-	void	*new;
+	void	*temp;
 
-	new = malloc(content_size);
-	if (new == NULL)
-		return (NULL);
-	ft_memcpy(new, content, content_size);
-	return (new);
-}
-
-void	ft_lstadd_back2(t_token **lst, t_token *new)
-{
-	t_token	*temp;
-
-	if (!lst || !new)
-		return ;
+	if (!lst || !new_node)
+		return;
 	temp = *lst;
-	if (!temp)
+	if (*lst == NULL)
 	{
-		*lst = new;
-		return ;
+		*lst = new_node;
+		*(void **)((char *)new_node + next_offset) = NULL;
+		return;
 	}
-	while (temp->next != NULL)
-		temp = temp->next;
-	temp->next = new;
+	while (*(void **)((char *)temp + next_offset) != NULL)
+		temp = *(void **)((char *)temp + next_offset);
+	if (temp)
+		*(void **)((char *)temp + next_offset) = new_node;
 }
 
 int	next_separator(char *str)
@@ -143,6 +134,8 @@ void	add_token(t_data *data, t_token *current, int i)
 	int		len;
 	char	*str;
 
+	if (!current)
+		return ;
 	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
 	if (str[0] == '\'')
@@ -157,7 +150,7 @@ void	add_token(t_data *data, t_token *current, int i)
 	}
 	else
 		current->str = str;
-	ft_lstadd_back2(&(data->token), current);
+	ft_lstadd_back_generic((void **)&data->token, current, (sizeof(t_token) - sizeof(t_token *)));
 }
 
 int	check_quotes(t_data *data)
@@ -191,10 +184,10 @@ int	check_quotes(t_data *data)
 void	tokenise(t_data *data)
 {
 	int		i;
-	t_token	*current;
+	t_token	*tmp;
 
 	i = 0;
-	current = data->token;
+	tmp = NULL;
 	while (data->line)
 	{
 		while (data->line[i])
@@ -203,14 +196,16 @@ void	tokenise(t_data *data)
 				i++;
 			if (data->line[i])
 			{
-				current = ft_lstnew2(NULL, sizeof(t_token));
-				get_token(data->line + i, current);
-				add_token(data, current, i);
+				tmp = malloc(sizeof(t_token));
+				if (!tmp)
+					return ;
+				tmp->next = NULL;
+				get_token(data->line + i, tmp);
+				add_token(data, tmp, i);
 				i += get_token_len(data->line + i);
 			}
 			if (!data->line[i])
 				return ;
-			current = current->next;
 		}
 	}
 }
@@ -223,25 +218,29 @@ void	parsing(t_data *data)
 		exit(EXIT_FAILURE);
 	}
 	tokenise(data);
-	t_token *cur;
-	cur = data->token;
-	while (cur)
-	{
-		printf("%s | %d\n", cur->str, cur->type);
-		cur = cur->next;
-	}
 }
 
-void	init_data(t_data *data)
+void	init_data(t_data *data, char **env)
 {
 	int		i;
-	t_list	*dup;
+	t_lst	*dup;
 
 	i = 0;
-	dup = data->env;
 	data->line = NULL;
 	data->token = NULL;
 	data->cmd = NULL;
+	data->env = NULL;
+	dup = data->env;
+	while (env[i])
+	{
+		dup = malloc(sizeof(t_lst));
+		if (!dup)
+			return ;
+		dup->str = ft_strdup(env[i]);
+		dup->next = NULL;
+		ft_lstadd_back_generic((void **)&data->env, dup, sizeof(char *));
+		i++;
+	}
 }
 
 void	prompt(t_data *data)
@@ -259,22 +258,29 @@ void	prompt(t_data *data)
 			parsing(data);
 			free(input);
 		}
-		ft_free_lst(&(data->token));
+		t_token *cur;
+		cur = data->token;
+		while (cur)
+		{
+			printf("%s | %d\n", cur->str, cur->type);
+			cur = cur->next;
+		}
+		free_token(&data->token);
 		data->token = NULL;
 	}
 }
 
-int main(int argc, char **env)
+int main(int argc, char **argv, char **env)
 {
 	t_data	data;
 
-	(void)env;
+	(void)argv;
 	if (argc != 1)
 	{
-		printf("toooooo many arguments bro\n");
+		printf("too many arguments\n");
 		return (1);
 	}
-	init_data(&data);
+	init_data(&data, env);
 	prompt(&data);
-	ft_free_lst(&(data.token));
+	free_all(&data);
 }
