@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/08 13:39:36 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/09 11:13:37 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,9 @@
 # include <termios.h>
 # include <term.h>
 # include <errno.h>
+# include <stdbool.h>
 
-typedef enum e_type
+enum e_type
 {
 	INPUT, //<
 	HEREDOC, //<<
@@ -40,7 +41,14 @@ typedef enum e_type
 	CMD,
 	ARG,
 	VAR_ENV,
-}	t_type;
+}	;
+
+typedef	struct s_node
+{
+	void			*data;
+	struct s_cmd	*next;
+}	t_node;
+
 
 typedef struct s_cmd
 {
@@ -53,6 +61,7 @@ typedef struct s_token
 {
 	char	*str;
 	int		type;
+	bool	quotes[2];
 	struct s_token	*next;
 }			t_token;
 
@@ -69,6 +78,7 @@ typedef struct s_data
 	t_cmd	*cmd;
 	t_lst	*env;
 }			t_data;
+
 
 
 void	ft_free_tab(char **table);

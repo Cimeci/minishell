@@ -6,11 +6,29 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/08 14:20:04 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/09 11:28:11 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
+
+t_node	*ft_lstnew_generic(size_t data_size)
+{
+	t_node	*new_node;
+	new_node = (t_node *)malloc(sizeof(t_node));
+	if (!new_node)
+		return (NULL);
+
+	new_node->data = malloc(data_size);
+	if (new_node->data == NULL)
+	{
+		free(new_node);
+		return NULL;
+	}
+	memset(new_node->data, 0, data_size);
+	new_node->next = NULL;
+	return (new_node->data);
+}
 
 void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset)
 {
@@ -52,28 +70,30 @@ int	next_separator(char *str)
 	return (i);
 }
 
-int	get_token_len(char *str)
+int	get_token_len(t_token *current, char *str)
 {
-	int	i;
+	int		i;
+	int		len;
 
 	i = 0;
+	len = 0;
 	if (str[i] == 34)
 	{
+		current->quotes[1] = true;
 		i++;
-		while (str[i] && str[i] != 34)
-			i++;
-		i++;
+		while (str[i + len] && str[i + len] != 34)
+			len++;
 	}
 	else if (str[i] == 39)
 	{
+		current->quotes[0] = true;
 		i++;
-		while (str[i] && str[i] != 39)
-			i++;
-		i++;
+		while (str[i + len] && str[i + len] != 39)
+			len++;
 	}
 	else
-		i = next_separator(str);
-	return (i);
+		len = next_separator(str);
+	return (len);
 }
 
 char	*find_path(char *str)
@@ -110,8 +130,11 @@ void	get_token(char *str, t_token *current)
 	int		len;
 	char	*only_token;
 
-	len = get_token_len(str);
-	only_token = ft_substr(str, 0, len);
+	len = get_token_len(current, str);
+	if (current->quotes[0] || current->quotes[1])
+		only_token = ft_substr(str, 1, len);
+	else
+		only_token = ft_substr(str, 0, len);
 	if (!access(str, X_OK) || find_path(only_token))
 		current->type = CMD;
 	else if (ft_strnstr(str, "|", len))
@@ -124,6 +147,8 @@ void	get_token(char *str, t_token *current)
 		current->type = APPEND;
 	else if (ft_strnstr(str, ">", len))
 		current->type = OVERWRITE;
+	else if (ft_strnstr(str, "$", len))
+		current->type = VAR_ENV;
 	else
 		current->type = ARG;
 	free(only_token);
@@ -136,16 +161,14 @@ void	add_token(t_data *data, t_token *current, int i)
 
 	if (!current)
 		return ;
-	len = get_token_len(data->line + i);
-	str = ft_substr(data->line, i, len);
-	if (str[0] == '\'')
+	len = get_token_len(current, data->line + i);
+	if (current->quotes[0] || current->quotes[1])
+		str = ft_substr(data->line, i + 1, len);
+	else
+		str = ft_substr(data->line, i, len);
+	if (str[0] == '$')
 	{
-		current->str = ft_strtrim(str, "'");
-		free(str);
-	}
-	else if (str[0] == '"')
-	{
-		current->str = ft_strtrim(str, "\"");
+		current->str = ft_strtrim(str, "$");
 		free(str);
 	}
 	else
@@ -184,10 +207,10 @@ int	check_quotes(t_data *data)
 void	tokenise(t_data *data)
 {
 	int		i;
-	t_token	*tmp;
+	t_token	*current;
 
 	i = 0;
-	tmp = NULL;
+	current = NULL;
 	while (data->line)
 	{
 		while (data->line[i])
@@ -196,13 +219,13 @@ void	tokenise(t_data *data)
 				i++;
 			if (data->line[i])
 			{
-				tmp = malloc(sizeof(t_token));
-				if (!tmp)
-					return ;
-				tmp->next = NULL;
-				get_token(data->line + i, tmp);
-				add_token(data, tmp, i);
-				i += get_token_len(data->line + i);
+				current = (t_token *)ft_lstnew_generic(sizeof(t_token));
+				get_token(data->line + i, current);
+				add_token(data, current, i);
+				if (current->quotes[0] || current->quotes[1])
+					i += get_token_len(current, data->line + i) + 2;
+				else
+					i += get_token_len(current, data->line + i);
 			}
 			if (!data->line[i])
 				return ;
@@ -223,22 +246,22 @@ void	parsing(t_data *data)
 void	init_data(t_data *data, char **env)
 {
 	int		i;
-	t_lst	*dup;
+	t_lst	*current;
 
 	i = 0;
 	data->line = NULL;
 	data->token = NULL;
 	data->cmd = NULL;
 	data->env = NULL;
-	dup = data->env;
+	current = data->env;
 	while (env[i])
 	{
-		dup = malloc(sizeof(t_lst));
+		current = malloc(sizeof(t_lst));
 		if (!dup)
 			return ;
-		dup->str = ft_strdup(env[i]);
-		dup->next = NULL;
-		ft_lstadd_back_generic((void **)&data->env, dup, sizeof(char *));
+		current->str = ft_strdup(env[i]);
+		current->next = NULL;
+		ft_lstadd_back_generic((void **)&data->env, current, sizeof(char *));
 		i++;
 	}
 }
