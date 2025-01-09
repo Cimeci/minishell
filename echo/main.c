@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/07 12:54:05 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/09 11:05:00 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,28 +29,70 @@ int	count_file(char **argv)
 	return (file);
 }
 
-void	ft_echo(char **argv, int argc)
+void	execution_cmd(char **argv, char **env)
+{
+	char	*path;
+	pid_t	pid;
+
+	path = ft_strjoin("/usr/bin/", argv[0]);
+	if (!path)
+		return ;
+	if (path && access(path, X_OK) == 0)
+	{
+		pid = fork();
+		if (pid == -1)
+			exit(EXIT_FAILURE);
+		else if (pid == 0)
+		{
+			execve(path, argv, env);
+			perror("Error");
+		}
+		else
+		{
+			if (wait(NULL) == -1)
+				perror("wait failed");
+		}
+	}
+	free(path);
+}
+
+void	ft_echo(int argc, char **argv, char **env)
 {
 	int	i;
 	int	endl;
 	int	fd;
 	int	j;
+	int	k;
+	int	w;
 	int	save;
+	int	l;
 
 	endl = 0;
 	i = 1;
 	fd = 0;
-	// for (int j = 0; argv[j]; j++)
-	// 	printf("|%s|\n", argv[j]);
 	if (ft_strncmp("echo", argv[0], ft_strlen(argv[0])))
 	{
-		printf("Error input\n");
+		execution_cmd(argv, env);
 		return ;
 	}
-	if (!ft_strncmp("-n", argv[1], ft_strlen(argv[1])))
+	k = 1;
+	while (argv[k])
 	{
-		i++;
-		endl--;
+		w = 0;
+		if (argv[k][w] == '-')
+		{
+			w++;
+			while (argv[k][w] == 'n')
+				w++;
+			if (argv[k][w] == '\0')
+			{
+				endl--;
+				i++;
+			}
+			else
+				break ;
+		}
+		k++;
 	}
 	save = i;
 	while (i < argc)
@@ -69,43 +111,45 @@ void	ft_echo(char **argv, int argc)
 		}
 		i++;
 	}
-	int l = 0;
 	j = save;
-	while (j < argc && argv[j])
+	if (endl >= 0)
 	{
-		if (!ft_strncmp(">", argv[j], ft_strlen(argv[j])) || !ft_strncmp(">>",
-				argv[j], ft_strlen(argv[j])))
-		{
-			j += 2;
-			l += 2;
-			if (j >= argc || !argv[j])
-				break ;
-			continue ;
-		}
-		j++;
+		if (((!ft_strncmp(argv[j], ">", ft_strlen(argv[j])))
+				|| (!ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))))
+			&& (!ft_strncmp("echo", argv[j - 1], ft_strlen(argv[j - 1]))))
+			ft_putendl_fd("", fd);
+	}
+	l = 0;
+	j = argc - 1;
+	while (j > 0)
+	{
+		if (!ft_strncmp(argv[j], ">", ft_strlen(argv[j])) || !ft_strncmp(argv[j
+				- 1], ">", ft_strlen(argv[j])) || !ft_strncmp(argv[j], ">>",
+				ft_strlen(argv[j])) || !ft_strncmp(argv[j - 1], ">>",
+				ft_strlen(argv[j])))
+			l++;
+		else
+			break ;
+		j--;
 	}
 	j = save;
 	while (j < argc && argv[j])
 	{
-		// printf("argc:%d |dif:%d | j:%d\n", argc, argc - 1, j);
-		// printf("bef:argv[%d] = %s\n", j, argv[j]);
-		if (!ft_strncmp(">", argv[j], ft_strlen(argv[j])) || !ft_strncmp(">>",
-			argv[j], ft_strlen(argv[j])))
+		if ((ft_strncmp(argv[j], ">", ft_strlen(argv[j])) && ft_strncmp(argv[j
+					- 1], ">", ft_strlen(argv[j]))) && (ft_strncmp(argv[j],
+					">>", ft_strlen(argv[j])) && ft_strncmp(argv[j - 1], ">>",
+					ft_strlen(argv[j - 1]))))
 		{
-			j += 2;
-			if (j > argc || !argv[j])
-				break ;
+			if (j < argc - l - 1)
+			{
+				ft_putstr_fd(argv[j], fd);
+				ft_putstr_fd(" ", fd);
+			}
+			else if (endl < 0)
+				ft_putstr_fd(argv[j], fd);
+			else
+				ft_putendl_fd(argv[j], fd);
 		}
-		// printf("aft:argv[%d] = %s\n", j, argv[j]);
-		if (j < argc - l + 1)
-		{
-			ft_putstr_fd(argv[j], fd);
-			ft_putstr_fd(" ", fd);
-		}
-		else if (endl < 0)
-			ft_putstr_fd(argv[j], fd);
-		else
-			ft_putendl_fd(argv[j], fd);
 		j++;
 	}
 	if (fd)
@@ -159,7 +203,7 @@ char	**ft_argv(char *input)
 	return (argv);
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **env)
 {
 	char *input;
 
@@ -177,7 +221,7 @@ int	main(int argc, char **argv)
 		{
 			add_history(input);
 			argv = ft_argv(input);
-			ft_echo(argv, ft_words(input, ' '));
+			ft_echo(ft_words(input, ' '), argv, env);
 			ft_free_tab(argv);
 			argv = NULL;
 			free(input);
