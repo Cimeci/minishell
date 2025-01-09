@@ -34,6 +34,10 @@
 // # define ARG 2
 // # define OPERATOR 3
 
-
+typedef struct s_env
+{
+    char    *path;
+    struct s_env   *next;
+}           t_env;
 
 #endif

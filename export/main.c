@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/08 15:07:16 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:40:10 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,44 +26,7 @@ void	ft_free_tab(char **table)
 	}
 }
 
-int	ft_len_tab(char **env, char *var)
-{
-	int	len;
-	int	i;
-
-	len = 0;
-	i = 0;
-	while (env[i])
-		len += ft_strlen(env[i++]);
-	len += ft_strlen(var);
-	return (len);
-}
-
-int	ft_argc(char **argv)
-{
-	int	i;
-
-	i = 0;
-	while (argv[i])
-		i++;
-	return (i);
-}
-
-char	**ft_preparss(char **argv);
-
-char	*ft_get_var(char *str)
-{
-	char	*var;
-	int		i;
-
-	i = 0;
-	while (str[i] != '=')
-		i++;
-	var = ft_substr(str, 0, i);
-	return (var);
-}
-
-char	*my_getenv(const char *name, char **env)
+static char	*my_getenv(const char *name, char **env)
 {
 	int		i;
 	int		j;
@@ -87,181 +50,265 @@ char	*my_getenv(const char *name, char **env)
 	return (NULL);
 }
 
-char	**ft_new_env(char **argv, char **env)
+char	*find_pathname(char *cmd, char **cmd_split, char **path_split, int i)
 {
-	int		i;
-	int		j;
-	char	**new_env;
-	char	*var;
+	char	*pathname;
 
-	i = 0;
-	new_env = malloc(sizeof(char *) * (ft_argc(env) + ft_argc(argv)));
-	if (!new_env)
+	cmd = ft_strjoin("/", cmd_split[0]);
+	pathname = ft_strjoin(path_split[i], cmd);
+	free(cmd);
+	if (!access(pathname, F_OK | X_OK))
 	{
-		printf("Error malloc\n");
-		ft_free_tab(argv);
-		return (env);
+		ft_free_tab(path_split);
+		ft_free_tab(cmd_split);
+		return (pathname);
 	}
-	while (env[i])
-	{
-		new_env[i] = ft_strdup(env[i]);
-		// printf("%s\n", new_env[i]);
-		if (!new_env[i])
-		{
-			ft_free_tab(new_env);
-			ft_free_tab(argv);
-			return (env);
-		}
-		i++;
-	}
-	j = 1;
-	while (argv[j])
-	{
-		var = ft_get_var(argv[j]);
-		char *path = my_getenv(var, env);
-		printf("path: %s | var: %s\n", path, var);
-		if (!path)
-			new_env[i] = ft_strdup(argv[j]);
-		else
-			printf("%s found\n", var);
-		printf("%s\n", new_env[i]);
-		if (!new_env[i])
-		{
-			ft_free_tab(new_env);
-			ft_free_tab(argv);
-			return (env);
-		}
-		if (!getenv(var))
-			i++;
-		j++;
-	}
-	new_env[i] = NULL;
-	return (new_env);
+	free(pathname);
+	return (NULL);
 }
 
-void	excution_cmd(char **argv, char **env)
+char	*find_path(char **env, char *cmd)
+{
+	char	**cmd_split;
+	char	**path_split;
+	char	*pathname;
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = my_getenv("PATH", env);
+	if (!tmp)
+		return (NULL);
+	if (ft_strncmp(cmd, "./", 2) == 0 || !access(cmd, X_OK))
+		return (cmd);
+	path_split = ft_split(tmp, ':');
+	cmd_split = ft_split(cmd, ' ');
+	while (path_split[i])
+	{
+		pathname = find_pathname(cmd, cmd_split, path_split, i);
+		if (pathname)
+			return (pathname);
+		i++;
+	}
+	ft_free_tab(path_split);
+	ft_free_tab(cmd_split);
+	return (NULL);
+}
+
+int	ft_lstsize2(t_env *lst)
+{
+	int	i;
+
+	i = 0;
+	if (!lst)
+		return (0);
+	if (lst->next == NULL)
+		return (1);
+	while (lst->next != NULL)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (i + 1);
+}
+
+t_env	*ft_lstnew2(void *path)
+{
+	t_env	*new;
+
+	new = malloc(sizeof(t_env));
+	if (new == NULL)
+		return (0);
+	new->path = path;
+	new->next = NULL;
+	return (new);
+}
+
+void	ft_lstadd_back2(t_env **lst, t_env *new)
+{
+	t_env	*temp;
+
+	if (!lst || !new)
+		return ;
+	temp = *lst;
+	if (!temp)
+	{
+		*lst = new;
+		return ;
+	}
+	while (temp->next != NULL)
+		temp = temp->next;
+	temp->next = new;
+}
+
+t_env	*ft_init_env(char **env)
+{
+	t_env	*s_env;
+	t_env	*list;
+	int		i;
+
+	i = 0;
+	list = NULL;
+	while (env[i])
+	{
+		s_env = malloc(sizeof(t_env));
+		s_env->path = ft_strdup(env[i++]);
+		s_env->next = NULL;
+		ft_lstadd_back2(&list, s_env);
+	}
+	return (list);
+}
+
+static char	*my_getenv_lst(const char *name, t_env *env)
+{
+	int		j;
+	char	*tmp;
+	t_env	*cur;
+
+	cur = env;
+	while (cur)
+	{
+		j = 0;
+		while (cur->path[j] != '=' && cur->path[j])
+			j++;
+		tmp = ft_substr(ft_strdup(cur->path), 0, j);
+		if (!ft_strncmp(tmp, name, j))
+		{
+			return (tmp);
+		}
+		free(tmp);
+		cur = cur->next;
+	}
+	return (NULL);
+}
+
+void	execution_cmd(char **argv, char **env)
 {
 	char	*path;
 	pid_t	pid;
 
-	path = ft_strjoin("/usr/bin/", argv[0]);
+	path = find_path(env, argv[0]);
 	if (!path)
 	{
-		ft_free_tab(argv);
+		perror("Error");
 		return ;
 	}
-	if (!access(path, X_OK))
+	if (path && access(path, X_OK) == 0)
 	{
 		pid = fork();
 		if (pid == -1)
+		{
+			perror("fork failed");
 			exit(EXIT_FAILURE);
+		}
 		else if (pid == 0)
+		{
+			env = NULL;
 			execve(path, argv, env);
-		while (wait(NULL) > 0)
-			;
+		}
+		else
+		{
+			if (wait(NULL) == -1)
+				perror("wait failed");
+		}
 	}
 	free(path);
 }
 
-char	**ft_export(char **argv, char **env)
+char	**ft_convert_lst_to_tab(t_env *env)
 {
 	int		i;
-	int		j;
-	char	**new_env;
+	char	**table;
+	t_env	*tmp;
 
 	i = 0;
-	j = 1;
-	if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])) && ft_argc(argv) > 1
-		&& env)
+	table = malloc(sizeof(char *) * (ft_lstsize2(env) + 1));
+	tmp = env;
+	while (tmp)
 	{
-		argv = ft_preparss(argv);
-		if (!argv)
+		table[i] = tmp->path;
+		i++;
+		tmp = tmp->next;
+	}
+	table[i] = NULL;
+	return (table);
+}
+
+char	*ft_get_var(char *str)
+{
+	char	*var;
+	int		i;
+
+	i = 0;
+	while (str[i] != '=' && str[i])
+		i++;
+	var = ft_substr(str, 0, i);
+	return (var);
+}
+
+t_env	*ft_export(char **argv, t_env *env)
+{
+	char	*path;
+	char	*var;
+	t_env	*cur;
+
+	cur = env;
+	if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])) && argv[1])
+	{
+		var = ft_get_var(argv[1]);
+		path = my_getenv_lst(argv[1], env);
+		// printf("var: %s | path: %s\n", var, path);
+		if (!path)
+			ft_lstadd_back2(&env, ft_lstnew2(ft_strdup(argv[1])));
+		else
 		{
-			printf("Error argv\n");
-			return (env);
+			free(path);
+			path = NULL;
+			while (cur)
+			{
+				path = my_getenv_lst(cur->path, env);
+				// printf("var: %s | path: %s\n", var, path);
+				if (!ft_strncmp(var, path, ft_strlen(var)))
+				{
+					free(var);
+					free(path);
+					free(cur->path);
+					cur->path = NULL;
+					// printf("%s\n", argv[1]);
+					cur->path = ft_strdup(argv[1]);
+					break ;
+				}
+				free(path);
+				cur = cur->next;
+			}
 		}
-		new_env = ft_new_env(argv, env);
-		// ft_free_tab(argv);
-		return (new_env);
 	}
 	else
-		excution_cmd(argv, env);
-	ft_free_tab(argv);
-	return (NULL);
+		execution_cmd(argv, ft_convert_lst_to_tab(cur));
+	return (env);
 }
 
-char	**ft_preparss(char **argv)
+void	ft_lstclear2(t_env *env)
 {
-	int		i;
-	int		j;
-	int		k;
-	int		nb_valid;
-	char	**new_argv;
+	t_env	*temp;
 
-	nb_valid = 0;
-	i = 1;
-	j = 0;
-	k = 0;
-	if (!argv)
-		return (NULL);
-	while (argv[j])
+	temp = env;
+	while (env)
 	{
-		i = 1;
-		while (argv[j][i] != '=' && argv[j][i])
-			i++;
-		if (argv[j][i] != '=' && !getenv(ft_get_var(argv[j])))
-			nb_valid++;
-		j++;
+		temp = (env)->next;
+		if (env->path)
+			free(env->path);
+		if (env->path)
+			free(env);
+		env = temp;
 	}
-	j = 0;
-	i = 0;
-	// printf("%d\n", nb_valid + 2);
-	new_argv = malloc(sizeof(char *) * (nb_valid + 2));
-	if (!new_argv)
-	{
-		ft_free_tab(argv);
-		return (NULL);
-	}
-	new_argv[k++] = ft_strdup(argv[j++]);
-	while (argv[j])
-	{
-		i = 1;
-		while (argv[j][i] != '=' && argv[j][i])
-			i++;
-		if (argv[j][i] == '=' && !getenv(ft_get_var(argv[j])))
-			new_argv[k++] = ft_strdup(argv[j]);
-		j++;
-	}
-	new_argv[k] = NULL;
-	ft_free_tab(argv);
-	// int w = 0;
-	// while (new_argv[w])
-	// 	printf("%s\n", new_argv[w++]);
-	return (new_argv);
-}
-
-char	**ft_strdup_tab(char **str)
-{
-	int		i;
-	char	**result;
-
-	i = 0;
-	result = malloc(sizeof(char *) * (ft_argc(str) + 1));
-	if (!result)
-		return (NULL);
-	while (str[i])
-	{
-		result[i] = ft_strdup(str[i]);
-		i++;
-	}
-	result[i] = NULL;
-	return (result);
+	temp = NULL;
 }
 
 int	main(int argc, char **argv, char **env)
 {
 	char *input;
-	char **new_env;
+	t_env *list;
 
 	if (argc != 1)
 	{
@@ -269,7 +316,7 @@ int	main(int argc, char **argv, char **env)
 		exit(1);
 	}
 	input = "1";
-	new_env = ft_strdup_tab(env);
+	list = ft_init_env(env);
 	while (input)
 	{
 		input = readline("Minishell> ");
@@ -279,15 +326,13 @@ int	main(int argc, char **argv, char **env)
 			argv = ft_split(input, ' ');
 			if (argv)
 			{
-				env = new_env;
-				// ft_free_tab(new_env);
-				new_env = NULL;
-				new_env = ft_export(argv, env);
+				list = ft_export(argv, list);
+				ft_free_tab(argv);
 				argv = NULL;
 			}
 		}
 		if (input)
 			free(input);
 	}
-	ft_free_tab(new_env);
+	// ft_lstclear2(list);
 }
