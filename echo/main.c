@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/09 11:05:00 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/09 13:56:16 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,61 +56,79 @@ void	execution_cmd(char **argv, char **env)
 	free(path);
 }
 
-void	ft_echo(int argc, char **argv, char **env)
+static int	handle_options(char **argv, int *endl)
 {
 	int	i;
-	int	endl;
-	int	fd;
-	int	j;
-	int	k;
 	int	w;
-	int	save;
-	int	l;
 
-	endl = 0;
 	i = 1;
-	fd = 0;
-	if (ft_strncmp("echo", argv[0], ft_strlen(argv[0])))
-	{
-		execution_cmd(argv, env);
-		return ;
-	}
-	k = 1;
-	while (argv[k])
+	while (argv[i])
 	{
 		w = 0;
-		if (argv[k][w] == '-')
+		if (argv[i][w] == '-')
 		{
 			w++;
-			while (argv[k][w] == 'n')
+			while (argv[i][w] == 'n')
 				w++;
-			if (argv[k][w] == '\0')
+			if (argv[i][w] == '\0')
 			{
-				endl--;
+				(*endl)--;
 				i++;
 			}
 			else
 				break ;
 		}
-		k++;
+		else
+			break ;
 	}
-	save = i;
+	return (i);
+}
+
+static int	open_output_file(char **argv, int argc)
+{
+	int	fd;
+	int	i;
+
+	fd = 0;
+	i = 1;
 	while (i < argc)
 	{
 		if (!ft_strncmp(">", argv[i], ft_strlen(argv[i])))
-		{
 			fd = open(argv[i + 1], O_WRONLY | O_TRUNC | O_CREAT, 0664);
-			if (fd < 0)
-				exit(1);
-		}
 		else if (!ft_strncmp(">>", argv[i], ft_strlen(argv[i])))
-		{
 			fd = open(argv[i + 1], O_WRONLY | O_APPEND | O_CREAT, 0664);
-			if (fd < 0)
-				exit(1);
-		}
+		if (fd < 0)
+			return (-1);
 		i++;
 	}
+	return (fd);
+}
+
+static int	count_trailing_redirects(char **argv, int argc)
+{
+	int	j;
+	int	l;
+
+	l = 0;
+	j = argc - 1;
+	while (j > 0)
+	{
+		if (!ft_strncmp(argv[j], ">", ft_strlen(argv[j]))
+			|| !ft_strncmp(argv[j - 1], ">", ft_strlen(argv[j]))
+			|| !ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))
+			|| !ft_strncmp(argv[j - 1], ">>", ft_strlen(argv[j])))
+			l++;
+		else
+			break ;
+		j--;
+	}
+	return (l);
+}
+
+static void	write_no_arguments(char **argv, int endl, int save, int fd)
+{
+	int	j;
+
 	j = save;
 	if (endl >= 0)
 	{
@@ -119,26 +137,21 @@ void	ft_echo(int argc, char **argv, char **env)
 			&& (!ft_strncmp("echo", argv[j - 1], ft_strlen(argv[j - 1]))))
 			ft_putendl_fd("", fd);
 	}
-	l = 0;
-	j = argc - 1;
-	while (j > 0)
-	{
-		if (!ft_strncmp(argv[j], ">", ft_strlen(argv[j])) || !ft_strncmp(argv[j
-				- 1], ">", ft_strlen(argv[j])) || !ft_strncmp(argv[j], ">>",
-				ft_strlen(argv[j])) || !ft_strncmp(argv[j - 1], ">>",
-				ft_strlen(argv[j])))
-			l++;
-		else
-			break ;
-		j--;
-	}
+}
+
+static void	write_arguments(char **argv, int argc, int fd, int endl, int save)
+{
+	int	j;
+	int	l;
+
+	l = count_trailing_redirects(argv, argc);
 	j = save;
 	while (j < argc && argv[j])
 	{
-		if ((ft_strncmp(argv[j], ">", ft_strlen(argv[j])) && ft_strncmp(argv[j
-					- 1], ">", ft_strlen(argv[j]))) && (ft_strncmp(argv[j],
-					">>", ft_strlen(argv[j])) && ft_strncmp(argv[j - 1], ">>",
-					ft_strlen(argv[j - 1]))))
+		if ((ft_strncmp(argv[j], ">", ft_strlen(argv[j]))
+				&& ft_strncmp(argv[j - 1], ">", ft_strlen(argv[j])))
+			&& (ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))
+				&& ft_strncmp(argv[j - 1], ">>", ft_strlen(argv[j - 1]))))
 		{
 			if (j < argc - l - 1)
 			{
@@ -152,6 +165,31 @@ void	ft_echo(int argc, char **argv, char **env)
 		}
 		j++;
 	}
+}
+
+void	ft_echo(int argc, char **argv, char **env)
+{
+	int	endl;
+	int	fd;
+	int	save;
+
+	if (ft_strncmp("echo", argv[0], ft_strlen(argv[0])))
+	{
+		execution_cmd(argv, env);
+		return ;
+	}
+	if (!argv[1])
+	{
+		ft_putendl_fd("", 1);
+		return ;
+	}
+	endl = 0;
+	save = handle_options(argv, &endl);
+	fd = open_output_file(argv, argc);
+	if (fd < 0)
+		return ;
+	write_no_arguments(argv, endl, save, fd);
+	write_arguments(argv, argc, fd, endl, save);
 	if (fd)
 		close(fd);
 }
@@ -167,45 +205,9 @@ void	ft_free_tab(char **table)
 	table = NULL;
 }
 
-char	**ft_argv(char *input)
-{
-	int		i;
-	int		j;
-	int		k;
-	int		t;
-	char	**argv;
-
-	i = 0;
-	j = 0;
-	k = 0;
-	t = 0;
-	argv = malloc(sizeof(char *) * (ft_words(input, ' ') + 1));
-	if (!argv)
-		return (NULL);
-	while (input[i])
-	{
-		k = 0;
-		t = 0;
-		while (input[i] == ' ' && input[i])
-			i++;
-		k = i;
-		while (input[i] != ' ' && input[i])
-		{
-			i++;
-			t++;
-		}
-		argv[j] = ft_substr(input, k, t);
-		if (!argv[j])
-			return (NULL);
-		j++;
-	}
-	argv[j] = NULL;
-	return (argv);
-}
-
 int	main(int argc, char **argv, char **env)
 {
-	char *input;
+	char	*input;
 
 	(void)argv;
 	if (argc != 1)
@@ -220,7 +222,7 @@ int	main(int argc, char **argv, char **env)
 		if (input)
 		{
 			add_history(input);
-			argv = ft_argv(input);
+			argv = ft_split(input, ' ');
 			ft_echo(ft_words(input, ' '), argv, env);
 			ft_free_tab(argv);
 			argv = NULL;
