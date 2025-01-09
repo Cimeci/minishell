@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:12:16 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/08 09:26:47 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/09 14:36:15 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	ft_free_tab(char **table)
 	int	i;
 
 	i = 0;
+	if (!table)
+		return ;
 	while (table[i])
 		free(table[i++]);
 	free(table);
@@ -38,6 +40,7 @@ void	free_token(t_token **head)
 		free(current);
 		current = next_node;
 	}
+	*head = NULL;
 }
 
 void	free_env(t_lst **head)
@@ -55,6 +58,7 @@ void	free_env(t_lst **head)
 		free(current);
 		current = next_node;
 	}
+	*head = NULL;
 }
 
 void	free_all(t_data *data)
@@ -63,4 +67,6 @@ void	free_all(t_data *data)
 		free_token(&data->token);
 	if (data->env)
 		free_env(&data->env);
+	data->token = NULL;
+	data->env = NULL;
 }

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/09 11:13:37 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/09 17:09:02 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,6 @@ enum e_type
 	VAR_ENV,
 }	;
 
-typedef	struct s_node
-{
-	void			*data;
-	struct s_cmd	*next;
-}	t_node;
-
-
 typedef struct s_cmd
 {
 	char			*cmd;
@@ -79,7 +72,9 @@ typedef struct s_data
 	t_lst	*env;
 }			t_data;
 
-
+#define DOUBLE_QUOTE 34
+#define SINGLE_QUOTE 39
+#define IS_QUOTE(c) (c == DOUBLE_QUOTE || c == SINGLE_QUOTE)
 
 void	ft_free_tab(char **table);
 void	free_token(t_token **head);
