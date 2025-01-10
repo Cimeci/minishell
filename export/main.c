@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/09 17:40:10 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/10 13:18:57 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,11 @@ void	ft_free_tab(char **table)
 	if (table)
 	{
 		while (table[i])
-			free(table[i++]);
+		{
+			if (table[i])
+				free(table[i]);
+			i++;
+		}
 		free(table);
 		table = NULL;
 	}
@@ -163,6 +167,7 @@ static char	*my_getenv_lst(const char *name, t_env *env)
 {
 	int		j;
 	char	*tmp;
+	char	*tmp_dup;
 	t_env	*cur;
 
 	cur = env;
@@ -171,11 +176,14 @@ static char	*my_getenv_lst(const char *name, t_env *env)
 		j = 0;
 		while (cur->path[j] != '=' && cur->path[j])
 			j++;
-		tmp = ft_substr(ft_strdup(cur->path), 0, j);
+		tmp_dup = ft_strdup(cur->path);
+		tmp = ft_substr(tmp_dup, 0, j);
 		if (!ft_strncmp(tmp, name, j))
 		{
+			free(tmp_dup);
 			return (tmp);
 		}
+		free(tmp_dup);
 		free(tmp);
 		cur = cur->next;
 	}
@@ -187,6 +195,8 @@ void	execution_cmd(char **argv, char **env)
 	char	*path;
 	pid_t	pid;
 
+	if (!env)
+		return ;
 	path = find_path(env, argv[0]);
 	if (!path)
 	{
@@ -197,21 +207,13 @@ void	execution_cmd(char **argv, char **env)
 	{
 		pid = fork();
 		if (pid == -1)
-		{
-			perror("fork failed");
 			exit(EXIT_FAILURE);
-		}
 		else if (pid == 0)
-		{
-			env = NULL;
 			execve(path, argv, env);
-		}
-		else
-		{
-			if (wait(NULL) == -1)
-				perror("wait failed");
-		}
+		else if (wait(NULL) == -1)
+			perror("wait failed");
 	}
+	ft_free_tab(env);
 	free(path);
 }
 
@@ -223,10 +225,12 @@ char	**ft_convert_lst_to_tab(t_env *env)
 
 	i = 0;
 	table = malloc(sizeof(char *) * (ft_lstsize2(env) + 1));
+	if (!table)
+		return (NULL);
 	tmp = env;
 	while (tmp)
 	{
-		table[i] = tmp->path;
+		table[i] = ft_strdup(tmp->path);
 		i++;
 		tmp = tmp->next;
 	}
@@ -246,41 +250,46 @@ char	*ft_get_var(char *str)
 	return (var);
 }
 
+void	ft_modif_env_var(t_env *cur, t_env *env, char *var, char *arg)
+{
+	char	*path;
+
+	while (cur)
+	{
+		path = my_getenv_lst(cur->path, env);
+		if (!ft_strncmp(var, path, ft_strlen(var)))
+		{
+			free(cur->path);
+			cur->path = ft_strdup(arg);
+			break ;
+		}
+		free(path);
+		cur = cur->next;
+	}
+}
+
 t_env	*ft_export(char **argv, t_env *env)
 {
 	char	*path;
 	char	*var;
 	t_env	*cur;
+	int		i;
 
+	i = 1;
 	cur = env;
-	if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])) && argv[1])
+	if (!ft_strncmp(argv[0], "export", ft_strlen(argv[0])))
 	{
-		var = ft_get_var(argv[1]);
-		path = my_getenv_lst(argv[1], env);
-		// printf("var: %s | path: %s\n", var, path);
-		if (!path)
-			ft_lstadd_back2(&env, ft_lstnew2(ft_strdup(argv[1])));
-		else
+		while (argv[i])
 		{
+			var = ft_get_var(argv[i]);
+			path = my_getenv_lst(argv[i], env);
+			if (!path)
+				ft_lstadd_back2(&env, ft_lstnew2(ft_strdup(argv[i])));
+			else
+				ft_modif_env_var(cur, env, var, argv[i]);
 			free(path);
-			path = NULL;
-			while (cur)
-			{
-				path = my_getenv_lst(cur->path, env);
-				// printf("var: %s | path: %s\n", var, path);
-				if (!ft_strncmp(var, path, ft_strlen(var)))
-				{
-					free(var);
-					free(path);
-					free(cur->path);
-					cur->path = NULL;
-					// printf("%s\n", argv[1]);
-					cur->path = ft_strdup(argv[1]);
-					break ;
-				}
-				free(path);
-				cur = cur->next;
-			}
+			free(var);
+			i++;
 		}
 	}
 	else
@@ -295,20 +304,35 @@ void	ft_lstclear2(t_env *env)
 	temp = env;
 	while (env)
 	{
-		temp = (env)->next;
+		temp = env->next;
 		if (env->path)
 			free(env->path);
-		if (env->path)
-			free(env);
+		free(env);
 		env = temp;
 	}
-	temp = NULL;
+}
+
+char	*use_input(char *input, t_env *list, char **argv)
+{
+	input = readline("Minishell> ");
+	if (input && input[0])
+	{
+		add_history(input);
+		argv = ft_split(input, ' ');
+		if (argv)
+		{
+			list = ft_export(argv, list);
+			ft_free_tab(argv);
+			argv = NULL;
+		}
+	}
+	return (input);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	char *input;
-	t_env *list;
+	char	*input;
+	t_env	*list;
 
 	if (argc != 1)
 	{
@@ -319,20 +343,10 @@ int	main(int argc, char **argv, char **env)
 	list = ft_init_env(env);
 	while (input)
 	{
-		input = readline("Minishell> ");
-		if (input && input[0])
-		{
-			add_history(input);
-			argv = ft_split(input, ' ');
-			if (argv)
-			{
-				list = ft_export(argv, list);
-				ft_free_tab(argv);
-				argv = NULL;
-			}
-		}
+		input = use_input(input, list, argv);
 		if (input)
 			free(input);
 	}
-	// ft_lstclear2(list);
+	rl_clear_history();
+	ft_lstclear2(list);
 }
