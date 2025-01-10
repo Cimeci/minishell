@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/09 17:23:31 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:07:57 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,11 +162,13 @@ char	*my_getenv(t_data *data, char *name)
 		if (ft_strncmp(tmp, name, i) == 0 && name[i] == '\0')
 		{
 			free(tmp);
+			free(name);
 			return (cur->str + i + 1);
 		}
 		cur = cur->next;
 		free(tmp);
 	}
+	free(name);
 	return (NULL);
 }
 
@@ -192,9 +194,12 @@ char	*remove_char(char *str, char c)
 void	add_token(t_data *data, t_token *cur, int i)
 {
 	int		len;
-	char	*var;
+	char	**var;
 	char	*str;
+	int		i;
+	char	*tmp;
 
+	i = 0;
 	if (!cur)
 		return ;
 	len = get_token_len(cur, data->line + i);
@@ -205,13 +210,20 @@ void	add_token(t_data *data, t_token *cur, int i)
 		cur->str = remove_char(str, '\'');
 	else if (str[0] == '$' && !cur->quotes[0])
 	{
-		var = ft_strtrim(str, "$");
-		cur->str = ft_strdup(my_getenv(data, var));
-		if (!cur->str)
-			cur->str = str;
-		else
-			free(str);
-		free(var);
+		var = ft_split(str, '$');
+		while (var[i])
+		{
+			if (my_getenv(data, var[i]))
+			{
+				tmp = cur->str;
+				cur->str = ft_strjoin(tmp, my_getenv(data, var[i]));
+				free(tmp);
+			}
+			i++;
+		}
+		
+		free(str);
+		ft_free_tab(var);
 	}
 	else
 		cur->str = str;
