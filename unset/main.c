@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/09 08:44:11 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/10 17:19:31 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,75 @@ void	ft_free_tab(char **table)
 		free(table);
 		table = NULL;
 	}
+}
+
+static char	*my_getenv(const char *name, char **env)
+{
+	int		i;
+	int		j;
+	char	*tmp;
+
+	i = 0;
+	while (env[i])
+	{
+		j = 0;
+		while (env[i][j] != '=' && env[i][j])
+			j++;
+		tmp = ft_substr(env[i], 0, j);
+		if (ft_strncmp(tmp, name, j) == 0 && name[j] == '\0')
+		{
+			free(tmp);
+			return (env[i] + j + 1);
+		}
+		free(tmp);
+		i++;
+	}
+	return (NULL);
+}
+
+char	*find_pathname(char *cmd, char **cmd_split, char **path_split, int i)
+{
+	char	*pathname;
+
+	cmd = ft_strjoin("/", cmd_split[0]);
+	pathname = ft_strjoin(path_split[i], cmd);
+	free(cmd);
+	if (!access(pathname, F_OK | X_OK))
+	{
+		ft_free_tab(path_split);
+		ft_free_tab(cmd_split);
+		return (pathname);
+	}
+	free(pathname);
+	return (NULL);
+}
+
+char	*find_path(char **env, char *cmd)
+{
+	char	**cmd_split;
+	char	**path_split;
+	char	*pathname;
+	char	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = my_getenv("PATH", env);
+	if (!tmp)
+		return (NULL);
+	if (ft_strncmp(cmd, "./", 2) == 0 || !access(cmd, X_OK))
+		return (cmd);
+	path_split = ft_split(tmp, ':');
+	cmd_split = ft_split(cmd, ' ');
+	while (path_split[i])
+	{
+		pathname = find_pathname(cmd, cmd_split, path_split, i);
+		if (pathname)
+			return (pathname);
+		i++;
+	}
+	ft_free_tab(path_split);
+	ft_free_tab(cmd_split);
+	return (NULL);
 }
 
 int	ft_lstsize2(t_env *lst)
@@ -105,12 +174,9 @@ void	execution_cmd(char **argv, char **env)
 	char	*path;
 	pid_t	pid;
 
-	path = ft_strjoin("/usr/bin/", argv[0]);
+	path = find_path(env, argv[0]);
 	if (!path)
-	{
-		ft_free_tab(argv);
 		return ;
-	}
 	if (path && access(path, X_OK) == 0)
 	{
 		pid = fork();
@@ -127,7 +193,8 @@ void	execution_cmd(char **argv, char **env)
 				perror("wait failed");
 		}
 	}
-	free(path);
+	if (path)
+		free(path);
 }
 
 char	**ft_convert_lst_to_tab(t_env *env)
@@ -141,7 +208,7 @@ char	**ft_convert_lst_to_tab(t_env *env)
 	tmp = env;
 	while (tmp)
 	{
-		table[i] = tmp->path;
+		table[i] = ft_strdup(tmp->path);
 		i++;
 		tmp = tmp->next;
 	}
@@ -149,45 +216,95 @@ char	**ft_convert_lst_to_tab(t_env *env)
 	return (table);
 }
 
-t_env	*ft_unset(char **argv, t_env **env)
+void	ft_unset_extension(char *unset_path, t_env *env)
 {
 	t_env	*tmp;
 	t_env	*prev;
-	char	*unset_path;
 
+	tmp = env;
+	prev = NULL;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->path, unset_path, ft_strlen(tmp->path)))
+		{
+			if (prev == NULL)
+				env = tmp->next;
+			else
+				prev->next = tmp->next;
+			free(tmp->path);
+			free(tmp);
+			tmp = NULL;
+			break ;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
+}
+
+void	ft_unset(char **argv, t_env *env)
+{
+	char	*unset_path;
+	int		i;
+	char	**env_tab;
+
+	i = 1;
 	if (!ft_strncmp(argv[0], "unset", ft_strlen(argv[0])))
 	{
-		unset_path = get_path(argv[1], *env);
-		if (!unset_path)
-			return (NULL);
-		tmp = *env;
-		prev = NULL;
-		while (tmp)
+		while (argv[i])
 		{
-			if (!ft_strncmp(tmp->path, unset_path, ft_strlen(tmp->path)))
-			{
-				if (prev == NULL)
-					*env = tmp->next;
-				else
-					prev->next = tmp->next;
-				free(tmp->path);
-				free(tmp);
-				break ;
-			}
-			prev = tmp;
-			tmp = tmp->next;
+			unset_path = get_path(argv[i], env);
+			if (!unset_path)
+				return ;
+			ft_unset_extension(unset_path, env);
+			i++;
 		}
-		return (*env);
 	}
 	else
-		execution_cmd(argv, ft_convert_lst_to_tab(*env));
-	return (NULL);
+	{
+		env_tab = ft_convert_lst_to_tab(env);
+		execution_cmd(argv, env_tab);
+		ft_free_tab(env_tab);
+	}
+}
+
+void	ft_lstclear2(t_env *env)
+{
+	t_env	*temp;
+
+	temp = env;
+	while (env)
+	{
+		temp = env->next;
+		if (env->path)
+			free(env->path);
+		free(env);
+		env = temp;
+	}
+}
+
+char	*use_input(char **argv, t_env *list)
+{
+	char	*input;
+
+	input = readline("Minishell> ");
+	if (input && input[0])
+	{
+		add_history(input);
+		argv = ft_split(input, ' ');
+		if (argv)
+		{
+			ft_unset(argv, list);
+			ft_free_tab(argv);
+			argv = NULL;
+		}
+	}
+	return (input);
 }
 
 int	main(int argc, char **argv, char **env)
 {
-	char *input;
-	t_env *list;
+	char	*input;
+	t_env	*list;
 
 	if (argc != 1)
 	{
@@ -198,19 +315,9 @@ int	main(int argc, char **argv, char **env)
 	list = ft_init_env(env);
 	while (input)
 	{
-		input = readline("Minishell> ");
-		if (input && input[0])
-		{
-			add_history(input);
-			argv = ft_split(input, ' ');
-			if (argv)
-			{
-				list = ft_unset(argv, &list);
-				ft_free_tab(argv);
-				argv = NULL;
-			}
-		}
+		input = use_input(argv, list);
 		if (input)
 			free(input);
 	}
+	ft_lstclear2(list);
 }
