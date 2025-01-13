@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:12:16 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/09 14:36:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:08:04 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,14 @@ void	free_all(t_data *data)
 		free_env(&data->env);
 	data->token = NULL;
 	data->env = NULL;
+}
+
+char	*ft_strjoin_free(char *s1, char *s2)
+{
+	char	*tmp;
+
+	tmp = s1;
+	s1 = ft_strjoin(s1, s2);
+	free(tmp);
+	return (s1);
 }

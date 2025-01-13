@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/09 17:09:02 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/13 16:08:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,5 +80,6 @@ void	ft_free_tab(char **table);
 void	free_token(t_token **head);
 void	free_env(t_lst **head);
 void	free_all(t_data *data);
+char	*ft_strjoin_free(char *s1, char *s2);
 
 #endif

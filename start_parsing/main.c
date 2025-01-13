@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/10 17:07:57 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/13 17:46:50 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ char	*my_getenv(t_data *data, char *name)
 		while (cur->str[i] && cur->str[i] != '=')
 			i++;
 		tmp = ft_substr(cur->str, 0, i);
+		printf("%s", tmp);
 		if (ft_strncmp(tmp, name, i) == 0 && name[i] == '\0')
 		{
 			free(tmp);
@@ -191,15 +192,48 @@ char	*remove_char(char *str, char c)
 	return (dest);
 }
 
+void	env_variables(t_data *data, t_token *cur, char *str)
+{
+	char	**var;
+	char	*result;
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 0;
+	result = ft_strdup("");
+	cur->str = ft_strdup("");
+	var = ft_split(str, '$');
+	while (var[i])
+	{
+		if (my_getenv(data, var[i]))
+			cur->str = ft_strjoin(cur->str, my_getenv(data, var[i]));
+		i++;
+	}
+	i = 0;
+	while (var[i])
+	{
+		j = i;
+		while (var[j])
+		{
+			result = ft_strjoin_free(result, "$");
+			result = ft_strjoin(result, var[j]);
+			if (my_getenv(data, result))
+				cur->str = ft_strjoin(cur->str, result);
+			j++;
+		}
+		free(result);
+		i++;
+	}
+	free(str);
+	ft_free_tab(var);
+}
+
 void	add_token(t_data *data, t_token *cur, int i)
 {
 	int		len;
-	char	**var;
 	char	*str;
-	int		i;
-	char	*tmp;
 
-	i = 0;
 	if (!cur)
 		return ;
 	len = get_token_len(cur, data->line + i);
@@ -209,22 +243,7 @@ void	add_token(t_data *data, t_token *cur, int i)
 	if (ft_strchr(str, '\''))
 		cur->str = remove_char(str, '\'');
 	else if (str[0] == '$' && !cur->quotes[0])
-	{
-		var = ft_split(str, '$');
-		while (var[i])
-		{
-			if (my_getenv(data, var[i]))
-			{
-				tmp = cur->str;
-				cur->str = ft_strjoin(tmp, my_getenv(data, var[i]));
-				free(tmp);
-			}
-			i++;
-		}
-		
-		free(str);
-		ft_free_tab(var);
-	}
+		env_variables(data, cur, str);
 	else
 		cur->str = str;
 	ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
