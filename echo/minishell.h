@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/09 13:11:06 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:35:35 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,15 @@
 # include <termios.h>
 # include <unistd.h>
 
-// # define CMD 1
-// # define ARG 2
-// # define OPERATOR 3
+void	ft_free_tab(char **table);
+int		count_file(char **argv);
+void	execution_cmd(char **argv, char **env);
+
+int		count_trailing_redirects(char **argv, int argc);
+
+void	write_no_arguments(char **argv, int endl, int save, int fd);
+void	ft_write_argv_space(char **argv, int j, int dif, int fd);
+void	ft_write_argv_endl(char **argv, int j, int endl, int fd);
+void	write_arguments(char **argv, int fd, int endl, int save);
 
 #endif

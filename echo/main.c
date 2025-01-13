@@ -6,55 +6,11 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/09 13:56:16 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/13 10:35:21 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	count_file(char **argv)
-{
-	int	file;
-	int	i;
-
-	file = 0;
-	i = 0;
-	while (argv[i])
-	{
-		if (!ft_strncmp(">", argv[i], ft_strlen(argv[i])) || !ft_strncmp(">>",
-				argv[i], ft_strlen(argv[i])))
-			file++;
-		i++;
-	}
-	return (file);
-}
-
-void	execution_cmd(char **argv, char **env)
-{
-	char	*path;
-	pid_t	pid;
-
-	path = ft_strjoin("/usr/bin/", argv[0]);
-	if (!path)
-		return ;
-	if (path && access(path, X_OK) == 0)
-	{
-		pid = fork();
-		if (pid == -1)
-			exit(EXIT_FAILURE);
-		else if (pid == 0)
-		{
-			execve(path, argv, env);
-			perror("Error");
-		}
-		else
-		{
-			if (wait(NULL) == -1)
-				perror("wait failed");
-		}
-	}
-	free(path);
-}
 
 static int	handle_options(char **argv, int *endl)
 {
@@ -104,7 +60,7 @@ static int	open_output_file(char **argv, int argc)
 	return (fd);
 }
 
-static int	count_trailing_redirects(char **argv, int argc)
+int	count_trailing_redirects(char **argv, int argc)
 {
 	int	j;
 	int	l;
@@ -123,48 +79,6 @@ static int	count_trailing_redirects(char **argv, int argc)
 		j--;
 	}
 	return (l);
-}
-
-static void	write_no_arguments(char **argv, int endl, int save, int fd)
-{
-	int	j;
-
-	j = save;
-	if (endl >= 0)
-	{
-		if (((!ft_strncmp(argv[j], ">", ft_strlen(argv[j])))
-				|| (!ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))))
-			&& (!ft_strncmp("echo", argv[j - 1], ft_strlen(argv[j - 1]))))
-			ft_putendl_fd("", fd);
-	}
-}
-
-static void	write_arguments(char **argv, int argc, int fd, int endl, int save)
-{
-	int	j;
-	int	l;
-
-	l = count_trailing_redirects(argv, argc);
-	j = save;
-	while (j < argc && argv[j])
-	{
-		if ((ft_strncmp(argv[j], ">", ft_strlen(argv[j]))
-				&& ft_strncmp(argv[j - 1], ">", ft_strlen(argv[j])))
-			&& (ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))
-				&& ft_strncmp(argv[j - 1], ">>", ft_strlen(argv[j - 1]))))
-		{
-			if (j < argc - l - 1)
-			{
-				ft_putstr_fd(argv[j], fd);
-				ft_putstr_fd(" ", fd);
-			}
-			else if (endl < 0)
-				ft_putstr_fd(argv[j], fd);
-			else
-				ft_putendl_fd(argv[j], fd);
-		}
-		j++;
-	}
 }
 
 void	ft_echo(int argc, char **argv, char **env)
@@ -189,20 +103,9 @@ void	ft_echo(int argc, char **argv, char **env)
 	if (fd < 0)
 		return ;
 	write_no_arguments(argv, endl, save, fd);
-	write_arguments(argv, argc, fd, endl, save);
+	write_arguments(argv, fd, endl, save);
 	if (fd)
 		close(fd);
-}
-
-void	ft_free_tab(char **table)
-{
-	int	i;
-
-	i = 0;
-	while (table[i])
-		free(table[i++]);
-	free(table);
-	table = NULL;
 }
 
 int	main(int argc, char **argv, char **env)

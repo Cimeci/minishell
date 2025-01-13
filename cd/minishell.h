@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 09:07:50 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 09:08:00 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/13 09:53:24 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,5 +29,9 @@
 # include <termios.h>
 # include <term.h>
 # include <errno.h>
+
+void	ft_free_path(char *path, char *target_path);
+void	ft_free_tab(char **table);
+char	*ft_strsstr(char *pwd, char *cmd);
 
 #endif

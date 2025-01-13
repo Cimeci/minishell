@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/11 08:15:54 by ncharbog          #+#    #+#              #
-#    Updated: 2025/01/07 10:34:33 by inowak--         ###   ########.fr        #
+#    Updated: 2025/01/13 09:52:30 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,7 @@ CFLAGS = -Wall -Werror -Wextra -g
 NAME = minishell
 
 SRC = main.c \
+		utils.c \
 
 OBJ_DIR = .objects
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
