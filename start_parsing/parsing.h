@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/13 16:08:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:36:54 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,15 @@ enum e_type
 	PIPE,
 	CMD,
 	ARG,
-	VAR_ENV,
 }	;
 
 typedef struct s_cmd
 {
 	char			*cmd;
 	char			**args;
+	char			*infile;
+	char			*outfile;
+	int				flag_redir;
 	struct s_cmd	*next;
 }	t_cmd;
 
@@ -72,9 +74,10 @@ typedef struct s_data
 	t_lst	*env;
 }			t_data;
 
-#define DOUBLE_QUOTE 34
-#define SINGLE_QUOTE 39
-#define IS_QUOTE(c) (c == DOUBLE_QUOTE || c == SINGLE_QUOTE)
+# define DOUBLE_QUOTE 34
+# define SINGLE_QUOTE 39
+# define IS_QUOTE(c) (c == DOUBLE_QUOTE || c == SINGLE_QUOTE)
+# define IS_SEPARATOR(c) ((c) == '=' || (c) == '$' || (c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ')
 
 void	ft_free_tab(char **table);
 void	free_token(t_token **head);

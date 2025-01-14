@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/13 17:46:50 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:50:16 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,9 +108,8 @@ char	*find_path(char *str)
 		free(tmp);
 		if (!access(pathname, X_OK))
 		{
-			free(pathname);
 			ft_free_tab(path_split);
-			return ("good");
+			return (pathname);
 		}
 		free(pathname);
 		i++;
@@ -126,9 +125,9 @@ void	get_token(char *str, t_token *cur)
 
 	len = get_token_len(cur, str);
 	only_token = ft_substr(str, cur->quotes[1] || cur->quotes[0], len);
-	if (!access(str, X_OK) || find_path(only_token))
-		cur->type = CMD;
-	else if (ft_strnstr(str, "|", len) && !cur->quotes[0] && !cur->quotes[1])
+	//if (!access(str, X_OK) || find_path(only_token))
+		//cur->type = CMD;
+	if (ft_strnstr(str, "|", len) && !cur->quotes[0] && !cur->quotes[1])
 		cur->type = PIPE;
 	else if (ft_strnstr(str, "<<", len) && !cur->quotes[0] && !cur->quotes[1])
 		cur->type = HEREDOC;
@@ -138,10 +137,8 @@ void	get_token(char *str, t_token *cur)
 		cur->type = APPEND;
 	else if (ft_strnstr(str, ">", len) && !cur->quotes[0] && !cur->quotes[1])
 		cur->type = OVERWRITE;
-	else if (ft_strnstr(str, "$", len) && !cur->quotes[0])
-		cur->type = VAR_ENV;
 	else
-		cur->type = ARG;
+		cur->type = CMD;
 	free(only_token);
 }
 
@@ -159,17 +156,14 @@ char	*my_getenv(t_data *data, char *name)
 		while (cur->str[i] && cur->str[i] != '=')
 			i++;
 		tmp = ft_substr(cur->str, 0, i);
-		printf("%s", tmp);
 		if (ft_strncmp(tmp, name, i) == 0 && name[i] == '\0')
 		{
 			free(tmp);
-			free(name);
 			return (cur->str + i + 1);
 		}
 		cur = cur->next;
 		free(tmp);
 	}
-	free(name);
 	return (NULL);
 }
 
@@ -192,41 +186,39 @@ char	*remove_char(char *str, char c)
 	return (dest);
 }
 
-void	env_variables(t_data *data, t_token *cur, char *str)
+void	env_variables(t_data *data)
 {
-	char	**var;
-	char	*result;
 	int		i;
 	int		j;
+	char	**table;
+	char	*var;
+	char	*tmp;
 
-	i = 0;
+	i = 1;
 	j = 0;
-	result = ft_strdup("");
-	cur->str = ft_strdup("");
-	var = ft_split(str, '$');
-	while (var[i])
+	table = ft_split(data->line, '$');
+	while (table[i])
 	{
-		if (my_getenv(data, var[i]))
-			cur->str = ft_strjoin(cur->str, my_getenv(data, var[i]));
-		i++;
-	}
-	i = 0;
-	while (var[i])
-	{
-		j = i;
-		while (var[j])
-		{
-			result = ft_strjoin_free(result, "$");
-			result = ft_strjoin(result, var[j]);
-			if (my_getenv(data, result))
-				cur->str = ft_strjoin(cur->str, result);
+		j = 0;
+		while (table[i][j] && !IS_SEPARATOR(table[i][j]))
 			j++;
+		var = ft_substr(table[i], 0, j);
+		tmp = ft_substr(table[i], j, ft_strlen(table[i]));
+		free(table[i]);
+		if (my_getenv(data, var))
+		{
+			table[i] = ft_strjoin(ft_strdup(my_getenv(data, var)), tmp);
+			free(tmp);
 		}
-		free(result);
+		else
+			table[i] = tmp;
+		free(var);
 		i++;
 	}
-	free(str);
-	ft_free_tab(var);
+	data->line = table[0];
+	i = 1;
+	while (table[i])
+		data->line = ft_strjoin_free(data->line, table[i++]);
 }
 
 void	add_token(t_data *data, t_token *cur, int i)
@@ -242,8 +234,6 @@ void	add_token(t_data *data, t_token *cur, int i)
 		cur->str = remove_char(str, '"');
 	if (ft_strchr(str, '\''))
 		cur->str = remove_char(str, '\'');
-	else if (str[0] == '$' && !cur->quotes[0])
-		env_variables(data, cur, str);
 	else
 		cur->str = str;
 	ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
@@ -305,6 +295,71 @@ void	tokenise(t_data *data)
 	}
 }
 
+void	build_cmd(t_cmd *cur_cmd, t_token *cur_tok)
+{
+	t_token	*tmp;
+	int		i;
+	int		len;
+
+	i = 0;
+	len = 0;
+	tmp = cur_tok;
+	cur_cmd->cmd = find_path(cur_tok->str);
+	if (!cur_cmd->cmd)
+		cur_cmd->cmd = ft_strdup(cur_tok->str);
+	while (tmp && tmp->type == CMD)
+	{
+		len++;
+		tmp = tmp->next;
+	}
+	cur_cmd->args = malloc((len + 1) * sizeof(char *));
+	if (!cur_cmd->args)
+		return ;
+	while (cur_tok && cur_tok->type == CMD)
+	{
+		cur_cmd->args[i] = ft_strdup(cur_tok->str);
+		i++;
+		cur_tok = cur_tok->next;
+	}
+	cur_cmd->args[i] = NULL;
+}
+
+void	get_cmds(t_data *data)
+{
+	t_cmd	*cur_cmd;
+	t_token	*cur_tok;
+
+	cur_cmd = data->cmd;
+	cur_tok = data->token;
+	while (cur_tok)
+	{
+		cur_cmd = (t_cmd *)ft_lstnew_generic(sizeof(t_cmd));
+		if (!cur_cmd)
+			return ;
+		while (cur_tok && cur_tok->type != PIPE)
+		{
+			if (cur_tok->type == INPUT)
+			{
+				cur_cmd->infile = ft_strdup(cur_tok->next->str);
+				cur_tok = cur_tok->next;
+			}
+			else if (cur_tok->type == OVERWRITE || cur_tok->type == APPEND)
+			{
+				cur_cmd->outfile = ft_strdup(cur_tok->next->str);
+				if (cur_tok->type == APPEND)
+					cur_cmd->flag_redir = 1;
+				cur_tok = cur_tok->next;
+			}
+			else if (cur_tok->type == CMD)
+				build_cmd(cur_cmd, cur_tok);
+			cur_tok = cur_tok->next;
+		}
+		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, sizeof(t_cmd));
+		if (cur_tok)
+			cur_tok = cur_tok->next;
+	}
+}
+
 void	parsing(t_data *data)
 {
 	if (check_quotes(data) == -1)
@@ -312,7 +367,9 @@ void	parsing(t_data *data)
 		printf("erreur quote");
 		exit(EXIT_FAILURE);
 	}
+	env_variables(data);
 	tokenise(data);
+	get_cmds(data);
 }
 
 void	init_data(t_data *data, char **env)
@@ -353,11 +410,11 @@ void	prompt(t_data *data)
 			parsing(data);
 			free(input);
 		}
-		t_token *cur;
-		cur = data->token;
+		t_cmd *cur;
+		cur = data->cmd;
 		while (cur)
 		{
-			printf("%s | %d\n", cur->str, cur->type);
+			printf("%s\n", cur->cmd);
 			cur = cur->next;
 		}
 		free_token(&data->token);
