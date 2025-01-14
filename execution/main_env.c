@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 18:28:26 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 18:32:00 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,7 @@ void	ft_sort_env(char **env, int size)
 	char	*tab1;
 	char	*tab2;
 
-
 	i = 0;
-	j = 0;
 	while (i < size - 1)
 	{
 		j = 0;
@@ -81,10 +79,7 @@ int	ft_env(char **argv, t_env *env)
 		free(pathname);
 		ft_sort_env(table_env, ft_strlen_tab(table_env));
 		while (table_env[i])
-		{
-			printf("%s\n", table_env[i]);
-			i++;
-		}
+			printf("%s\n", table_env[i++]);
 		ft_free_tab(table_env);
 		return (1);
 	}
