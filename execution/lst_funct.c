@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:22:33 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 11:24:43 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 16:22:12 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*my_getenv_lst(const char *name, t_env *env)
 			j++;
 		tmp_dup = ft_strdup(cur->path);
 		tmp = ft_substr(tmp_dup, 0, j);
-		if (!ft_strncmp(tmp, name, j))
+		if (!ft_strncmp(tmp, name, ft_strlen(name)))
 		{
 			free(tmp_dup);
 			return (tmp);

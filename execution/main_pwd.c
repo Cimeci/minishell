@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 15:09:27 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:34:38 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char	*ft_clear_quote(char *input)
 	return (ft_strtrim(input, "\""));
 }
 
-char	*ft_pwd(char **argv)
+int	ft_pwd(char **argv)
 {
 	char	buffer[BUFFER_SIZE];
 
@@ -53,10 +53,10 @@ char	*ft_pwd(char **argv)
 			printf("Error directory\n");
 			if (errno == ERANGE)
 				printf("BUFFER_SIZE too small\n");
-			return (NULL);
+			return (-1);
 		}
 		printf("%s\n", buffer);
-		return (ft_strdup(buffer));
+		return (1);
 	}
-	return (NULL);
+	return (0);
 }

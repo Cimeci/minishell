@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 14:30:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:00:25 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,6 @@
 # include "minishell.h"
 
 char	*ft_clear_quote(char *input);
-char	*ft_pwd(char **argv);
+int		ft_pwd(char **argv);
 
 #endif

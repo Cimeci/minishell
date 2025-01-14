@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:36:35 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 16:54:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:01:17 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,36 @@
 
 int	ft_apply_funct(char **argv, t_env *list, char *input)
 {
-	if (ft_env(argv, list))
+	int	info;
+
+	info = ft_env(argv, list);
+	if (info)
 		return (1);
-	else if (ft_unset(argv, list))
+	else if (info == -1)
+		return (-1);
+	info = ft_unset(argv, list);
+	if (info)
 		return (1);
-	else if (ft_export(argv, list))
+	else if (info == -1)
+		return (-1);
+	info = ft_export(argv, list);
+	if (info)
 		return (1);
-	else if (ft_cd(argv))
+	else if (info == -1)
+		return (-1);
+	info = ft_cd(argv);
+	if (info)
 		return (1);
-	else if (ft_echo(ft_words(input, ' '), argv))
+	else if (info == -1)
+		return (-1);
+	info = ft_echo(ft_words(input, ' '), argv);
+	if (info)
 		return (1);
-	else if (ft_pwd(argv))
+	info = ft_pwd(argv);
+	if (info)
 		return (1);
+	else if (info == -1)
+		return (-1);
 	ft_exit(argv);
 	return (0);
 }
@@ -54,8 +72,8 @@ char	*use_input(char **argv, t_env *list)
 
 int	main(int argc, char **argv, char **env)
 {
-	char *input;
-	t_env *list;
+	char	*input;
+	t_env	*list;
 
 	if (argc != 1)
 	{

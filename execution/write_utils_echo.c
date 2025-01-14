@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:27:29 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 16:09:27 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:02:16 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	write_arguments(char **argv, int fd, int endl, int save)
 			&& (ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))
 				&& ft_strncmp(argv[j - 1], ">>", ft_strlen(argv[j - 1]))))
 		{
-			if(!ft_write_argv_space(argv, j, argc - l, fd))
+			if (!ft_write_argv_space(argv, j, argc - l, fd))
 				ft_write_argv_endl(argv, j, endl, fd);
 		}
 		j++;

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:49:30 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 10:52:23 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 15:01:50 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,10 @@ char	*find_path(char **env, char *cmd)
 	i = 0;
 	tmp = my_getenv("PATH", env);
 	if (!tmp)
+	{
+		printf("bash: %s: No such file or directory\n", cmd);
 		return (NULL);
+	}
 	if (ft_strncmp(cmd, "./", 2) == 0 || !access(cmd, X_OK))
 		return (cmd);
 	path_split = ft_split(tmp, ':');
@@ -76,6 +79,7 @@ char	*find_path(char **env, char *cmd)
 			return (pathname);
 		i++;
 	}
+	perror("Error");
 	ft_free_tab(path_split);
 	ft_free_tab(cmd_split);
 	return (NULL);
@@ -90,10 +94,7 @@ void	execution_cmd(char **argv, char **env)
 		return ;
 	path = find_path(env, argv[0]);
 	if (!path)
-	{
-		perror("Error");
 		return ;
-	}
 	if (path && access(path, X_OK) == 0)
 	{
 		pid = fork();

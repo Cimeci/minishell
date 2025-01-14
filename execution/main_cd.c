@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 15:59:27 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 14:15:08 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	ft_cd(char **argv)
 		if (!argv[1] || argv[1][0] == '\0')
 		{
 			ft_putendl_fd("Error : No path", 2);
-			return (0);
+			return (-1);
 		}
 		if (argv[1] && argv[1][0] != '\0')
 		{

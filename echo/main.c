@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 10:35:21 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/14 13:22:16 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ int	count_trailing_redirects(char **argv, int argc)
 	j = argc - 1;
 	while (j > 0)
 	{
-		if (!ft_strncmp(argv[j], ">", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j - 1], ">", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j - 1], ">>", ft_strlen(argv[j])))
+		if (!ft_strncmp(argv[j], ">", ft_strlen(argv[j])) || !ft_strncmp(argv[j
+				- 1], ">", ft_strlen(argv[j])) || !ft_strncmp(argv[j], ">>",
+				ft_strlen(argv[j])) || !ft_strncmp(argv[j - 1], ">>",
+				ft_strlen(argv[j])))
 			l++;
 		else
 			break ;
@@ -81,7 +81,7 @@ int	count_trailing_redirects(char **argv, int argc)
 	return (l);
 }
 
-void	ft_echo(int argc, char **argv, char **env)
+void	ft_echo(int argc, char **argv, t_env *env)
 {
 	int	endl;
 	int	fd;
@@ -92,6 +92,8 @@ void	ft_echo(int argc, char **argv, char **env)
 		execution_cmd(argv, env);
 		return ;
 	}
+	if (!find_path(ft_convert_lst_to_tab(env), argv[0]))
+		return (-1);
 	if (!argv[1])
 	{
 		ft_putendl_fd("", 1);
