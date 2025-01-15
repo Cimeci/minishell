@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:12:16 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/13 16:08:04 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/15 08:46:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,29 @@ void	free_env(t_lst **head)
 		current->str = NULL;
 		free(current);
 		current = next_node;
+	}
+	*head = NULL;
+}
+
+void	free_cmd(t_cmd **head)
+{
+	t_cmd	*cur;
+	t_cmd	*next_node;
+
+	cur = *head;
+	next_node = NULL;
+	while (cur)
+	{
+		next_node = cur->next;
+		free(cur->cmd);
+		cur->cmd = NULL;
+		ft_free_tab(cur->args);
+		free(cur->outfile);
+		cur->outfile = NULL;
+		free(cur->infile);
+		cur->infile = NULL;
+		free(cur);
+		cur = next_node;
 	}
 	*head = NULL;
 }

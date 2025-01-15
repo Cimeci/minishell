@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/14 16:50:16 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:26:35 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,8 +125,6 @@ void	get_token(char *str, t_token *cur)
 
 	len = get_token_len(cur, str);
 	only_token = ft_substr(str, cur->quotes[1] || cur->quotes[0], len);
-	//if (!access(str, X_OK) || find_path(only_token))
-		//cur->type = CMD;
 	if (ft_strnstr(str, "|", len) && !cur->quotes[0] && !cur->quotes[1])
 		cur->type = PIPE;
 	else if (ft_strnstr(str, "<<", len) && !cur->quotes[0] && !cur->quotes[1])
@@ -186,10 +184,45 @@ char	*remove_char(char *str, char c)
 	return (dest);
 }
 
+int	*expansion_quotes(char *line, int nb_var)
+{
+	int		i;
+	int		j;
+	int		*quote_tab;
+	char	quote;
+
+	i = 0;
+	j = 1;
+	quote_tab = malloc(nb_var * sizeof(int));
+	if (!quote_tab)
+		return (0);
+	while (line[i])
+	{
+		if (IS_QUOTE(line[i]))
+		{
+			quote = line[i];
+			i++;
+			while (line[i] && line[i] != quote)
+			{
+				if (line[i] == '$' && quote == SINGLE_QUOTE)
+					quote_tab[j++] = 0;
+				if (line[i] == '$' && quote == DOUBLE_QUOTE)
+					quote_tab[j++] = 1;
+				i++;
+			}
+		}
+		if (line[i] && line[i] == '$')
+			quote_tab[j++] = 1;
+		i++;
+	}
+	return (quote_tab);
+}
+
 void	env_variables(t_data *data)
 {
 	int		i;
 	int		j;
+	int		*quote_tab;
 	char	**table;
 	char	*var;
 	char	*tmp;
@@ -198,25 +231,31 @@ void	env_variables(t_data *data)
 	j = 0;
 	table = ft_split(data->line, '$');
 	while (table[i])
+		i++;
+	quote_tab = expansion_quotes(data->line, i);
+	i = 0;
+	while (table[i])
 	{
 		j = 0;
 		while (table[i][j] && !IS_SEPARATOR(table[i][j]))
 			j++;
 		var = ft_substr(table[i], 0, j);
 		tmp = ft_substr(table[i], j, ft_strlen(table[i]));
-		free(table[i]);
-		if (my_getenv(data, var))
+		if (my_getenv(data, var) && quote_tab[i] == 1)
 		{
+			free(table[i]);
 			table[i] = ft_strjoin(ft_strdup(my_getenv(data, var)), tmp);
 			free(tmp);
 		}
-		else
+		else if (!my_getenv(data, var) && quote_tab[i] == 1)
 			table[i] = tmp;
+		else if (quote_tab[i] == 0)
+			free(tmp);
 		free(var);
 		i++;
 	}
 	data->line = table[0];
-	i = 1;
+	i = 0;
 	while (table[i])
 		data->line = ft_strjoin_free(data->line, table[i++]);
 }
@@ -295,7 +334,24 @@ void	tokenise(t_data *data)
 	}
 }
 
-void	build_cmd(t_cmd *cur_cmd, t_token *cur_tok)
+t_token	*redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
+{
+	if (cur_tok->type == INPUT)
+	{
+		cur_cmd->infile = ft_strdup(cur_tok->next->str);
+		cur_tok = cur_tok->next->next;
+	}
+	else if (cur_tok->type == OVERWRITE || cur_tok->type == APPEND)
+	{
+		cur_cmd->outfile = ft_strdup(cur_tok->next->str);
+		if (cur_tok->type == APPEND)
+			cur_cmd->flag_redir = 1;
+		cur_tok = cur_tok->next->next;
+	}
+	return (cur_tok);
+}
+
+t_token	*build_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 {
 	t_token	*tmp;
 	int		i;
@@ -307,21 +363,31 @@ void	build_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 	cur_cmd->cmd = find_path(cur_tok->str);
 	if (!cur_cmd->cmd)
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
-	while (tmp && tmp->type == CMD)
+	while (tmp && tmp->type != PIPE)
 	{
+		if (cur_tok->type == INPUT || cur_tok->type == APPEND
+			|| cur_tok->type == OVERWRITE)
+			tmp = tmp->next->next;
 		len++;
 		tmp = tmp->next;
 	}
 	cur_cmd->args = malloc((len + 1) * sizeof(char *));
 	if (!cur_cmd->args)
-		return ;
-	while (cur_tok && cur_tok->type == CMD)
+		return (NULL);
+	while (cur_tok && cur_tok->type != PIPE)
 	{
-		cur_cmd->args[i] = ft_strdup(cur_tok->str);
-		i++;
-		cur_tok = cur_tok->next;
+		if (cur_tok->type == INPUT || cur_tok->type == APPEND
+			|| cur_tok->type == OVERWRITE)
+			cur_tok = redir_cmd(cur_cmd, cur_tok);
+		else
+		{
+			cur_cmd->args[i] = ft_strdup(cur_tok->str);
+			i++;
+			cur_tok = cur_tok->next;
+		}
 	}
 	cur_cmd->args[i] = NULL;
+	return (cur_tok);
 }
 
 void	get_cmds(t_data *data)
@@ -338,23 +404,13 @@ void	get_cmds(t_data *data)
 			return ;
 		while (cur_tok && cur_tok->type != PIPE)
 		{
-			if (cur_tok->type == INPUT)
-			{
-				cur_cmd->infile = ft_strdup(cur_tok->next->str);
-				cur_tok = cur_tok->next;
-			}
-			else if (cur_tok->type == OVERWRITE || cur_tok->type == APPEND)
-			{
-				cur_cmd->outfile = ft_strdup(cur_tok->next->str);
-				if (cur_tok->type == APPEND)
-					cur_cmd->flag_redir = 1;
-				cur_tok = cur_tok->next;
-			}
+			if (cur_tok->type == INPUT || cur_tok->type == APPEND
+				|| cur_tok->type == OVERWRITE)
+				cur_tok = redir_cmd(cur_cmd, cur_tok);
 			else if (cur_tok->type == CMD)
-				build_cmd(cur_cmd, cur_tok);
-			cur_tok = cur_tok->next;
+				cur_tok = build_cmd(cur_cmd, cur_tok);
 		}
-		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, sizeof(t_cmd));
+		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, (sizeof(t_cmd) - sizeof(t_cmd *)));
 		if (cur_tok)
 			cur_tok = cur_tok->next;
 	}
@@ -410,14 +466,25 @@ void	prompt(t_data *data)
 			parsing(data);
 			free(input);
 		}
-		t_cmd *cur;
+		t_cmd	*cur;
+		int		i = 0;
 		cur = data->cmd;
 		while (cur)
 		{
-			printf("%s\n", cur->cmd);
+			printf("cmd : %s\n", cur->cmd);
+			i = 0;
+			while (cur->args[i])
+			{
+				printf("args : %s\n", cur->args[i]);
+				i++;
+			}
+			printf("outfile : %s\n", cur->outfile);
+			printf("infile : %s\n", cur->infile);
 			cur = cur->next;
+			printf ("\n");
 		}
 		free_token(&data->token);
+		free_cmd(&data->cmd);
 		data->token = NULL;
 	}
 }

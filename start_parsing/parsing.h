@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/14 16:36:54 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/15 14:35:56 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ enum e_type
 	APPEND, //>>
 	PIPE,
 	CMD,
-	ARG,
 }	;
 
 typedef struct s_cmd
@@ -77,12 +76,13 @@ typedef struct s_data
 # define DOUBLE_QUOTE 34
 # define SINGLE_QUOTE 39
 # define IS_QUOTE(c) (c == DOUBLE_QUOTE || c == SINGLE_QUOTE)
-# define IS_SEPARATOR(c) ((c) == '=' || (c) == '$' || (c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ')
+# define IS_SEPARATOR(c) ((c) == '=' || (c) == '$' || (c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ' || (c) == '\'' || (c) == '"')
 
 void	ft_free_tab(char **table);
 void	free_token(t_token **head);
 void	free_env(t_lst **head);
 void	free_all(t_data *data);
 char	*ft_strjoin_free(char *s1, char *s2);
+void	free_cmd(t_cmd **head);
 
 #endif
