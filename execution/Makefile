@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/13 15:08:48 by inowak--         ###   ########.fr        #
+#    Updated: 2025/01/15 12:57:17 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,6 @@ LIBFT_DIR = ../libft
 OBJ_LIBFT = $(LIBFT_DIR)/libft.a
 
 all: $(NAME)
-	@echo "compiled"
 
 $(OBJ_LIBFT):
 	@cd $(LIBFT_DIR) && make

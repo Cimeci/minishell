@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 18:32:00 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:30:47 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,9 @@ int	ft_env(char **argv, t_env *env)
 	char	**table_env;
 	int		i;
 	char	*pathname;
+	int		fd;
 
+	fd = open_output_file(argv, ft_strlen_tab(argv));
 	i = 0;
 	cur = env;
 	if (!ft_strncmp(argv[0], "env", ft_strlen(argv[0])))
@@ -77,9 +79,9 @@ int	ft_env(char **argv, t_env *env)
 			return (-1);
 		}
 		free(pathname);
-		ft_sort_env(table_env, ft_strlen_tab(table_env));
+		// ft_sort_env(table_env, ft_strlen_tab(table_env));
 		while (table_env[i])
-			printf("%s\n", table_env[i++]);
+			ft_putendl_fd(table_env[i++], fd);
 		ft_free_tab(table_env);
 		return (1);
 	}

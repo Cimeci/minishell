@@ -6,13 +6,32 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:36:35 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 15:01:17 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/15 13:01:34 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_apply_funct(char **argv, t_env *list, char *input)
+t_env	*ft_dup_node(t_env *env)
+{
+	t_env	*export_env;
+	t_env	*cur;
+	t_env	*s_export_env;
+
+	cur = env;
+	export_env = NULL;
+	while (env)
+	{
+		s_export_env = malloc(sizeof(t_env));
+		s_export_env->path = ft_strdup(env->path);
+		s_export_env->next = NULL;
+		ft_lstadd_back2(&export_env, s_export_env);
+		env = env->next;
+	}
+	return (export_env);
+}
+
+int	ft_apply_funct(char **argv, t_env *list, char *input, t_env *export_env)
 {
 	int	info;
 
@@ -21,12 +40,12 @@ int	ft_apply_funct(char **argv, t_env *list, char *input)
 		return (1);
 	else if (info == -1)
 		return (-1);
-	info = ft_unset(argv, list);
+	info = ft_unset(argv, list, export_env);
 	if (info)
 		return (1);
 	else if (info == -1)
 		return (-1);
-	info = ft_export(argv, list);
+	info = ft_export(argv, list, export_env);
 	if (info)
 		return (1);
 	else if (info == -1)
@@ -48,10 +67,11 @@ int	ft_apply_funct(char **argv, t_env *list, char *input)
 	return (0);
 }
 
-char	*use_input(char **argv, t_env *list)
+char	*use_input(char **argv, t_env *list, t_env *export_env)
 {
 	char	*input;
 	t_env	*tmp;
+	t_env	*tmp_export;
 
 	input = readline("Minishell> ");
 	if (input && input[0])
@@ -61,7 +81,8 @@ char	*use_input(char **argv, t_env *list)
 		if (argv)
 		{
 			tmp = list;
-			if (!ft_apply_funct(argv, tmp, input))
+			tmp_export = export_env;
+			if (!ft_apply_funct(argv, tmp, input, tmp_export))
 				execution_cmd(argv, ft_convert_lst_to_tab(tmp));
 			ft_free_tab(argv);
 			argv = NULL;
@@ -74,6 +95,7 @@ int	main(int argc, char **argv, char **env)
 {
 	char	*input;
 	t_env	*list;
+	t_env	*export_env;
 
 	if (argc != 1)
 	{
@@ -82,11 +104,13 @@ int	main(int argc, char **argv, char **env)
 	}
 	input = "1";
 	list = ft_init_env(env);
+	export_env = ft_dup_node(list);
 	while (input)
 	{
-		input = use_input(argv, list);
+		input = use_input(argv, list, export_env);
 		if (input)
 			free(input);
 	}
 	ft_lstclear2(list);
+	ft_lstclear2(export_env);
 }

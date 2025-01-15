@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 14:34:38 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/15 16:39:33 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,9 @@ char	*ft_clear_quote(char *input)
 int	ft_pwd(char **argv)
 {
 	char	buffer[BUFFER_SIZE];
+	int		fd;
 
+	fd = open_output_file(argv, ft_strlen_tab(argv));
 	if (!ft_strncmp(argv[0], "pwd", ft_strlen(argv[0])))
 	{
 		if (getcwd(buffer, BUFFER_SIZE) == NULL)
@@ -55,7 +57,7 @@ int	ft_pwd(char **argv)
 				printf("BUFFER_SIZE too small\n");
 			return (-1);
 		}
-		printf("%s\n", buffer);
+		ft_putendl_fd(buffer, fd);
 		return (1);
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 15:34:10 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/15 11:18:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,10 @@ void	ft_unset_extension(char *unset_path, t_env *env)
 	}
 }
 
-int	ft_unset(char **argv, t_env *env)
+int	ft_unset(char **argv, t_env *env, t_env *export_env)
 {
 	char	*unset_path;
+	char	*unset_path_export;
 	int		i;
 
 	i = 1;
@@ -70,9 +71,16 @@ int	ft_unset(char **argv, t_env *env)
 		while (argv[i])
 		{
 			unset_path = get_path(argv[i], env);
+			unset_path_export = unset_path;
 			if (!unset_path)
-				return (0);
-			ft_unset_extension(unset_path, env);
+			{
+				unset_path_export = get_path(argv[i], export_env);
+				if (!unset_path_export)
+					return (0);
+			}
+			if (unset_path)
+				ft_unset_extension(unset_path, env);
+			ft_unset_extension(unset_path_export, export_env);
 			i++;
 		}
 		return (1);
