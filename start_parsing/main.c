@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/16 12:08:59 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/16 20:23:33 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,12 @@ void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset)
 		*(void **)((char *)temp + next_offset) = new_node;
 }
 
-int	get_token_len(t_token *cur, char *str)
+int	get_token_len(char *str)
 {
 	int		i;
 	char	quote;
 
 	i = 0;
-	(void)cur;
 	while (str[i])
 	{
 		if (IS_QUOTE(str[i]))
@@ -105,9 +104,8 @@ void	get_token(char *str, t_token *cur)
 	int		len;
 	char	*only_token;
 
-	len = get_token_len(cur, str);
+	len = get_token_len(str);
 	only_token = ft_substr(str, 0, len);
-	printf("only_token = %s\n", only_token);
 	if (ft_strnstr(str, "|", len))
 		cur->type = PIPE;
 	else if (ft_strnstr(str, "<<", len))
@@ -118,6 +116,8 @@ void	get_token(char *str, t_token *cur)
 		cur->type = APPEND;
 	else if (ft_strnstr(str, ">", len))
 		cur->type = OVERWRITE;
+	else if (ft_strnstr(str, "''", len) || ft_strnstr(str, "\"\"", len))
+		cur->type = EMPTY_QUOTE;
 	else
 		cur->type = WORD;
 	free(only_token);
@@ -148,23 +148,48 @@ char	*my_getenv(t_data *data, char *name)
 	return (NULL);
 }
 
-char	*remove_char(char *str, char c)
+void	remove_quotes(char *str, t_token *cur)
 {
-	char	**table;
-	char	*dest;
 	char	*tmp;
+	char	quote;
 	int		i;
+	int		start;
+	int		len;
 
-	table = ft_split(str, c);
-	dest = ft_strjoin(table[0], table[1]);
-	i = 2;
-	while (table[i])
+	i = 0;
+	len = 0;
+	start = 0;
+	tmp = NULL;
+	while (str[i])
 	{
-		tmp = dest;
-		dest = ft_strjoin(tmp, table[i++]);
-		free(tmp);
+		start = i;
+		while (str[i + len] && !IS_QUOTE(str[i + len]))
+			len++;
+		tmp = ft_substr(str, start, len);
+		cur->str = ft_strjoin_free(cur->str, tmp);
+		if (tmp)
+			free(tmp);
+		tmp = NULL;
+		i += len;
+		len = 0;
+		if (str[i] && IS_QUOTE(str[i]))
+		{
+			quote = str[i];
+			i++;
+			while (str[i + len] && str[i + len] != quote)
+				len++;
+			tmp = ft_substr(str, i, len);
+			cur->str = ft_strjoin_free(cur->str, tmp);
+			if (tmp)
+				free(tmp);
+			tmp = NULL;
+			i += len + 1;
+		}
+		len = 0;
 	}
-	return (dest);
+	printf("%s\n", cur->str);
+	if (tmp)
+		free(tmp);
 }
 
 int	*expansion_quotes(char *line, int nb_var)
@@ -259,14 +284,11 @@ void	add_token(t_data *data, t_token *cur, int i)
 
 	if (!cur)
 		return ;
-	len = get_token_len(cur, data->line + i);
+	cur->str = malloc(1);
+	cur->str[0] = '\0';
+	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
-	if (ft_strchr(str, '"'))
-		cur->str = remove_char(str, '"');
-	if (ft_strchr(str, '\''))
-		cur->str = remove_char(str, '\'');
-	else
-		cur->str = str;
+	remove_quotes(str, cur);
 	ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
 }
 
@@ -316,7 +338,7 @@ void	tokenise(t_data *data)
 				return ;
 			get_token(data->line + i, cur);
 			add_token(data, cur, i);
-			i += get_token_len(cur, data->line + i);
+			i += get_token_len(data->line + i);
 		}
 		if (!data->line[i])
 			return ;
