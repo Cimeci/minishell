@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/16 09:15:24 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/16 16:25:50 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,44 @@ char	*find_path(char **env, char *cmd)
 	return (NULL);
 }
 
+int	ft_lstsize3(t_save *lst)
+{
+	int	i;
+
+	i = 0;
+	if (!lst)
+		return (0);
+	if (lst->next == NULL)
+		return (1);
+	while (lst->next != NULL)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (i + 1);
+}
+
+char	**ft_convert_lst_to_tab2(t_save *save)
+{
+	int		i;
+	char	**table;
+	t_save	*tmp;
+
+	i = 0;
+	table = malloc(sizeof(char *) * (ft_lstsize3(save) + 1));
+	if (!table)
+		return (NULL);
+	tmp = save;
+	while (tmp)
+	{
+		table[i] = ft_strdup(tmp->line);
+		i++;
+		tmp = tmp->next;
+	}
+	table[i] = NULL;
+	return (table);
+}
+
 void	ft_lstadd_back3(t_save **lst, t_save *new)
 {
 	t_save	*temp;
@@ -132,48 +170,160 @@ t_save	*ft_init_save(void)
 	return (save);
 }
 
+char	**find_args(char **argv)
+{
+	int		i;
+	char	**args;
+
+	i = 0;
+	while (ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
+		i++;
+	args = malloc(sizeof(char *) * (i + 1));
+	i = 0;
+	while (ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
+	{
+		args[i] = ft_strdup(argv[i]);
+		i++;
+	}
+	args[i] = NULL;
+	return (args);
+}
+
+char	*ft_search_end(char **argv)
+{
+	int	i;
+
+	i = 0;
+	while (argv[i] && ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
+		i++;
+	if (!argv[i])
+		return (NULL);
+	return (argv[i + 1]);
+}
+
+void	execution_cmd(char **argv, char **env)
+{
+	char	*path;
+	pid_t	pid;
+
+	if (!env)
+		return ;
+	path = find_path(env, argv[0]);
+	if (!path)
+		return ;
+	if (path && access(path, X_OK) == 0)
+	{
+		pid = fork();
+		if (pid == -1)
+			exit(EXIT_FAILURE);
+		else if (pid == 0)
+			execve(path, argv, env);
+		else if (wait(NULL) == -1)
+			perror("wait failed");
+	}
+	// ft_free_tab(env);
+	free(path);
+}
+
 void	ft_heredoc(char **argv, char **env)
 {
 	char	*input;
 	t_save	*save;
 	t_save	*cur;
-	t_save	*tmp;
-	int		info1;
-	int		info2;
+	pid_t	pid;
+	int		pipe_fd[2];
 	char	*path;
+	char	**args;
+	t_save	*tmp;
+	t_save	*next;
+	char	*end;
 
-	path = find_path(env, argv[0]);
-	info1 = access(path, X_OK);
-	info2 = ft_strncmp("<<", argv[1], ft_strlen(argv[1]));
-	// printf("%s | %s | %d | %d\n", argv[0], path, info1, info2);
-	if (info1 || info2 || !argv[2])
+	if (argv[0][0] == '\n')
+		return ;
+	if (!ft_search_end(argv))
 	{
-		printf("Error\n");
+		execution_cmd(argv, env);
 		return ;
 	}
-	input = "1";
+	path = find_path(env, argv[0]);
+	if (!path || access(path, X_OK))
+	{
+		fprintf(stderr, "Error: invalid arguments or command\n");
+		free(path);
+		return ;
+	}
 	save = NULL;
-	cur = NULL;
-	while (input)
+	while (1)
 	{
 		input = readline("> ");
-		if (!ft_strncmp(input, argv[2], ft_strlen(argv[2])))
-			break ;
-		if (input)
+		end = ft_search_end(argv);
+		if (!end)
+			return ;
+		if (!input || !ft_strncmp(input, end, ft_strlen(end)))
 		{
-			cur = malloc(sizeof(t_save));
-			cur->line = ft_strdup(input);
-			cur->next = NULL;
-			ft_lstadd_back3(&save, cur);
+			free(input);
+			break ;
 		}
+		cur = malloc(sizeof(t_save));
+		if (!cur)
+			exit(EXIT_FAILURE);
+		cur->line = strdup(input);
+		cur->next = NULL;
+		ft_lstadd_back3(&save, cur);
+		free(input);
 	}
-	tmp = save;
-	while (tmp)
+	if (pipe(pipe_fd) == -1)
 	{
-		printf("%s\n", tmp->line);
-		tmp = tmp->next;
+		perror("pipe");
+		free(path);
+		return ;
 	}
-	// ft_lstclear3(save);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		free(path);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return ;
+	}
+	else if (pid == 0)
+	{
+		close(pipe_fd[1]);
+		if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
+		{
+			perror("dup2");
+			exit(EXIT_FAILURE);
+		}
+		close(pipe_fd[0]);
+		args = find_args(argv);
+		if (!args)
+			exit(EXIT_FAILURE);
+		execve(path, args, env);
+		perror("execve");
+		exit(EXIT_FAILURE);
+	}
+	else
+	{
+		close(pipe_fd[0]);
+		tmp = save;
+		while (tmp)
+		{
+			dprintf(pipe_fd[1], "%s\n", tmp->line);
+			tmp = tmp->next;
+		}
+		close(pipe_fd[1]);
+		if (wait(NULL) == -1)
+			perror("wait");
+	}
+	free(path);
+	while (save)
+	{
+		next = save->next;
+		free(save->line);
+		free(save);
+		save = next;
+	}
 }
 
 int	main(int argc, char **argv, char **env)

@@ -1,0 +1,45 @@
+baise_moi_timothy
+bonjour
+cat
+coucou
+fiel
+file
+file2
+file3
+file34
+file6
+file78
+file89
+file_env
+main.c
+Makefile
+minishell
+minishell.h
+output.txt
+output.txt
+
+test
+yo
+total 88
+-rw-r--r-- 1 inowak-- 2024_angouleme    20 Jan 16 19:11 baise_moi_timothy
+-rw-r--r-- 1 inowak-- 2024_angouleme     0 Jan 16 16:45 bonjour
+-rw-r--r-- 1 inowak-- 2024_angouleme     4 Jan 16 17:50 cat
+-rw-r--r-- 1 inowak-- 2024_angouleme     0 Jan 16 16:41 coucou
+-rw-r--r-- 1 inowak-- 2024_angouleme     0 Jan 16 18:41 fiel
+-rw-r--r-- 1 inowak-- 2024_angouleme   135 Jan 16 19:09 file
+-rw-r--r-- 1 inowak-- 2024_angouleme   841 Jan 16 17:55 file2
+-rw-r--r-- 1 inowak-- 2024_angouleme   105 Jan 16 17:56 file3
+-rw-r--r-- 1 inowak-- 2024_angouleme  1089 Jan 16 18:50 file34
+-rw-r--r-- 1 inowak-- 2024_angouleme     2 Jan 16 18:29 file6
+-rw-r--r-- 1 inowak-- 2024_angouleme   130 Jan 16 19:07 file78
+-rw-r--r-- 1 inowak-- 2024_angouleme   164 Jan 16 19:12 file89
+-rw-r--r-- 1 inowak-- 2024_angouleme  3821 Jan 16 19:11 file_env
+-rw-r--r-- 1 inowak-- 2024_angouleme  5670 Jan 16 19:09 main.c
+-rw-r--r-- 1 inowak-- 2024_angouleme  1490 Jan 16 16:27 Makefile
+-rwxr-xr-x 1 inowak-- 2024_angouleme 25296 Jan 16 19:09 minishell
+-rw-r--r-- 1 inowak-- 2024_angouleme  1365 Jan 16 16:27 minishell.h
+-rw-r--r-- 1 inowak-- 2024_angouleme     0 Jan 16 16:57 output.txt
+-rw-r--r-- 1 inowak-- 2024_angouleme     0 Jan 16 16:57 output.txt
+
+-rw-r--r-- 1 inowak-- 2024_angouleme     5 Jan 16 17:49 test
+-rw-r--r-- 1 inowak-- 2024_angouleme     0 Jan 16 16:46 yo

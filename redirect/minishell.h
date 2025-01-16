@@ -5,45 +5,35 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/16 16:36:21 by inowak--         ###   ########.fr       */
+/*   Created: 2025/01/13 09:10:04 by inowak--          #+#    #+#             */
+/*   Updated: 2025/01/16 08:44:17 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+typedef struct s_save
+{
+	char			*line;
+	struct s_save	*next;
+}					t_save;
+
 # include "../libft/libft.h"
-# include <dirent.h>
-# include <errno.h>
-# include <fcntl.h>
-# include <readline/history.h>
+
 # include <readline/readline.h>
-# include <signal.h>
+# include <readline/history.h>
 # include <stdio.h>
 # include <stdlib.h>
-# include <sys/stat.h>
+# include <unistd.h>
 # include <sys/types.h>
 # include <sys/wait.h>
-# include <term.h>
+# include <sys/stat.h>
+# include <fcntl.h>
+# include <signal.h>
+# include <dirent.h>
 # include <termios.h>
-# include <unistd.h>
-
-typedef struct s_env
-{
-	char			*path;
-	struct s_env	*next;
-}					t_env;
-
-void				ft_free_tab(char **table);
-int					count_file(char **argv);
-void				execution_cmd(char **argv, char **env);
-
-int					count_trailing_redirects(char **argv, int argc);
-
-void				write_no_arguments(char **argv, int endl, int save, int fd);
-void				ft_write_argv_space(char **argv, int j, int dif, int fd);
-void				ft_write_argv_endl(char **argv, int j, int endl, int fd);
-void				write_arguments(char **argv, int fd, int endl, int save);
+# include <term.h>
+# include <errno.h>
 
 #endif
