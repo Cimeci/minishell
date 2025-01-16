@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/15 16:26:35 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:08:59 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,23 @@ void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset)
 		*(void **)((char *)temp + next_offset) = new_node;
 }
 
-int	next_separator(char *str)
+int	get_token_len(t_token *cur, char *str)
 {
-	int	i;
+	int		i;
+	char	quote;
 
 	i = 0;
+	(void)cur;
 	while (str[i])
 	{
-		if (str[i] == ' ' || str[i] == '<' || str[i] == '|' || str[i] == '>')
+		if (IS_QUOTE(str[i]))
+		{
+			quote = str[i];
+			i++;
+			while (str[i] != quote)
+				i++;
+		}
+		if (IS_SEPARATOR_TOKEN(str[i]))
 		{
 			if (i == 0)
 				i++;
@@ -61,33 +70,6 @@ int	next_separator(char *str)
 		i++;
 	}
 	return (i);
-}
-
-int	get_token_len(t_token *cur, char *str)
-{
-	int	i;
-	int	len;
-
-	i = 0;
-	len = 0;
-	if (IS_QUOTE(str[i]))
-	{
-		if (str[i] == DOUBLE_QUOTE)
-			cur->quotes[1] = true;
-		else
-			cur->quotes[0] = true;
-		i++;
-		while (str[i + len] && str[i + len] != str[0])
-			len++;
-		if (str[i + len + 1] && str[i + len + 1] != ' ')
-		{
-			while (str[i + len] && str[i + len] != ' ')
-				len++;
-		}
-	}
-	else
-		len = next_separator(str);
-	return (len);
 }
 
 char	*find_path(char *str)
@@ -124,19 +106,20 @@ void	get_token(char *str, t_token *cur)
 	char	*only_token;
 
 	len = get_token_len(cur, str);
-	only_token = ft_substr(str, cur->quotes[1] || cur->quotes[0], len);
-	if (ft_strnstr(str, "|", len) && !cur->quotes[0] && !cur->quotes[1])
+	only_token = ft_substr(str, 0, len);
+	printf("only_token = %s\n", only_token);
+	if (ft_strnstr(str, "|", len))
 		cur->type = PIPE;
-	else if (ft_strnstr(str, "<<", len) && !cur->quotes[0] && !cur->quotes[1])
+	else if (ft_strnstr(str, "<<", len))
 		cur->type = HEREDOC;
-	else if (ft_strnstr(str, "<", len) && !cur->quotes[0] && !cur->quotes[1])
+	else if (ft_strnstr(str, "<", len))
 		cur->type = INPUT;
-	else if (ft_strnstr(str, ">>", len) && !cur->quotes[0] && !cur->quotes[1])
+	else if (ft_strnstr(str, ">>", len))
 		cur->type = APPEND;
-	else if (ft_strnstr(str, ">", len) && !cur->quotes[0] && !cur->quotes[1])
+	else if (ft_strnstr(str, ">", len))
 		cur->type = OVERWRITE;
 	else
-		cur->type = CMD;
+		cur->type = WORD;
 	free(only_token);
 }
 
@@ -227,13 +210,13 @@ void	env_variables(t_data *data)
 	char	*var;
 	char	*tmp;
 
-	i = 1;
+	i = 0;
 	j = 0;
 	table = ft_split(data->line, '$');
 	while (table[i])
 		i++;
 	quote_tab = expansion_quotes(data->line, i);
-	i = 0;
+	i = 1;
 	while (table[i])
 	{
 		j = 0;
@@ -248,14 +231,23 @@ void	env_variables(t_data *data)
 			free(tmp);
 		}
 		else if (!my_getenv(data, var) && quote_tab[i] == 1)
+		{
+			free(table[i]);
 			table[i] = tmp;
+		}
 		else if (quote_tab[i] == 0)
+		{
 			free(tmp);
+			tmp = ft_strdup(table[i]);
+			free(table[i]);
+			table[i] = ft_strjoin("$", tmp);
+			free(tmp);
+		}
 		free(var);
 		i++;
 	}
 	data->line = table[0];
-	i = 0;
+	i = 1;
 	while (table[i])
 		data->line = ft_strjoin_free(data->line, table[i++]);
 }
@@ -268,7 +260,7 @@ void	add_token(t_data *data, t_token *cur, int i)
 	if (!cur)
 		return ;
 	len = get_token_len(cur, data->line + i);
-	str = ft_substr(data->line, i + (cur->quotes[0] || cur->quotes[1]), len);
+	str = ft_substr(data->line, i, len);
 	if (ft_strchr(str, '"'))
 		cur->str = remove_char(str, '"');
 	if (ft_strchr(str, '\''))
@@ -324,10 +316,7 @@ void	tokenise(t_data *data)
 				return ;
 			get_token(data->line + i, cur);
 			add_token(data, cur, i);
-			if (cur->quotes[0] || cur->quotes[1])
-				i += get_token_len(cur, data->line + i) + 2;
-			else
-				i += get_token_len(cur, data->line + i);
+			i += get_token_len(cur, data->line + i);
 		}
 		if (!data->line[i])
 			return ;
@@ -407,7 +396,7 @@ void	get_cmds(t_data *data)
 			if (cur_tok->type == INPUT || cur_tok->type == APPEND
 				|| cur_tok->type == OVERWRITE)
 				cur_tok = redir_cmd(cur_cmd, cur_tok);
-			else if (cur_tok->type == CMD)
+			else if (cur_tok->type == WORD)
 				cur_tok = build_cmd(cur_cmd, cur_tok);
 		}
 		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, (sizeof(t_cmd) - sizeof(t_cmd *)));
@@ -425,7 +414,7 @@ void	parsing(t_data *data)
 	}
 	env_variables(data);
 	tokenise(data);
-	get_cmds(data);
+	//get_cmds(data);
 }
 
 void	init_data(t_data *data, char **env)

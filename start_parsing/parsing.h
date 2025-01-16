@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/15 14:35:56 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/16 12:05:06 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ enum e_type
 	OVERWRITE, //>
 	APPEND, //>>
 	PIPE,
-	CMD,
+	WORD,
 }	;
 
 typedef struct s_cmd
@@ -55,7 +55,7 @@ typedef struct s_token
 {
 	char	*str;
 	int		type;
-	bool	quotes[2];
+	bool	quotes;
 	struct s_token	*next;
 }			t_token;
 
@@ -77,6 +77,7 @@ typedef struct s_data
 # define SINGLE_QUOTE 39
 # define IS_QUOTE(c) (c == DOUBLE_QUOTE || c == SINGLE_QUOTE)
 # define IS_SEPARATOR(c) ((c) == '=' || (c) == '$' || (c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ' || (c) == '\'' || (c) == '"')
+# define IS_SEPARATOR_TOKEN(c) ((c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ')
 
 void	ft_free_tab(char **table);
 void	free_token(t_token **head);
