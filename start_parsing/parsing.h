@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 10:47:46 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:56:08 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,13 @@ typedef struct s_data
 # define IS_SEPARATOR_TOKEN(c) ((c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ')
 
 //main.c
+int		check_pipes(t_data *data);
 void	prompt(t_data *data);
 void	init_data(t_data *data, char **env);
-void	parsing(t_data *data);
+void	parsing(t_data *data, char *input);
 
 //env_variables.c
-void	env_variables(t_data *data);
+void	env_variables(t_data *data, char *input);
 int		*expansion_quotes(char *line, int nb_var);
 
 //token.c
@@ -106,13 +107,13 @@ void	*ft_lstnew_generic(size_t data_size);
 void	ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
 char	*find_path(char *str);
 char	*my_getenv(t_data *data, char *name);
-int		check_quotes(t_data *data);
+int		check_quotes(char *input);
 
 // free.c
 void	ft_free_tab(char **table);
 void	free_token(t_token **head);
 void	free_env(t_lst **head);
-void	free_all(t_data *data);
+void	free_all(t_data *data, int flag);
 char	*ft_strjoin_free(char *s1, char *s2);
 void	free_cmd(t_cmd **head);
 

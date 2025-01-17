@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 10:36:32 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/17 14:48:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ void	remove_quotes(char *str, t_token *cur)
 		}
 		len = 0;
 	}
-	printf("%s\n", cur->str);
 	if (tmp)
 		free(tmp);
 }

@@ -6,22 +6,62 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 10:42:54 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:23:11 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parsing.h"
 
-void	parsing(t_data *data)
+int	check_syntax(t_data *data)
 {
-	if (check_quotes(data) == -1)
+	t_token	*last_token;
+	int		i;
+
+	i = 0;
+	last_token = data->token;
+	while (last_token->next != NULL)
+	{
+		if (last_token->type <= 3 && last_token->next->type == PIPE)
+		{
+			printf("erreur de syntaxe\n");
+			return (0);
+		}
+		last_token = last_token->next;
+	}
+	if (data->token->type == PIPE)
+	{
+		printf("erreur de syntaxe\n");
+		return (0);
+	}
+	while (i < 5)
+	{
+		if (last_token->type == i)
+		{
+			printf("erreur de syntaxe\n");
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+void	parsing(t_data *data, char *input)
+{
+	if (check_quotes(input) == -1)
 	{
 		printf("erreur quote");
-		exit(EXIT_FAILURE);
+		return ;
 	}
-	env_variables(data);
+	env_variables(data, input);
 	tokenise(data);
-	//get_cmds(data);
+	if (data->token)
+	{
+		if (!check_syntax(data))
+			return ;
+		get_cmds(data);
+	}
+	else
+		return ;
 }
 
 void	init_data(t_data *data, char **env)
@@ -54,39 +94,44 @@ void	prompt(t_data *data)
 	input = "1";
 	while (input)
 	{
-		input = readline("minishell> ");
+		input = readline("$> ");
 		if (input)
 		{
 			add_history(input);
-			data->line = input;
-			parsing(data);
-			free(input);
-		}
-		t_cmd	*cur;
-		int		i = 0;
-		cur = data->cmd;
-		while (cur)
-		{
-			printf("cmd : %s\n", cur->cmd);
-			i = 0;
-			while (cur->args[i])
+			if (input[0] == '\0')
+				free(input);
+			else
 			{
-				printf("args : %s\n", cur->args[i]);
-				i++;
+				parsing(data, input);
+				free(input);
 			}
-			printf("outfile : %s\n", cur->outfile);
-			printf("infile : %s\n", cur->infile);
-			cur = cur->next;
-			printf ("\n");
 		}
-		free_all(data);
+		// t_cmd	*cur;
+		// int		i = 0;
+		// cur = data->cmd;
+		// while (cur)
+		// {
+		// 	printf("cmd : %s\n", cur->cmd);
+		// 	i = 0;
+		// 	printf("outfile : %s\n", cur->outfile);
+		// 	printf("infile : %s\n", cur->infile);
+		// 	while (cur->args[i])
+		// 	{
+		// 		printf("args : %s\n", cur->args[i]);
+		// 		i++;
+		// 	}
+		// 	cur = cur->next;
+		// 	printf ("\n");
+		// }
+		free_all(data, 1);
 	}
 }
 
-int main(int argc, char **env)
+int main(int argc, char **argv, char **env)
 {
 	t_data	data;
 
+	(void)argv;
 	if (argc != 1)
 	{
 		printf("too many arguments\n");
@@ -94,5 +139,5 @@ int main(int argc, char **env)
 	}
 	init_data(&data, env);
 	prompt(&data);
-	free_all(&data);
+	free_all(&data, 0);
 }

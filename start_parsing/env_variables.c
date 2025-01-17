@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 10:34:11 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/17 16:19:01 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ int	*expansion_quotes(char *line, int nb_var)
 	char	quote;
 
 	i = 0;
-	j = 1;
+	j = 0;
+	if (line[0] != '$')
+		j = 1;
 	quote_tab = malloc(nb_var * sizeof(int));
 	if (!quote_tab)
 		return (0);
@@ -46,7 +48,8 @@ int	*expansion_quotes(char *line, int nb_var)
 	return (quote_tab);
 }
 
-void	env_variables(t_data *data)
+
+void	env_variables(t_data *data, char *input)
 {
 	int		i;
 	int		j;
@@ -57,11 +60,13 @@ void	env_variables(t_data *data)
 
 	i = 0;
 	j = 0;
-	table = ft_split(data->line, '$');
+	table = ft_split(input, '$');
 	while (table[i])
 		i++;
-	quote_tab = expansion_quotes(data->line, i);
-	i = 1;
+	quote_tab = expansion_quotes(input, i);
+	i = 0;
+	if (input[0] != '$')
+		i = 1;
 	while (table[i])
 	{
 		j = 0;

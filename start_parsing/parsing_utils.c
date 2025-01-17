@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:40:02 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 10:40:40 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/17 11:06:24 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,27 +95,27 @@ char	*my_getenv(t_data *data, char *name)
 	return (NULL);
 }
 
-int	check_quotes(t_data *data)
+int	check_quotes(char *input)
 {
 	int	i;
 
 	i = 0;
-	while (data->line[i])
+	while (input[i])
 	{
-		if (data->line[i] == '\'')
+		if (input[i] == '\'')
 		{
 			i++;
-			while (data->line[i] && data->line[i] != '\'')
+			while (input[i] && input[i] != '\'')
 				i++;
-			if (data->line[i] != '\'')
+			if (input[i] != '\'')
 				return (-1);
 		}
-		if (data->line[i] == '"')
+		if (input[i] == '"')
 		{
 			i++;
-			while (data->line[i] && data->line[i] != '"')
+			while (input[i] && input[i] != '"')
 				i++;
-			if (data->line[i] != '"')
+			if (input[i] != '"')
 				return (-1);
 		}
 		i++;
