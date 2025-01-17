@@ -6,7 +6,7 @@
 #    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/12/11 08:15:54 by ncharbog          #+#    #+#              #
-#    Updated: 2025/01/06 17:23:08 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/01/17 10:50:32 by ncharbog         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,10 @@ CFLAGS = -Wall -Werror -Wextra -g
 NAME = minishell
 
 SRC = main.c \
+	commands.c \
+	env_variables.c \
+	parsing_utils.c \
+	token.c \
 	free.c
 
 OBJ_DIR = .objects

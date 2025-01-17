@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/16 15:07:56 by noacharbogn      ###   ########.fr       */
+/*   Updated: 2025/01/17 10:47:46 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,35 @@ typedef struct s_data
 # define IS_SEPARATOR(c) ((c) == '=' || (c) == '$' || (c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ' || (c) == '\'' || (c) == '"')
 # define IS_SEPARATOR_TOKEN(c) ((c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ')
 
+//main.c
+void	prompt(t_data *data);
+void	init_data(t_data *data, char **env);
+void	parsing(t_data *data);
+
+//env_variables.c
+void	env_variables(t_data *data);
+int		*expansion_quotes(char *line, int nb_var);
+
+//token.c
+void	remove_quotes(char *str, t_token *cur);
+int		get_token_len(char *str);
+void	add_token(t_data *data, t_token *cur, int i);
+void	get_token(char *str, t_token *cur);
+void	tokenise(t_data *data);
+
+//commands.c
+t_token	*redir_cmd(t_cmd *cur_cmd, t_token *cur_tok);
+t_token	*build_cmd(t_cmd *cur_cmd, t_token *cur_tok);
+void	get_cmds(t_data *data);
+
+//parsing_utils.c
+void	*ft_lstnew_generic(size_t data_size);
+void	ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
+char	*find_path(char *str);
+char	*my_getenv(t_data *data, char *name);
+int		check_quotes(t_data *data);
+
+// free.c
 void	ft_free_tab(char **table);
 void	free_token(t_token **head);
 void	free_env(t_lst **head);

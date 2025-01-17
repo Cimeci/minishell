@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:12:16 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/15 08:46:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/17 10:31:31 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,10 @@ void	free_all(t_data *data)
 		free_token(&data->token);
 	if (data->env)
 		free_env(&data->env);
+	if (data->line)
+		free(data->line);
+	if (data->cmd)
+		free_cmd(&data->cmd);
 	data->token = NULL;
 	data->env = NULL;
 }
