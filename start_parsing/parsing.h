@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 14:56:08 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:33:28 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_lst
 typedef struct s_data
 {
 	char	*line;
+	char	*shell_pid;
 	t_token	*token;
 	t_cmd	*cmd;
 	t_lst	*env;
@@ -87,7 +88,7 @@ void	init_data(t_data *data, char **env);
 void	parsing(t_data *data, char *input);
 
 //env_variables.c
-void	env_variables(t_data *data, char *input);
+void	env_variables(t_data *data);
 int		*expansion_quotes(char *line, int nb_var);
 
 //token.c
@@ -108,6 +109,7 @@ void	ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
 char	*find_path(char *str);
 char	*my_getenv(t_data *data, char *name);
 int		check_quotes(char *input);
+void	get_shell_pid(t_data *data);
 
 // free.c
 void	ft_free_tab(char **table);

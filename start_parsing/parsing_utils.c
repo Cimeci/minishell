@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:40:02 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 11:06:24 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:50:44 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,4 +121,26 @@ int	check_quotes(char *input)
 		i++;
 	}
 	return (0);
+}
+
+void	get_shell_pid(t_data *data)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
+		return ;
+	if (pid == 0)
+		exit(0);
+	else
+	{
+		data->shell_pid = ft_itoa(pid);
+		if (!data->shell_pid)
+		{
+			perror("ft_itoa failed");
+			exit(1);
+		}
+	}
+	wait(NULL);
+	return ;
 }

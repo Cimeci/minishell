@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 17:12:16 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 14:01:10 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/20 13:22:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,7 @@ char	*ft_strjoin_free(char *s1, char *s2)
 {
 	char	*tmp;
 
-	tmp = s1;
-	s1 = ft_strjoin(s1, s2);
-	free(tmp);
-	return (s1);
+	tmp = ft_strjoin(s1, s2);
+	free(s1);
+	return (tmp);
 }

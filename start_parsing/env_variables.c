@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/17 16:19:01 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/20 15:00:33 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,45 @@ int	*expansion_quotes(char *line, int nb_var)
 	return (quote_tab);
 }
 
+char	*only_dollars(t_data *data, char *line)
+{
+	char	*tmp;
+	char	*save;
+	int		dollar;
+	int		i;
 
-void	env_variables(t_data *data, char *input)
+	i = 0;
+	dollar = 0;
+	while (line[i])
+	{
+		dollar = 0;
+		if (line[i] == '$')
+		{
+			dollar++;
+			while (line[i + dollar] && line[i + dollar] == '$')
+				dollar++;
+			while (line[i] && dollar > 0)
+			{
+				if (dollar == 1)
+					break ;
+				tmp = ft_substr(line, 0, i);
+				tmp = ft_strjoin_free(tmp, data->shell_pid);
+				save = ft_strdup(line);
+				free(line);
+				line = NULL;
+				line = ft_strjoin(tmp, save + i + 2);
+				i = ft_strlen(tmp);
+				free(tmp);
+				tmp = NULL;
+				dollar -= 2;
+			}
+		}
+		i++;
+	}
+	return (line);
+}
+
+void	env_variables(t_data *data)
 {
 	int		i;
 	int		j;
@@ -60,12 +97,13 @@ void	env_variables(t_data *data, char *input)
 
 	i = 0;
 	j = 0;
-	table = ft_split(input, '$');
+	data->line = only_dollars(data, data->line);
+	table = ft_split(data->line, '$');
 	while (table[i])
 		i++;
-	quote_tab = expansion_quotes(input, i);
+	quote_tab = expansion_quotes(data->line, i);
 	i = 0;
-	if (input[0] != '$')
+	if (data->line[0] != '$')
 		i = 1;
 	while (table[i])
 	{
@@ -74,7 +112,12 @@ void	env_variables(t_data *data, char *input)
 			j++;
 		var = ft_substr(table[i], 0, j);
 		tmp = ft_substr(table[i], j, ft_strlen(table[i]));
-		if (my_getenv(data, var) && quote_tab[i] == 1)
+		if (var[0] == '\0')
+		{
+			free(table[i]);
+			table[i] = ft_strjoin("$", tmp);
+		}
+		else if (my_getenv(data, var) && quote_tab[i] == 1)
 		{
 			free(table[i]);
 			table[i] = ft_strjoin(ft_strdup(my_getenv(data, var)), tmp);
@@ -100,6 +143,7 @@ void	env_variables(t_data *data, char *input)
 	i = 0;
 	while (table[i])
 		data->line = ft_strjoin_free(data->line, table[i++]);
+	printf("%s\n", data->line);
 	ft_free_tab(table);
 	free(quote_tab);
 }
