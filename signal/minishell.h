@@ -6,14 +6,14 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:40:32 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 11:40:35 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/20 14:28:08 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-// # include "../libft/libft.h"
+# include "../libft/libft.h"
 
 # include <dirent.h>
 # include <errno.h>
