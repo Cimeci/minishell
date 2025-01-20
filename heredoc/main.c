@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/16 16:25:50 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:05:39 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,16 +189,24 @@ char	**find_args(char **argv)
 	return (args);
 }
 
-char	*ft_search_end(char **argv)
+char	*ft_search_end(char **argv, int i)
 {
-	int	i;
-
-	i = 0;
 	while (argv[i] && ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
 		i++;
 	if (!argv[i])
 		return (NULL);
 	return (argv[i + 1]);
+}
+
+int	ft_search_index_end(char **argv, int i)
+{
+	// if (!ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
+	// 	return (i);
+	while (argv[i] && ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
+		i++;
+	if (!argv[i])
+		return (-1);
+	return (i);
 }
 
 void	execution_cmd(char **argv, char **env)
@@ -235,12 +243,13 @@ void	ft_heredoc(char **argv, char **env)
 	char	*path;
 	char	**args;
 	t_save	*tmp;
-	t_save	*next;
 	char	*end;
+	int		i;
 
+	i = 0;
 	if (argv[0][0] == '\n')
 		return ;
-	if (!ft_search_end(argv))
+	if (!ft_search_end(argv, i))
 	{
 		execution_cmd(argv, env);
 		return ;
@@ -252,78 +261,84 @@ void	ft_heredoc(char **argv, char **env)
 		free(path);
 		return ;
 	}
-	save = NULL;
-	while (1)
+	while (ft_search_index_end(argv, i) != -1)
 	{
-		input = readline("> ");
-		end = ft_search_end(argv);
-		if (!end)
-			return ;
-		if (!input || !ft_strncmp(input, end, ft_strlen(end)))
+		save = NULL;
+		while (1)
 		{
+			input = readline("> ");
+			i = ft_search_index_end(argv, i);
+			// dprintf(2, "%d\n", i);
+			if (i == -1)
+				return ;
+			end = ft_search_end(argv, i);
+			// dprintf(2, "%s\n", end);
+			if (!end)
+				return ;
+			if (!input || !ft_strncmp(input, end, ft_strlen(end)))
+			{
+				free(input);
+				i++;
+				break ;
+			}
+			cur = malloc(sizeof(t_save));
+			if (!cur)
+				exit(EXIT_FAILURE);
+			cur->line = strdup(input);
+			cur->next = NULL;
+			ft_lstadd_back3(&save, cur);
 			free(input);
-			break ;
 		}
-		cur = malloc(sizeof(t_save));
-		if (!cur)
-			exit(EXIT_FAILURE);
-		cur->line = strdup(input);
-		cur->next = NULL;
-		ft_lstadd_back3(&save, cur);
-		free(input);
-	}
-	if (pipe(pipe_fd) == -1)
-	{
-		perror("pipe");
-		free(path);
-		return ;
-	}
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		free(path);
-		close(pipe_fd[0]);
-		close(pipe_fd[1]);
-		return ;
-	}
-	else if (pid == 0)
-	{
-		close(pipe_fd[1]);
-		if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
+		if (ft_search_index_end(argv, i) == -1)
 		{
-			perror("dup2");
-			exit(EXIT_FAILURE);
+			if (pipe(pipe_fd) == -1)
+			{
+				perror("pipe");
+				free(path);
+				return ;
+			}
+			pid = fork();
+			if (pid == -1)
+			{
+				perror("fork");
+				free(path);
+				close(pipe_fd[0]);
+				close(pipe_fd[1]);
+				return ;
+			}
+			else if (pid == 0)
+			{
+				close(pipe_fd[1]);
+				if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
+				{
+					perror("dup2");
+					exit(EXIT_FAILURE);
+				}
+				close(pipe_fd[0]);
+				args = find_args(argv);
+				if (!args)
+					exit(EXIT_FAILURE);
+				execve(path, args, env);
+				perror("execve");
+				exit(EXIT_FAILURE);
+			}
+			else
+			{
+				close(pipe_fd[0]);
+				tmp = save;
+				while (tmp)
+				{
+					dprintf(pipe_fd[1], "%s\n", tmp->line);
+					tmp = tmp->next;
+				}
+				close(pipe_fd[1]);
+				if (wait(NULL) == -1)
+					perror("wait");
+			}
 		}
-		close(pipe_fd[0]);
-		args = find_args(argv);
-		if (!args)
-			exit(EXIT_FAILURE);
-		execve(path, args, env);
-		perror("execve");
-		exit(EXIT_FAILURE);
-	}
-	else
-	{
-		close(pipe_fd[0]);
-		tmp = save;
-		while (tmp)
-		{
-			dprintf(pipe_fd[1], "%s\n", tmp->line);
-			tmp = tmp->next;
-		}
-		close(pipe_fd[1]);
-		if (wait(NULL) == -1)
-			perror("wait");
+		ft_lstclear3(save);
 	}
 	free(path);
-	while (save)
-	{
-		next = save->next;
-		free(save->line);
-		free(save);
-		save = next;
-	}
 }
 
 int	main(int argc, char **argv, char **env)
