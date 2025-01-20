@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/20 11:05:39 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/20 11:14:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -200,8 +200,6 @@ char	*ft_search_end(char **argv, int i)
 
 int	ft_search_index_end(char **argv, int i)
 {
-	// if (!ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
-	// 	return (i);
 	while (argv[i] && ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
 		i++;
 	if (!argv[i])
@@ -229,115 +227,145 @@ void	execution_cmd(char **argv, char **env)
 		else if (wait(NULL) == -1)
 			perror("wait failed");
 	}
-	// ft_free_tab(env);
 	free(path);
+}
+
+void	handle_invalid_command(char *path)
+{
+	fprintf(stderr, "Error: invalid arguments or command\n");
+	free(path);
+}
+
+int	is_invalid_path(char *path)
+{
+	return (!path || access(path, X_OK));
+}
+
+void	handle_input_loop(char **argv, t_save **save, int *i)
+{
+	char	*input;
+	char	*end;
+	t_save	*cur;
+
+	while (1)
+	{
+		input = readline("> ");
+		*i = ft_search_index_end(argv, *i);
+		if (*i == -1)
+			return ;
+		end = ft_search_end(argv, *i);
+		if (!end || !input || !ft_strncmp(input, end, ft_strlen(end)))
+		{
+			free(input);
+			(*i)++;
+			break ;
+		}
+		cur = malloc(sizeof(t_save));
+		if (!cur)
+			exit(EXIT_FAILURE);
+		cur->line = strdup(input);
+		cur->next = NULL;
+		ft_lstadd_back3(save, cur);
+		free(input);
+	}
+}
+
+void	execute_child_process(char *path, char **argv, char **env,
+		int pipe_fd[2])
+{
+	char	**args;
+
+	close(pipe_fd[1]);
+	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		exit(EXIT_FAILURE);
+	}
+	close(pipe_fd[0]);
+	args = find_args(argv);
+	if (!args)
+		exit(EXIT_FAILURE);
+	execve(path, args, env);
+	perror("execve");
+	exit(EXIT_FAILURE);
+}
+
+void	handle_parent_process(t_save *save, int pipe_fd[2])
+{
+	t_save	*tmp;
+
+	tmp = save;
+	close(pipe_fd[0]);
+	while (tmp)
+	{
+		dprintf(pipe_fd[1], "%s\n", tmp->line);
+		tmp = tmp->next;
+	}
+	close(pipe_fd[1]);
+	if (wait(NULL) == -1)
+		perror("wait");
+}
+
+void	process_pipe_and_fork(char *path, char **argv, char **env, t_save *save)
+{
+	int		pipe_fd[2];
+	pid_t	pid;
+
+	if (pipe(pipe_fd) == -1)
+	{
+		perror("pipe");
+		free(path);
+		return ;
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		free(path);
+		close(pipe_fd[0]);
+		close(pipe_fd[1]);
+		return ;
+	}
+	if (pid == 0)
+		execute_child_process(path, argv, env, pipe_fd);
+	else
+		handle_parent_process(save, pipe_fd);
+}
+
+void	process_heredoc_loop(char **argv, char **env, char *path)
+{
+	t_save	*save;
+	int		i;
+
+	i = 0;
+	while (ft_search_index_end(argv, i) != -1)
+	{
+		save = NULL;
+		handle_input_loop(argv, &save, &i);
+		if (ft_search_index_end(argv, i) == -1)
+			process_pipe_and_fork(path, argv, env, save);
+		ft_lstclear3(save);
+	}
 }
 
 void	ft_heredoc(char **argv, char **env)
 {
-	char	*input;
-	t_save	*save;
-	t_save	*cur;
-	pid_t	pid;
-	int		pipe_fd[2];
 	char	*path;
-	char	**args;
-	t_save	*tmp;
-	char	*end;
-	int		i;
 
-	i = 0;
 	if (argv[0][0] == '\n')
 		return ;
-	if (!ft_search_end(argv, i))
+	if (!ft_search_end(argv, 0))
 	{
 		execution_cmd(argv, env);
 		return ;
 	}
 	path = find_path(env, argv[0]);
-	if (!path || access(path, X_OK))
+	if (is_invalid_path(path))
 	{
-		fprintf(stderr, "Error: invalid arguments or command\n");
-		free(path);
+		handle_invalid_command(path);
 		return ;
 	}
-	while (ft_search_index_end(argv, i) != -1)
-	{
-		save = NULL;
-		while (1)
-		{
-			input = readline("> ");
-			i = ft_search_index_end(argv, i);
-			// dprintf(2, "%d\n", i);
-			if (i == -1)
-				return ;
-			end = ft_search_end(argv, i);
-			// dprintf(2, "%s\n", end);
-			if (!end)
-				return ;
-			if (!input || !ft_strncmp(input, end, ft_strlen(end)))
-			{
-				free(input);
-				i++;
-				break ;
-			}
-			cur = malloc(sizeof(t_save));
-			if (!cur)
-				exit(EXIT_FAILURE);
-			cur->line = strdup(input);
-			cur->next = NULL;
-			ft_lstadd_back3(&save, cur);
-			free(input);
-		}
-		if (ft_search_index_end(argv, i) == -1)
-		{
-			if (pipe(pipe_fd) == -1)
-			{
-				perror("pipe");
-				free(path);
-				return ;
-			}
-			pid = fork();
-			if (pid == -1)
-			{
-				perror("fork");
-				free(path);
-				close(pipe_fd[0]);
-				close(pipe_fd[1]);
-				return ;
-			}
-			else if (pid == 0)
-			{
-				close(pipe_fd[1]);
-				if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
-				{
-					perror("dup2");
-					exit(EXIT_FAILURE);
-				}
-				close(pipe_fd[0]);
-				args = find_args(argv);
-				if (!args)
-					exit(EXIT_FAILURE);
-				execve(path, args, env);
-				perror("execve");
-				exit(EXIT_FAILURE);
-			}
-			else
-			{
-				close(pipe_fd[0]);
-				tmp = save;
-				while (tmp)
-				{
-					dprintf(pipe_fd[1], "%s\n", tmp->line);
-					tmp = tmp->next;
-				}
-				close(pipe_fd[1]);
-				if (wait(NULL) == -1)
-					perror("wait");
-			}
-		}
-		ft_lstclear3(save);
-	}
+	process_heredoc_loop(argv, env, path);
 	free(path);
 }
 
