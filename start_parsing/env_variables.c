@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/20 15:00:33 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/20 17:35:33 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,6 @@ int	*expansion_quotes(char *line, int nb_var)
 
 	i = 0;
 	j = 0;
-	if (line[0] != '$')
-		j = 1;
 	quote_tab = malloc(nb_var * sizeof(int));
 	if (!quote_tab)
 		return (0);
@@ -48,102 +46,99 @@ int	*expansion_quotes(char *line, int nb_var)
 	return (quote_tab);
 }
 
-char	*only_dollars(t_data *data, char *line)
+int	only_dollars(t_data *data, int *quote_tab, int dollars, int i)
 {
 	char	*tmp;
 	char	*save;
-	int		dollar;
-	int		i;
+	int		cur;
+	int		index;
 
-	i = 0;
-	dollar = 0;
-	while (line[i])
+	cur = 0;
+	while (data->line[i + cur] && data->line[i + cur] == '$' && quote_tab[dollars + cur] == 1)
+		cur++;
+	index = cur;
+	while (data->line[i] && cur > 0)
 	{
-		dollar = 0;
-		if (line[i] == '$')
-		{
-			dollar++;
-			while (line[i + dollar] && line[i + dollar] == '$')
-				dollar++;
-			while (line[i] && dollar > 0)
-			{
-				if (dollar == 1)
-					break ;
-				tmp = ft_substr(line, 0, i);
-				tmp = ft_strjoin_free(tmp, data->shell_pid);
-				save = ft_strdup(line);
-				free(line);
-				line = NULL;
-				line = ft_strjoin(tmp, save + i + 2);
-				i = ft_strlen(tmp);
-				free(tmp);
-				tmp = NULL;
-				dollar -= 2;
-			}
-		}
-		i++;
+		if (cur == 1)
+			break ;
+		tmp = ft_substr(data->line, 0, i);
+		tmp = ft_strjoin_free(tmp, data->shell_pid);
+		save = ft_strdup(data->line);
+		free(data->line);
+		data->line = NULL;
+		data->line = ft_strjoin(tmp, save + i + 2);
+		i = ft_strlen(tmp);
+		free(tmp);
+		tmp = NULL;
+		cur -= 2;
 	}
-	return (line);
+	return (index + dollars);
 }
 
 void	env_variables(t_data *data)
 {
 	int		i;
-	int		j;
+	int		result;
+	int		dollars;
 	int		*quote_tab;
-	char	**table;
 	char	*var;
 	char	*tmp;
 
 	i = 0;
-	j = 0;
-	data->line = only_dollars(data, data->line);
-	table = ft_split(data->line, '$');
-	while (table[i])
-		i++;
-	quote_tab = expansion_quotes(data->line, i);
-	i = 0;
-	if (data->line[0] != '$')
-		i = 1;
-	while (table[i])
+	dollars = 0;
+	result = 0;
+	while (data->line[i])
 	{
-		j = 0;
-		while (table[i][j] && !IS_SEPARATOR(table[i][j]))
-			j++;
-		var = ft_substr(table[i], 0, j);
-		tmp = ft_substr(table[i], j, ft_strlen(table[i]));
-		if (var[0] == '\0')
-		{
-			free(table[i]);
-			table[i] = ft_strjoin("$", tmp);
-		}
-		else if (my_getenv(data, var) && quote_tab[i] == 1)
-		{
-			free(table[i]);
-			table[i] = ft_strjoin(ft_strdup(my_getenv(data, var)), tmp);
-			free(tmp);
-		}
-		else if (!my_getenv(data, var) && quote_tab[i] == 1)
-		{
-			free(table[i]);
-			table[i] = tmp;
-		}
-		else if (quote_tab[i] == 0)
-		{
-			free(tmp);
-			tmp = ft_strdup(table[i]);
-			free(table[i]);
-			table[i] = ft_strjoin("$", tmp);
-			free(tmp);
-		}
-		free(var);
+		if (data->line[i] == '$')
+			dollars++;
 		i++;
 	}
-	data->line = ft_strdup("");
+	quote_tab = expansion_quotes(data->line, dollars);
+	dollars = 0;
 	i = 0;
-	while (table[i])
-		data->line = ft_strjoin_free(data->line, table[i++]);
+	while (data->line[i])
+	{
+		if (data->line[i] == '$')
+		{
+			result = only_dollars(data, quote_tab, dollars, i);
+			while (data->line[i] && !IS_SEPARATOR(data->line[i]))
+				i++;
+			dollars = result - (result % 2);
+			if (data->line[i] != '$')
+				;
+			else
+			{
+				i++;
+				result = i;
+				while (data->line[i + result] && !IS_SEPARATOR(data->line[i + result]))
+					result++;
+				var = ft_substr(data->line, i, result);
+				tmp = ft_substr(data->line, i + result, ft_strlen(data->line));
+				if (my_getenv(data, var) && quote_tab[dollars] == 1)
+				{
+					free(data->line);
+					data->line = ft_strjoin(ft_strdup(my_getenv(data, var)), tmp);
+					free(tmp);
+				}
+				else if (!my_getenv(data, var) && quote_tab[dollars] == 1)
+				{
+					free(data->line);
+					data->line = tmp;
+				}
+				else if (quote_tab[dollars] == 0)
+				{
+					free(tmp);
+					tmp = ft_strdup(data->line);
+					free(data->line);
+					data->line = ft_strjoin("$", tmp);
+					free(tmp);
+				}
+				dollars++;
+			}
+		}
+		else
+			i++;
+	}
 	printf("%s\n", data->line);
-	ft_free_tab(table);
 	free(quote_tab);
 }
