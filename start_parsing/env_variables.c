@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/20 17:35:33 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 09:36:08 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ void	env_variables(t_data *data)
 	int		dollars;
 	int		*quote_tab;
 	char	*var;
-	char	*tmp;
+	char	*next;
+	char	*prev;
 
 	i = 0;
 	dollars = 0;
@@ -109,30 +110,33 @@ void	env_variables(t_data *data)
 			else
 			{
 				i++;
-				result = i;
+				result = 0;
 				while (data->line[i + result] && !IS_SEPARATOR(data->line[i + result]))
 					result++;
 				var = ft_substr(data->line, i, result);
-				tmp = ft_substr(data->line, i + result, ft_strlen(data->line));
-				if (my_getenv(data, var) && quote_tab[dollars] == 1)
+				next = ft_substr(data->line, i + result, ft_strlen(data->line));
+				prev = ft_substr(data->line, 0, i - 1);
+				free(data->line);
+				if (result == 0 && var[0] == '\0')
 				{
-					free(data->line);
-					data->line = ft_strjoin(ft_strdup(my_getenv(data, var)), tmp);
-					free(tmp);
+					prev = ft_strjoin_free(prev, "$");
+					data->line = ft_strjoin(prev, next);
+				}
+				else if (my_getenv(data, var) && quote_tab[dollars] == 1)
+				{
+					prev = ft_strjoin_free(prev, my_getenv(data, var));
+					data->line = ft_strjoin(prev, next);
 				}
 				else if (!my_getenv(data, var) && quote_tab[dollars] == 1)
-				{
-					free(data->line);
-					data->line = tmp;
-				}
+					data->line = ft_strjoin(prev, next);
 				else if (quote_tab[dollars] == 0)
 				{
-					free(tmp);
-					tmp = ft_strdup(data->line);
-					free(data->line);
-					data->line = ft_strjoin("$", tmp);
-					free(tmp);
+					prev = ft_strjoin_free(prev, "$");
+					prev = ft_strjoin_free(prev, var);
+					data->line = ft_strjoin(prev, next);
 				}
+				free(next);
+				free(prev);
 				dollars++;
 			}
 		}
