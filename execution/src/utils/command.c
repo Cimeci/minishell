@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:49:30 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 15:39:21 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 18:14:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ char	*find_path(t_data *data, char *str)
 
 	i = 0;
 	path = my_getenv(data, "PATH");
+	if (!path)
+		return (NULL);
 	path_split = ft_split(path, ':');
 	while (path_split[i])
 	{

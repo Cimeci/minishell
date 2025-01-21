@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_export.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 17:15:21 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 18:29:44 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,9 @@ void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var_line)
 
 	while (cur)
 	{
-		var = ft_get_var(cur->str);
+		var = ft_get_var(var_line);
 		path = my_getenv_lst(var, env);
+		printf("|%s|%s|\n", var, path);
 		if (!ft_strncmp(path, var, ft_strlen(path)))
 		{
 			free(path);

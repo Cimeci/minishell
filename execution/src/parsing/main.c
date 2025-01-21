@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 17:16:01 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:30:28 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ void	exec(t_data *data)
 			ft_env(data, cur);
 		else if (!ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 6)
 			ft_export(data, cur);
+		else if (!ft_strncmp(cur->args[0], "unset", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 5)
+			ft_unset(data, cur);
 		cur = cur->next;
 	}
 }

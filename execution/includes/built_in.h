@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 16:53:27 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:39:01 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,8 +79,8 @@ int		ft_pwd(void);
 // // unset //
 
 // char	*get_path(const char *name, t_env *env);
-// void	ft_unset_extension(char *unset_path, t_env *env);
-// int		ft_unset(char **argv, t_env *env, t_env *export_env);
+void	ft_unset_extension(char *unset_path, t_lst *env);
+int     ft_unset(t_data *data, t_cmd *cur);
 
 // t_env	*ft_init_env(char **env);
 // char	*my_getenv_lst(const char *name, t_env *env);

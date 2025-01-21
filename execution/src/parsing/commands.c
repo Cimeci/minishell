@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 15:33:36 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 18:15:19 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	len = 0;
 	tmp = cur_tok;
 	cur_cmd->cmd = find_path(data, cur_tok->str);
+	// printf("|%s|%s|\n", cur_tok->str, cur_cmd->cmd);
 	if (!cur_cmd->cmd)
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
 	while (tmp && tmp->type != PIPE)

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
+#    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/21 16:58:31 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/01/21 17:33:02 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,9 +33,8 @@ SRC = src/utils/command.c\
 		src/built-in/main_export.c\
 		src/built-in/lst_funct.c\
 		src/built-in/lst_funct_utils.c\
-		# src/built-in/main.c\
+		src/built-in/main_unset.c\
 		# src/built-in/main_exit.c\
-		# src/built-in/main_unset.c\
 
 OBJ_DIR = .objects
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))

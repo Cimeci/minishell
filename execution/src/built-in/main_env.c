@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 16:27:06 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 17:53:20 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,9 +62,8 @@ int	ft_env(t_data *data, t_cmd *cur)
 {
 	t_lst	*tmp;
 
-	if (!ft_strncmp(cur->cmd, "pwd", ft_strlen(cur->cmd)))
+	if (!ft_strncmp(cur->cmd, "env", ft_strlen(cur->cmd)))
 		return (-1);
-	// ft_sort_env(table_env, ft_strlen_tab(table_env));
 	tmp = data->env;
 	while (tmp)
 	{
