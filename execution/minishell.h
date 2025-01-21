@@ -6,18 +6,12 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 15:31:23 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/21 13:16:37 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
-
-typedef struct s_env
-{
-	char			*path;
-	struct s_env	*next;
-}					t_env;
 
 # include "../libft/libft.h"
 # include "minishell_cd.h"
@@ -41,6 +35,12 @@ typedef struct s_env
 # include <term.h>
 # include <termios.h>
 # include <unistd.h>
+
+typedef struct s_env
+{
+	char			*path;
+	struct s_env	*next;
+}					t_env;
 
 void				execution_cmd(char **argv, char **env);
 int					ft_strlen_tab(char **table);
