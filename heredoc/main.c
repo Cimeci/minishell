@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/20 11:14:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:53:24 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,7 +263,7 @@ void	handle_input_loop(char **argv, t_save **save, int *i)
 		cur = malloc(sizeof(t_save));
 		if (!cur)
 			exit(EXIT_FAILURE);
-		cur->line = strdup(input);
+		cur->line = ft_strdup(input);
 		cur->next = NULL;
 		ft_lstadd_back3(save, cur);
 		free(input);

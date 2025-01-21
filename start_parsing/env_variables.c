@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 09:36:08 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 09:40:25 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,6 +143,5 @@ void	env_variables(t_data *data)
 		else
 			i++;
 	}
-	printf("%s\n", data->line);
 	free(quote_tab);
 }

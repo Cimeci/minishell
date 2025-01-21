@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/20 14:31:31 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/21 10:33:40 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,15 +54,17 @@ void	parsing(t_data *data, char *input)
 	}
 	data->line = ft_strdup(input);
 	env_variables(data);
-	// tokenise(data);
-	// if (data->token)
-	// {
-	// 	if (!check_syntax(data))
-	// 		return ;
-	// 	get_cmds(data);
-	// }
-	// else
-	// 	return ;
+	tokenise(data);
+	if (data->token)
+	{
+		if (!check_syntax(data))
+			return ;
+		get_cmds(data);
+		if (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':')
+			return ;
+	}
+	else
+		return ;
 }
 
 void	init_data(t_data *data, char **env)
@@ -108,23 +110,23 @@ void	prompt(t_data *data)
 				free(input);
 			}
 		}
-		// t_cmd	*cur;
-		// int		i = 0;
-		// cur = data->cmd;
-		// while (cur)
-		// {
-		// 	printf("cmd : %s\n", cur->cmd);
-		// 	i = 0;
-		// 	printf("outfile : %s\n", cur->outfile);
-		// 	printf("infile : %s\n", cur->infile);
-		// 	while (cur->args[i])
-		// 	{
-		// 		printf("args : %s\n", cur->args[i]);
-		// 		i++;
-		// 	}
-		// 	cur = cur->next;
-		// 	printf ("\n");
-		// }
+		t_cmd	*cur;
+		int		i = 0;
+		cur = data->cmd;
+		while (cur)
+		{
+			printf("cmd : %s\n", cur->cmd);
+			i = 0;
+			printf("outfile : %s\n", cur->outfile);
+			printf("infile : %s\n", cur->infile);
+			while (cur->args[i])
+			{
+				printf("args : %s\n", cur->args[i]);
+				i++;
+			}
+			cur = cur->next;
+			printf ("\n");
+		}
 		free_all(data, 1);
 	}
 }
