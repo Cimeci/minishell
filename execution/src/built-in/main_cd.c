@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 14:15:08 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:00:37 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 #define BUFFER_SIZE 100000
 
@@ -48,7 +48,7 @@ void	ft_absolut_path(char **argv, char *root)
 		}
 		if (chdir(target_path))
 		{
-			printf("here\n");
+			// printf("here\n");
 			ft_free_path(path, target_path);
 			perror("Error");
 			return ;
@@ -63,27 +63,24 @@ int	ft_cd(char **argv)
 	char	*root;
 
 	root = NULL;
-	if (!ft_strncmp(argv[0], "cd", ft_strlen(argv[0])))
+	if (argv[1][0] == '\0' || ft_strlen_tab(argv) != 2)
 	{
-		if (!argv[1] || argv[1][0] == '\0')
+		ft_putendl_fd("Error : No path", 2);
+		return (-1);
+	}
+	if (argv[1] && argv[1][0] != '\0')
+	{
+		if (!ft_strncmp(argv[1], "/", ft_strlen(argv[1])))
 		{
-			ft_putendl_fd("Error : No path", 2);
-			return (-1);
-		}
-		if (argv[1] && argv[1][0] != '\0')
-		{
-			if (!ft_strncmp(argv[1], "/", ft_strlen(argv[1])))
+			if (chdir("/"))
 			{
-				if (chdir("/"))
-				{
-					perror("Error");
-					return (0);
-				}
-				return (1);
+				perror("Error");
+				return (-1);
 			}
-			ft_absolut_path(argv, root);
 			return (1);
 		}
+		ft_absolut_path(argv, root);
+		return (1);
 	}
 	return (0);
 }

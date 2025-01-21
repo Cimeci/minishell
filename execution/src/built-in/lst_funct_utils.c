@@ -3,31 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   lst_funct_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:23:53 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 11:39:20 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:48:52 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
-void	ft_lstclear2(t_env *env)
+void	ft_lstclear2(t_lst *env)
 {
-	t_env	*temp;
+	t_lst	*temp;
 
 	temp = env;
 	while (env)
 	{
 		temp = env->next;
-		if (env->path)
-			free(env->path);
+		if (env->str)
+			free(env->str);
 		free(env);
 		env = temp;
 	}
 }
 
-int	ft_lstsize2(t_env *lst)
+int	ft_lstsize2(t_lst *lst)
 {
 	int	i;
 
@@ -44,21 +44,21 @@ int	ft_lstsize2(t_env *lst)
 	return (i + 1);
 }
 
-t_env	*ft_lstnew2(void *path)
+t_lst	*ft_lstnew2(void *path)
 {
-	t_env	*new;
+	t_lst	*new;
 
-	new = malloc(sizeof(t_env));
+	new = malloc(sizeof(t_lst));
 	if (new == NULL)
 		return (0);
-	new->path = path;
+	new->str = path;
 	new->next = NULL;
 	return (new);
 }
 
-void	ft_lstadd_back2(t_env **lst, t_env *new)
+void	ft_lstadd_back2(t_lst **lst, t_lst *new)
 {
-	t_env	*temp;
+	t_lst	*temp;
 
 	if (!lst || !new)
 		return ;

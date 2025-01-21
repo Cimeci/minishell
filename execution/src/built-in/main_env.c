@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/15 16:30:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:27:06 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 char	*tab_to_lower(char *str)
 {
@@ -58,32 +58,18 @@ void	ft_sort_env(char **env, int size)
 	}
 }
 
-int	ft_env(char **argv, t_env *env)
+int	ft_env(t_data *data, t_cmd *cur)
 {
-	t_env	*cur;
-	char	**table_env;
-	int		i;
-	char	*pathname;
-	int		fd;
+	t_lst	*tmp;
 
-	fd = open_output_file(argv, ft_strlen_tab(argv));
-	i = 0;
-	cur = env;
-	if (!ft_strncmp(argv[0], "env", ft_strlen(argv[0])))
+	if (!ft_strncmp(cur->cmd, "pwd", ft_strlen(cur->cmd)))
+		return (-1);
+	// ft_sort_env(table_env, ft_strlen_tab(table_env));
+	tmp = data->env;
+	while (tmp)
 	{
-		table_env = ft_convert_lst_to_tab(env);
-		pathname = find_path(table_env, argv[0]);
-		if (!pathname)
-		{
-			ft_free_tab(table_env);
-			return (-1);
-		}
-		free(pathname);
-		// ft_sort_env(table_env, ft_strlen_tab(table_env));
-		while (table_env[i])
-			ft_putendl_fd(table_env[i++], fd);
-		ft_free_tab(table_env);
-		return (1);
+		printf("%s\n", tmp->str);
+		tmp = tmp->next;
 	}
-	return (0);
+	return (1);
 }

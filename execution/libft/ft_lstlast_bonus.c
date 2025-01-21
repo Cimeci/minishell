@@ -1,21 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_pwd.h                                    :+:      :+:    :+:   */
+/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 15:00:25 by inowak--         ###   ########.fr       */
+/*   Created: 2024/10/15 11:15:26 by ncharbog          #+#    #+#             */
+/*   Updated: 2024/10/17 15:55:20 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_PWD_H
-# define MINISHELL_PWD_H
+#include "libft.h"
 
-# include "minishell.h"
+t_list	*ft_lstlast(t_list *lst)
+{
+	t_list	*temp;
 
-char	*ft_clear_quote(char *input);
-int		ft_pwd(char **argv);
-
-#endif
+	if (!lst)
+		return (0);
+	temp = lst;
+	while (temp->next != NULL)
+		temp = temp->next;
+	return (temp);
+}

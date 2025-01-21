@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   write_utils_echo.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:27:29 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/14 15:02:16 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/21 14:25:29 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 void	write_no_arguments(char **argv, int endl, int save, int fd)
 {

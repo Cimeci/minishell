@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell_exit.h                                   :+:      :+:    :+:   */
+/*   ft_isalpha.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/13 09:08:45 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/13 14:03:44 by inowak--         ###   ########.fr       */
+/*   Created: 2024/10/08 08:47:03 by ncharbog          #+#    #+#             */
+/*   Updated: 2024/10/08 08:47:07 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINISHELL_EXIT_H
-# define MINISHELL_EXIT_H
+#include "libft.h"
 
-# include "minishell.h"
-
-void	ft_exit(char **argv);
-
-#endif
+int	ft_isalpha(int c)
+{
+	if (!((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')))
+		return (0);
+	return (1024);
+}

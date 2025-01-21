@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
+#    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/15 12:57:17 by inowak--         ###   ########.fr        #
+#    Updated: 2025/01/21 16:58:31 by ncharbog         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,20 +16,26 @@ CFLAGS = -Wall -Werror -Wextra -g
 
 NAME = minishell
 
-SRC = command.c\
-		lst_funct_utils.c\
-		main_echo.c\
-		main_export.c\
-		utils_cd.c\
-		free.c\
-		main.c\
-		main_env.c\
-		main_pwd.c\
-		write_utils_echo.c\
-		lst_funct.c\
-		main_cd.c\
-		main_exit.c\
-		main_unset.c
+SRC = src/utils/command.c\
+		src/utils/free.c\
+		src/utils/size.c\
+		src/built-in/utils_cd.c\
+		src/built-in/main_cd.c\
+		src/parsing/commands.c\
+		src/parsing/env_variables.c\
+		src/parsing/main.c\
+		src/parsing/parsing_utils.c\
+		src/parsing/token.c\
+		src/built-in/main_pwd.c\
+		src/built-in/main_echo.c\
+		src/built-in/write_utils_echo.c\
+		src/built-in/main_env.c\
+		src/built-in/main_export.c\
+		src/built-in/lst_funct.c\
+		src/built-in/lst_funct_utils.c\
+		# src/built-in/main.c\
+		# src/built-in/main_exit.c\
+		# src/built-in/main_unset.c\
 
 OBJ_DIR = .objects
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))

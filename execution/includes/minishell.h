@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 13:16:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/21 16:55:39 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,9 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-# include "minishell_cd.h"
-# include "minishell_echo.h"
-# include "minishell_env.h"
-# include "minishell_exit.h"
-# include "minishell_export.h"
-# include "minishell_pwd.h"
-# include "minishell_unset.h"
+# include "parsing.h"
+# include "built_in.h"
+
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -35,14 +31,10 @@
 # include <term.h>
 # include <termios.h>
 # include <unistd.h>
-
-typedef struct s_env
-{
-	char			*path;
-	struct s_env	*next;
-}					t_env;
+# include <stdbool.h>
 
 void				execution_cmd(char **argv, char **env);
 int					ft_strlen_tab(char **table);
+t_lst				*ft_dup_lst(t_lst *env);
 
 #endif
