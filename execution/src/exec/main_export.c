@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_export.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 18:29:44 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:24:42 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,9 +154,13 @@ int	ft_export(t_data *data, t_cmd *cur)
 	char	*value;
 	t_lst	*tmp;
 	t_lst	*tmp_export;
+	t_lst	*node;
+	t_lst	*node_export;
 	int		i;
 
 	i = 1;
+	node = NULL;
+	node_export = NULL;
 	tmp = data->env;
 	tmp_export = data->export_env;
 	if (ft_strlen_tab(cur->args) - count_trailing_redirects(cur->args, ft_strlen_tab(cur->args)) == 1)
@@ -190,8 +194,15 @@ int	ft_export(t_data *data, t_cmd *cur)
 			var = cur->args[i];
 			path = my_getenv_lst(var, data->export_env);
 			if (!path)
-				ft_lstadd_back2(&data->export_env,
-					ft_lstnew2(ft_strdup(cur->args[i])));
+			{
+				node = (t_lst *)ft_lstnew_generic(sizeof(t_lst));
+				if (!node)
+					return (0);
+				node->str = ft_strdup(cur->args[i]);
+				ft_lstadd_back_generic((void **)&data->export_env, node, sizeof(char *));
+			}
+				//ft_lstadd_back2(&data->export_env,    <<<< modif liste générique >>>>>
+					//ft_lstnew2(ft_strdup(cur->args[i])));
 			free(path);
 		}
 		else if (ft_check_env_var(var_check))
@@ -200,10 +211,22 @@ int	ft_export(t_data *data, t_cmd *cur)
 			path = my_getenv_lst(var, data->env);
 			if (!path)
 			{
-				ft_lstadd_back2(&data->env, ft_lstnew2(ft_strdup(cur->args[i])));
-				ft_lstadd_back2(&data->export_env,
-					ft_lstnew2(ft_strdup(cur->args[i])));
+				node = (t_lst *)ft_lstnew_generic(sizeof(t_lst));
+				if (!node)
+					return (0);
+				node->str = ft_strdup(cur->args[i]);
+				ft_lstadd_back_generic((void **)&data->env, node, sizeof(char *));
+				node_export = (t_lst *)ft_lstnew_generic(sizeof(t_lst));
+				if (!node_export)
+					return (0);
+				node_export->str = ft_strdup(cur->args[i]);
+				ft_lstadd_back_generic((void **)&data->export_env, node_export, sizeof(char *));
 			}
+			// {
+			// 	ft_lstadd_back2(&data->env, ft_lstnew2(ft_strdup(cur->args[i])));   <<<<modif liste générique>>>>
+			// 	ft_lstadd_back2(&data->export_env,
+			// 		ft_lstnew2(ft_strdup(cur->args[i])));
+			// }
 			else
 			{
 				ft_modif_env_var(tmp, data->env, cur->args[i]);

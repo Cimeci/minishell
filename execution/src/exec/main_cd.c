@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 16:00:37 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 08:59:51 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	ft_absolut_path(char **argv, char *root)
 		}
 		if (chdir(target_path))
 		{
-			// printf("here\n");
 			ft_free_path(path, target_path);
 			perror("Error");
 			return ;

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 16:40:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 08:56:26 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ int		check_pipes(t_data *data);
 void	prompt(t_data *data);
 void	init_data(t_data *data, char **env);
 void	parsing(t_data *data, char *input);
+int		is_built_in(t_data *data, t_cmd *cur);
 
 //env_variables.c
 void	env_variables(t_data *data);

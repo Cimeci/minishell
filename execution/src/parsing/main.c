@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 17:30:28 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:32:12 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,24 @@ int	check_syntax(t_data *data)
 	return (1);
 }
 
+int	is_built_in(t_data *data, t_cmd *cur)
+{
+	if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd) == 2)
+		ft_cd(cur->args);
+	else if (!ft_strncmp(cur->args[0], "pwd", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 3)
+		ft_pwd();
+	else if (!ft_strncmp(cur->args[0], "echo", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 4)
+		ft_echo(ft_strlen_tab(cur->args), cur->args);
+	else if (!ft_strncmp(cur->args[0], "env", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 3)
+		ft_env(data, cur);
+	else if (!ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 6)
+		ft_export(data, cur);
+	else if (!ft_strncmp(cur->args[0], "unset", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 5)
+		ft_unset(data, cur);
+	else
+		return (0);
+}
+
 void	exec(t_data *data)
 {
 	t_cmd	*cur;
@@ -52,19 +70,8 @@ void	exec(t_data *data)
 	cur = data->cmd;
 	while (cur)
 	{
-		// printf("|%s| |%s| |%zu|\n", cur->cmd, cur->args[0], ft_strlen(cur->args[0]));
-		if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd) == 2)
-			ft_cd(cur->args);
-		else if (!ft_strncmp(cur->args[0], "pwd", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 3)
-			ft_pwd();
-		else if (!ft_strncmp(cur->args[0], "echo", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 4)
-			ft_echo(ft_strlen_tab(cur->args), cur->args);
-		else if (!ft_strncmp(cur->args[0], "env", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 3)
-			ft_env(data, cur);
-		else if (!ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 6)
-			ft_export(data, cur);
-		else if (!ft_strncmp(cur->args[0], "unset", ft_strlen(cur->args[0])) && ft_strlen(cur->args[0]) == 5)
-			ft_unset(data, cur);
+		if (!is_built_in(data, cur))
+			return ;
 		cur = cur->next;
 	}
 }
@@ -86,7 +93,6 @@ void	parsing(t_data *data, char *input)
 		get_cmds(data);
 		if (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':')
 			return ;
-		exec(data);
 	}
 	else
 		return ;
@@ -133,6 +139,7 @@ void	prompt(t_data *data)
 			else
 			{
 				parsing(data, input);
+				exec(data);
 				free(input);
 			}
 		}

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:40:02 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 14:38:09 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:31:13 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,23 @@ void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset)
 		temp = *(void **)((char *)temp + next_offset);
 	if (temp)
 		*(void **)((char *)temp + next_offset) = new_node;
+}
+
+int	ft_lstsize_generic(void *lst, size_t offset)
+{
+	int	i;
+
+	i = 0;
+	if (!lst)
+		return (0);
+	if ((void *)((char *)lst + offset) == NULL)
+		return (1);
+	while ((void *)((char *)lst + offset) != NULL)
+	{
+		lst = (void *)((char *)lst + offset);
+		i++;
+	}
+	return (i + 1);
 }
 
 int	check_quotes(char *input)

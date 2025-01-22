@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:23:53 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 16:48:52 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:32:19 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,33 +42,4 @@ int	ft_lstsize2(t_lst *lst)
 		i++;
 	}
 	return (i + 1);
-}
-
-t_lst	*ft_lstnew2(void *path)
-{
-	t_lst	*new;
-
-	new = malloc(sizeof(t_lst));
-	if (new == NULL)
-		return (0);
-	new->str = path;
-	new->next = NULL;
-	return (new);
-}
-
-void	ft_lstadd_back2(t_lst **lst, t_lst *new)
-{
-	t_lst	*temp;
-
-	if (!lst || !new)
-		return ;
-	temp = *lst;
-	if (!temp)
-	{
-		*lst = new;
-		return ;
-	}
-	while (temp->next != NULL)
-		temp = temp->next;
-	temp->next = new;
 }
