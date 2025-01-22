@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:12:58 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 17:52:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:29:23 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ void	ft_unset_extension(char *unset_path, t_lst *env)
 		tmp = tmp->next;
 	}
 }
+
 int	ft_unset(t_data *data, t_cmd *cur)
 {
 	int i;

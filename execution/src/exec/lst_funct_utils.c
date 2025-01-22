@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_funct_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:23:53 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 09:44:56 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 10:21:47 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,12 @@ void	*ft_lstnew_generic(size_t data_size)
 	return (new_node);
 }
 
-void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset)
+void	ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset)
 {
 	void	*temp;
 
 	if (!lst || !new_node)
-		return;
+		return ;
 	temp = *lst;
 	if (*lst == NULL)
 	{
@@ -58,4 +58,3 @@ int	ft_lstsize_generic(void *lst, size_t offset)
 	}
 	return (i);
 }
-

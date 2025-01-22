@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/21 17:33:02 by inowak--         ###   ########.fr        #
+#    Updated: 2025/01/22 11:32:45 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,22 +19,23 @@ NAME = minishell
 SRC = src/utils/command.c\
 		src/utils/free.c\
 		src/utils/size.c\
-		src/built-in/utils_cd.c\
-		src/built-in/main_cd.c\
 		src/parsing/commands.c\
 		src/parsing/env_variables.c\
 		src/parsing/main.c\
 		src/parsing/parsing_utils.c\
 		src/parsing/token.c\
-		src/built-in/main_pwd.c\
-		src/built-in/main_echo.c\
-		src/built-in/write_utils_echo.c\
-		src/built-in/main_env.c\
-		src/built-in/main_export.c\
-		src/built-in/lst_funct.c\
-		src/built-in/lst_funct_utils.c\
-		src/built-in/main_unset.c\
-		# src/built-in/main_exit.c\
+		src/exec/utils_cd.c\
+		src/exec/main_cd.c\
+		src/exec/main_pwd.c\
+		src/exec/main_echo.c\
+		src/exec/write_utils_echo.c\
+		src/exec/main_env.c\
+		src/exec/main_export.c\
+		src/exec/lst_funct.c\
+		src/exec/lst_funct_utils.c\
+		src/exec/main_unset.c\
+		src/exec/exec.c\
+		# src/exec/main_exit.c\
 
 OBJ_DIR = .objects
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))

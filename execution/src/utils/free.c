@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:46:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 14:31:51 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:08:04 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,10 @@ void	free_all(t_data *data, int flag)
 		free_token(&data->token);
 	if (data->env && flag == 0)
 		free_env(&data->env);
+	if (data->export_env)
+		free_env(&data->export_env);
+	if (data->shell_pid && flag == 0)
+		free(data->shell_pid);
 	if (data->line)
 		free(data->line);
 	if (data->cmd)

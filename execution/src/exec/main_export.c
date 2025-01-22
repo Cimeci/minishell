@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 09:24:42 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 10:10:221 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,27 +26,27 @@ char	*ft_get_var(char *str)
 	return (var);
 }
 
-void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var_line)
+void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var, char *arg)
 {
 	char	*path;
-	char	*var;
 
-
+	(void)env;
 	while (cur)
 	{
-		var = ft_get_var(var_line);
-		path = my_getenv_lst(var, env);
-		printf("|%s|%s|\n", var, path);
-		if (!ft_strncmp(path, var, ft_strlen(path)))
+		path = ft_get_var(cur->str);
+		// printf("%s|%s|%s\n", var, arg, path);
+		if (path)
 		{
-			free(path);
-			free(var);
-			free(cur->str);
-			cur->str = ft_strdup(var_line);
-			break ;
+			if (!ft_strncmp(var, path, ft_strlen(var)))
+			{
+				free(cur->str);
+				free(path);
+				cur->str = ft_strdup(arg);
+				break ;
+			}
 		}
 		free(path);
-		free(var);
+		path = NULL;
 		cur = cur->next;
 	}
 }
@@ -151,6 +151,7 @@ int	ft_export(t_data *data, t_cmd *cur)
 	char	*var;
 	char	*var_check;
 	char	*p_var;
+	char	*p_res;
 	char	*value;
 	t_lst	*tmp;
 	t_lst	*tmp_export;
@@ -163,7 +164,8 @@ int	ft_export(t_data *data, t_cmd *cur)
 	node_export = NULL;
 	tmp = data->env;
 	tmp_export = data->export_env;
-	if (ft_strlen_tab(cur->args) - count_trailing_redirects(cur->args, ft_strlen_tab(cur->args)) == 1)
+	if (ft_strlen_tab(cur->args) - count_trailing_redirects(cur->args,
+			ft_strlen_tab(cur->args)) == 1)
 	{
 		ft_print_env_export(tmp_export, cur->args);
 		return (1);
@@ -178,12 +180,15 @@ int	ft_export(t_data *data, t_cmd *cur)
 			if (path)
 			{
 				value = ft_get_value(cur->args[i]);
-				p_var = ft_strjoin(ft_get_var_and_value(path, data->env), value);
+				p_var = ft_get_pvar(cur->args[i]);
+				p_res = ft_strjoin(ft_get_var_and_value(path, data->env),
+						value);
 				free(value);
-				printf("path %s| p_var: %s\n", path, p_var);
-				ft_modif_env_var(tmp, data->env, p_var);
-				ft_modif_env_var(tmp_export, data->export_env, p_var);
+				// printf("path %s| p_var: %s\n", path, p_var);
+				ft_modif_env_var(tmp, data->env, p_var, p_res);
+				ft_modif_env_var(tmp_export, data->export_env, p_var, p_res);
 				free(path);
+				free(p_res);
 				free(p_var);
 			}
 			free(var_check);
@@ -199,38 +204,36 @@ int	ft_export(t_data *data, t_cmd *cur)
 				if (!node)
 					return (0);
 				node->str = ft_strdup(cur->args[i]);
-				ft_lstadd_back_generic((void **)&data->export_env, node, sizeof(char *));
+				ft_lstadd_back_generic((void **)&data->export_env, node,
+					sizeof(char *));
 			}
-				//ft_lstadd_back2(&data->export_env,    <<<< modif liste générique >>>>>
-					//ft_lstnew2(ft_strdup(cur->args[i])));
 			free(path);
 		}
 		else if (ft_check_env_var(var_check))
 		{
 			var = ft_get_var(cur->args[i]);
 			path = my_getenv_lst(var, data->env);
+			// printf("path %s| var: %s\n", path, var);
 			if (!path)
 			{
 				node = (t_lst *)ft_lstnew_generic(sizeof(t_lst));
 				if (!node)
 					return (0);
 				node->str = ft_strdup(cur->args[i]);
-				ft_lstadd_back_generic((void **)&data->env, node, sizeof(char *));
+				ft_lstadd_back_generic((void **)&data->env, node,
+					sizeof(char *));
 				node_export = (t_lst *)ft_lstnew_generic(sizeof(t_lst));
 				if (!node_export)
 					return (0);
 				node_export->str = ft_strdup(cur->args[i]);
-				ft_lstadd_back_generic((void **)&data->export_env, node_export, sizeof(char *));
+				ft_lstadd_back_generic((void **)&data->export_env, node_export,
+					sizeof(char *));
 			}
-			// {
-			// 	ft_lstadd_back2(&data->env, ft_lstnew2(ft_strdup(cur->args[i])));   <<<<modif liste générique>>>>
-			// 	ft_lstadd_back2(&data->export_env,
-			// 		ft_lstnew2(ft_strdup(cur->args[i])));
-			// }
 			else
 			{
-				ft_modif_env_var(tmp, data->env, cur->args[i]);
-				ft_modif_env_var(tmp_export, data->export_env, cur->args[i]);
+				ft_modif_env_var(tmp, data->env, var, cur->args[i]);
+				ft_modif_env_var(tmp_export, data->export_env, var,
+					cur->args[i]);
 			}
 			free(path);
 			free(var);

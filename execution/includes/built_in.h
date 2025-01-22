@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/22 09:49:01 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 11:29:21 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,55 +38,50 @@ int		ft_write_argv_space(char **argv, int j, int dif, int fd);
 void	ft_write_argv_endl(char **argv, int j, int endl, int fd);
 void	write_arguments(char **argv, int fd, int endl, int save);
 
-// env //
+// // env //
 
-// // command.c
-
-// char	*my_getenv(const char *name, char **env);
-// char	*find_pathname(char *cmd, char **cmd_split, char **path_split, int i);
-// char	*find_path(char **env, char *cmd);
-
-// lst_funct_utils.c
-
-void	*ft_lstnew_generic(size_t data_size);
-void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
-int	ft_lstsize_generic(void *lst, size_t offset);
-
-// lst_funct.c
-
-t_lst	*ft_dup_lst(t_lst *env);
-char	**ft_convert_lst_to_tab(t_lst *env);
-char	*my_getenv_lst(const char *name, t_lst *env);
-
-// // main.c
-
-// t_env	*ft_init_env(char **env);
-int	ft_env(t_data *data, t_cmd *cur);
-
-// // exit //
-
-// void	ft_exit(char **argv);
+char	*tab_to_lower(char *str);
+void	ft_sort_env(char **env, int size);
+int		ft_env(t_data *data, t_cmd *cur);
 
 // // export //
 
 char	*ft_get_var(char *str);
-void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var_line);
+void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var, char *arg);
 int		ft_export(t_data *data, t_cmd *cur);
-
+char	*ft_get_value(char *argv);
+char	*ft_get_var_and_value(char *var, t_lst *env);
+char	*ft_get_pvar(char *argv);
+int		ft_check_env_var(char *var);
 char	*my_getenv_lst(const char *name, t_lst *env);
+void	ft_print_env_export(t_lst *env, char **argv);
 
-// pwd //
+// // pwd //
 
 int		ft_pwd(void);
 
 // // unset //
 
-// char	*get_path(const char *name, t_env *env);
 void	ft_unset_extension(char *unset_path, t_lst *env);
-int     ft_unset(t_data *data, t_cmd *cur);
+int		ft_unset(t_data *data, t_cmd *cur);
 
-// t_env	*ft_init_env(char **env);
-// char	*my_getenv_lst(const char *name, t_env *env);
+// // exit //
 
+// void	ft_exit(char **argv);
+
+// // lst_funct_utils.c //
+
+void	*ft_lstnew_generic(size_t data_size);
+void	ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
+int		ft_lstsize_generic(void *lst, size_t offset);
+
+// // lst_funct.c //
+char	**ft_convert_lst_to_tab(t_lst *env);
+t_lst	*ft_dup_lst(t_lst *env);
+char	*my_getenv_lst(const char *name, t_lst *env);
+
+// // exec.c //
+void	exec(t_data *data);
+int		is_built_in(t_data *data, t_cmd *cur);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_funct.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:22:33 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 09:49:05 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 10:32:01 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,14 @@ t_lst	*ft_dup_lst(t_lst *env)
 
 	cur = env;
 	export_env = NULL;
-	while (env)
+	while (cur)
 	{
 		s_export_env = malloc(sizeof(t_lst));
-		s_export_env->str = ft_strdup(env->str);
+		s_export_env->str = ft_strdup(cur->str);
 		s_export_env->next = NULL;
-		ft_lstadd_back2(&export_env, s_export_env);
-		env = env->next;
+		ft_lstadd_back_generic((void **)&export_env, s_export_env,
+			sizeof(char *));
+		cur = cur->next;
 	}
 	return (export_env);
 }
@@ -38,7 +39,7 @@ char	**ft_convert_lst_to_tab(t_lst *env)
 	t_lst	*tmp;
 
 	i = 0;
-	table = malloc(sizeof(char *) * (ft_lstsize2(env) + 1));
+	table = malloc(sizeof(char *) * (ft_lstsize_generic((void *)env, sizeof(char *)) + 1));
 	if (!table)
 		return (NULL);
 	tmp = env;
@@ -51,7 +52,6 @@ char	**ft_convert_lst_to_tab(t_lst *env)
 	table[i] = NULL;
 	return (table);
 }
-
 
 char	*my_getenv_lst(const char *name, t_lst *env)
 {
