@@ -3,14 +3,38 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 11:22:30 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/22 15:40:15 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	incorrect_infile(void)
+{
+	int	null;
+
+	null = open("/dev/null", O_RDONLY);
+	if (null != -1)
+	{
+		dup2(null, STDIN_FILENO);
+		close(null);
+	}
+}
+
+void	incorrect_outfile(void)
+{
+	int	null;
+
+	null = open("/dev/null", O_WRONLY);
+	if (null != -1)
+	{
+		dup2(null, STDOUT_FILENO);
+		close(null);
+	}
+}
 
 int	is_built_in(t_data *data, t_cmd *cur)
 {
@@ -34,19 +58,119 @@ int	is_built_in(t_data *data, t_cmd *cur)
 		ft_unset(data, cur);
 	else
 		return (0);
-	// execution_cmd(data);
 	return (1);
+}
+
+void	close_files(t_cmd *cur)
+{
+	if (cur->fd_infile != -1 && cur->fd_infile)
+	{
+			dprintf(2, "infile fd : %d\n", cur->fd_infile);
+		close(cur->fd_infile);
+		cur->fd_infile = -1;
+	}
+	if (cur->fd_outfile != -1 && cur->fd_outfile)
+	{
+		dprintf(2, "outfile fd : %d\n", cur->fd_outfile);
+		close(cur->fd_outfile);
+		cur->fd_outfile = -1;
+	}
+}
+
+void	parent(t_data *data)
+{
+	close(data->fd[1]);
+	dup2(data->fd[0], STDIN_FILENO);
+	close(data->fd[0]);
+}
+
+void	child(t_data *data, t_cmd *cur, int i)
+{
+	if (i == 0)
+	{
+		if (cur->fd_infile == -1)
+			incorrect_infile();
+		else
+			dup2(cur->fd_infile, STDIN_FILENO);
+		if (!cur->outfile && data->nb_cmd > 1)
+			dup2(data->fd[1], STDOUT_FILENO);
+		if (cur->outfile)
+			dup2(cur->fd_outfile, STDOUT_FILENO);
+	}
+	else if (i == data->nb_cmd - 1)
+	{
+		close(data->fd[1]);
+		close(data->fd[0]);
+		if (cur->fd_outfile == -1)
+			incorrect_outfile();
+		else if (cur->outfile)
+			dup2(cur->fd_outfile, STDOUT_FILENO);
+		if (cur->infile)
+			dup2(cur->fd_infile, STDIN_FILENO);
+	}
+	else
+	{
+		dprintf(2, "mid\n");
+		close(data->fd[0]);
+		if (!cur->outfile)
+			dup2(data->fd[1], STDOUT_FILENO);
+		else
+			dup2(cur->fd_outfile, STDOUT_FILENO);
+		if (cur->infile)
+			dup2(cur->fd_infile, STDIN_FILENO);
+		close(data->fd[1]);
+	}
+	close_files(cur);
+	if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
+	{
+		perror("Error");
+		exit(1);
+	}
+}
+
+void	files(t_cmd *cur)
+{
+	if (cur->infile)
+	{
+		cur->fd_infile = open(cur->infile, O_RDONLY);
+		if (cur->fd_infile < 0)
+			printf("infile n'existe pas/n'a pas les droits\n");
+	}
+	if (cur->outfile)
+	{
+		cur->fd_outfile = open(cur->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if (cur->fd_outfile < 0)
+		{
+			if (errno == EACCES)
+				printf("outfile n'a pas les droits\n");
+		}
+	}
 }
 
 void	exec(t_data *data)
 {
+	int		i;
 	t_cmd	*cur;
+	pid_t	p;
 
 	cur = data->cmd;
-	while (cur)
+	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
+	i = 0;
+	while (cur && i < data->nb_cmd)
 	{
-		if (!is_built_in(data, cur))
-			return ;
+		files(cur);
+		if (pipe(data->fd) == -1)
+			printf("pipe failed\n");
+		p = fork();
+		if (p < 0)
+			printf("fork failed\n");
+		else if (p == 0)
+			child(data, cur, i);
+		else
+			parent(data);
+		i++;
 		cur = cur->next;
 	}
+	while (wait(NULL) != -1)
+		;
 }

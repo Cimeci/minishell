@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/22 10:19:53 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/22 14:55:51 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,8 @@ typedef struct s_cmd
 	char			**args;
 	char			*infile;
 	char			*outfile;
+	int				fd_infile;
+	int				fd_outfile;
 	int				flag_redir;
 	struct s_cmd	*next;
 }					t_cmd;
@@ -55,6 +57,8 @@ typedef struct s_data
 {
 	char			*line;
 	char			*shell_pid;
+	int				fd[2];
+	int				nb_cmd;
 	t_token			*token;
 	t_cmd			*cmd;
 	t_lst			*env;
@@ -72,7 +76,6 @@ int					check_pipes(t_data *data);
 	void prompt(t_data *data);
 	void init_data(t_data *data, char **env);
 	void parsing(t_data *data, char *input);
-	int is_built_in(t_data *data, t_cmd *cur);
 
 	// env_variables.c
 	void env_variables(t_data *data);
