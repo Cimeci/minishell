@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/22 15:31:19 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 17:55:33 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,39 +96,17 @@ void	prompt(t_data *data)
 {
 	char	*input;
 
-	input = "1";
-	while (input)
+	while (1)
 	{
 		input = readline("$> ");
-		if (input)
-		{
-			add_history(input);
-			if (input[0] == '\0')
-				free(input);
-			else
-			{
-				parsing(data, input);
-				exec(data);
-				free(input);
-			}
+		if (!input) {
+			printf("\nERROR\n");
+			return ;
 		}
-		// t_cmd	*cur;
-		// int		i = 0;
-		// cur = data->cmd;
-		// while (cur)
-		// {
-		// 	printf("cmd : %s\n", cur->cmd);
-		// 	i = 0;
-		// 	printf("outfile : %s\n", cur->outfile);
-		// 	printf("infile : %s\n", cur->infile);
-		// 	while (cur->args[i])
-		// 	{
-		// 		printf("args : %s\n", cur->args[i]);
-		// 		i++;
-		// 	}
-		// 	cur = cur->next;
-		// 	printf ("\n");
-		// }
+		add_history(input);
+		parsing(data, input);
+		exec(data);
+		free(input);
 		free_all(data, 1);
 	}
 }

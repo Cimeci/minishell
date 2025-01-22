@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 15:40:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 17:51:29 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,11 @@ void	close_files(t_cmd *cur)
 {
 	if (cur->fd_infile != -1 && cur->fd_infile)
 	{
-			dprintf(2, "infile fd : %d\n", cur->fd_infile);
 		close(cur->fd_infile);
 		cur->fd_infile = -1;
 	}
 	if (cur->fd_outfile != -1 && cur->fd_outfile)
 	{
-		dprintf(2, "outfile fd : %d\n", cur->fd_outfile);
 		close(cur->fd_outfile);
 		cur->fd_outfile = -1;
 	}
@@ -82,50 +80,6 @@ void	parent(t_data *data)
 	close(data->fd[1]);
 	dup2(data->fd[0], STDIN_FILENO);
 	close(data->fd[0]);
-}
-
-void	child(t_data *data, t_cmd *cur, int i)
-{
-	if (i == 0)
-	{
-		if (cur->fd_infile == -1)
-			incorrect_infile();
-		else
-			dup2(cur->fd_infile, STDIN_FILENO);
-		if (!cur->outfile && data->nb_cmd > 1)
-			dup2(data->fd[1], STDOUT_FILENO);
-		if (cur->outfile)
-			dup2(cur->fd_outfile, STDOUT_FILENO);
-	}
-	else if (i == data->nb_cmd - 1)
-	{
-		close(data->fd[1]);
-		close(data->fd[0]);
-		if (cur->fd_outfile == -1)
-			incorrect_outfile();
-		else if (cur->outfile)
-			dup2(cur->fd_outfile, STDOUT_FILENO);
-		if (cur->infile)
-			dup2(cur->fd_infile, STDIN_FILENO);
-	}
-	else
-	{
-		dprintf(2, "mid\n");
-		close(data->fd[0]);
-		if (!cur->outfile)
-			dup2(data->fd[1], STDOUT_FILENO);
-		else
-			dup2(cur->fd_outfile, STDOUT_FILENO);
-		if (cur->infile)
-			dup2(cur->fd_infile, STDIN_FILENO);
-		close(data->fd[1]);
-	}
-	close_files(cur);
-	if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
-	{
-		perror("Error");
-		exit(1);
-	}
 }
 
 void	files(t_cmd *cur)
@@ -144,6 +98,50 @@ void	files(t_cmd *cur)
 			if (errno == EACCES)
 				printf("outfile n'a pas les droits\n");
 		}
+	}
+}
+
+void	child(t_data *data, t_cmd *cur, int i)
+{
+	if (i == 0)
+	{
+		close(data->fd[0]);
+		if (!cur->outfile && data->nb_cmd > 1)
+			dup2(data->fd[1], STDOUT_FILENO);
+		else if (cur->outfile)
+			dup2(cur->fd_outfile, STDOUT_FILENO);
+		if (cur->fd_infile == -1)
+			incorrect_infile();
+		else
+			dup2(cur->fd_infile, STDIN_FILENO);
+		close(data->fd[1]);
+	}
+	else if (i == data->nb_cmd - 1)
+	{
+		close(data->fd[1]);
+		close(data->fd[0]);
+		if (cur->infile)
+			dup2(cur->fd_infile, STDIN_FILENO);
+		if (cur->fd_outfile == -1)
+			incorrect_outfile();
+		else if (cur->outfile)
+			dup2(cur->fd_outfile, STDOUT_FILENO);
+	}
+	else
+	{
+		close(data->fd[0]);
+		if (cur->infile)
+			dup2(cur->fd_infile, STDIN_FILENO);
+		if (!cur->outfile)
+			dup2(data->fd[1], STDOUT_FILENO);
+		else
+			dup2(cur->fd_outfile, STDOUT_FILENO);
+		close(data->fd[1]);
+	}
+	close_files(cur);
+	if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
+	{
+		exit(EXIT_FAILURE);
 	}
 }
 
@@ -171,6 +169,7 @@ void	exec(t_data *data)
 		i++;
 		cur = cur->next;
 	}
-	while (wait(NULL) != -1)
+	while (wait(NULL) > 0)
 		;
+	// printf("bonjour");
 }

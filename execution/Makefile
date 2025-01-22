@@ -38,6 +38,7 @@ SRC = src/utils/command.c\
 		# src/exec/main_exit.c\
 
 OBJ_DIR = .objects
+INCLUDE_DIR = includes
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 LIBFT_DIR = ../libft
@@ -53,7 +54,7 @@ $(NAME): $(OBJ) $(OBJ_LIBFT)
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -I$(LIBFT_DIR) -O0 -c $< -o $@
+	@$(CC) $(CFLAGS) -I$(LIBFT_DIR) -I$(INCLUDE_DIR) -O0 -c $< -o $@
 
 clean:
 	@rm -rf $(OBJ_DIR) $(OBJ_LIBFT)
