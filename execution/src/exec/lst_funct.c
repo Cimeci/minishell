@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:22:33 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 08:59:07 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:49:05 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,23 +52,6 @@ char	**ft_convert_lst_to_tab(t_lst *env)
 	return (table);
 }
 
-// t_lst	*ft_init_env(char **env)
-// {
-// 	t_lst	*s_env;
-// 	t_lst	*list;
-// 	int		i;
-
-// 	i = 0;
-// 	list = NULL;
-// 	while (env[i])
-// 	{
-// 		s_env = malloc(sizeof(t_lst));
-// 		s_env->str = ft_strdup(env[i++]);
-// 		s_env->next = NULL;
-// 		ft_lstadd_back2(&list, s_env);
-// 	}
-// 	return (list);
-// }
 
 char	*my_getenv_lst(const char *name, t_lst *env)
 {

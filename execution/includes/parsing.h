@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/22 08:56:26 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:46:30 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,8 +92,6 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok);
 void	get_cmds(t_data *data);
 
 //parsing_utils.c
-void	*ft_lstnew_generic(size_t data_size);
-void	ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
 char	*find_path(t_data *data, char *str);
 char	*my_getenv(t_data *data, char *name);
 int		check_quotes(char *input);

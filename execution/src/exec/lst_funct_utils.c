@@ -6,40 +6,56 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:23:53 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 09:32:19 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:44:56 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_lstclear2(t_lst *env)
+void	*ft_lstnew_generic(size_t data_size)
 {
-	t_lst	*temp;
+	void	*new_node;
 
-	temp = env;
-	while (env)
-	{
-		temp = env->next;
-		if (env->str)
-			free(env->str);
-		free(env);
-		env = temp;
-	}
+	new_node = malloc(data_size);
+	if (!new_node)
+		return (NULL);
+	memset(new_node, 0, data_size);
+	return (new_node);
 }
 
-int	ft_lstsize2(t_lst *lst)
+void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset)
 {
-	int	i;
+	void	*temp;
+
+	if (!lst || !new_node)
+		return;
+	temp = *lst;
+	if (*lst == NULL)
+	{
+		*lst = new_node;
+		*(void **)((char *)new_node + next_offset) = NULL;
+		return ;
+	}
+	while (*(void **)((char *)temp + next_offset) != NULL)
+		temp = *(void **)((char *)temp + next_offset);
+	if (temp)
+		*(void **)((char *)temp + next_offset) = new_node;
+}
+
+int	ft_lstsize_generic(void *lst, size_t offset)
+{
+	int		i;
+	void	*cur;
+	void	**next;
 
 	i = 0;
-	if (!lst)
-		return (0);
-	if (lst->next == NULL)
-		return (1);
-	while (lst->next != NULL)
+	cur = lst;
+	while (cur)
 	{
-		lst = lst->next;
+		next = (void **)((char *)cur + offset);
+		cur = *next;
 		i++;
 	}
-	return (i + 1);
+	return (i);
 }
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 17:39:01 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/22 09:49:01 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,17 @@ void	write_arguments(char **argv, int fd, int endl, int save);
 // char	*find_pathname(char *cmd, char **cmd_split, char **path_split, int i);
 // char	*find_path(char **env, char *cmd);
 
+// lst_funct_utils.c
+
+void	*ft_lstnew_generic(size_t data_size);
+void ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
+int	ft_lstsize_generic(void *lst, size_t offset);
+
 // lst_funct.c
 
-void	ft_lstclear2(t_lst *env);
-void	ft_lstadd_back2(t_lst **lst, t_lst *new);
-int		ft_lstsize2(t_lst *lst);
-t_lst	*ft_lstnew2(void *path);
+t_lst	*ft_dup_lst(t_lst *env);
 char	**ft_convert_lst_to_tab(t_lst *env);
+char	*my_getenv_lst(const char *name, t_lst *env);
 
 // // main.c
 
@@ -69,7 +73,6 @@ char	*ft_get_var(char *str);
 void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var_line);
 int		ft_export(t_data *data, t_cmd *cur);
 
-// t_lst	*ft_init_env(char **env);
 char	*my_getenv_lst(const char *name, t_lst *env);
 
 // pwd //
