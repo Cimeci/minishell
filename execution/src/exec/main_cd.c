@@ -3,48 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   main_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 08:59:51 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 17:56:07 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-#define BUFFER_SIZE 100000
-
-char	*ft_find_pwd(void)
-{
-	char	buffer[BUFFER_SIZE];
-
-	if (getcwd(buffer, BUFFER_SIZE) == NULL)
-	{
-		printf("Error directory\n");
-		if (errno == ERANGE)
-			printf("BUFFER_SIZE too small\n");
-		return (NULL);
-	}
-	return (ft_strdup(buffer));
-}
-
-void	ft_absolut_path(char **argv, char *root)
+void	ft_absolut_path(t_data *data, t_cmd *cur)
 {
 	char	*path;
 	char	*target_path;
 
-	root = ft_find_pwd();
-	if (root)
-	{
-		path = NULL;
-		target_path = ft_strsstr(root, argv[1]);
-		if (target_path)
-			free(root);
+		target_path = ft_strsstr(data->pwd, cur->args[1]);
 		if (!target_path)
 		{
-			path = ft_strjoin(root, "/");
-			free(root);
-			target_path = ft_strjoin(path, argv[1]);
+			path = ft_strjoin(data->pwd, "/");
+			target_path = ft_strjoin(path, cur->args[1]);
 		}
 		if (chdir(target_path))
 		{
@@ -52,25 +29,27 @@ void	ft_absolut_path(char **argv, char *root)
 			perror("Error");
 			return ;
 		}
-		if (path)
-			ft_free_path(path, target_path);
-	}
+		// printf("%s\n", target_path);
+		// printf("%s\n", ft_find_pwd());
+		if (target_path)
+			free(target_path);
 }
 
-int	ft_cd(char **argv)
+int	ft_cd(t_data *data, t_cmd *cur)
 {
 	char	*root;
 
 	root = NULL;
-	if (argv[1][0] == '\0' || ft_strlen_tab(argv) != 2)
+	if (cur->args[1][0] == '\0' || ft_strlen_tab(cur->args) != 2)
 	{
 		ft_putendl_fd("Error : No path", 2);
 		return (-1);
 	}
-	if (argv[1] && argv[1][0] != '\0')
+	if (cur->args[1] && cur->args[1][0] != '\0')
 	{
-		if (!ft_strncmp(argv[1], "/", ft_strlen(argv[1])))
+		if (!ft_strncmp(cur->args[1], "/", ft_strlen(cur->args[1])))
 		{
+			data->pwd = ft_strdup("/");
 			if (chdir("/"))
 			{
 				perror("Error");
@@ -78,7 +57,7 @@ int	ft_cd(char **argv)
 			}
 			return (1);
 		}
-		ft_absolut_path(argv, root);
+		ft_absolut_path(data, cur);
 		return (1);
 	}
 	return (0);

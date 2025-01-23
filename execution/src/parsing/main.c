@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/23 09:37:11 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:05:05 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,18 @@ void	init_data(t_data *data, char **env)
 {
 	int		i;
 	t_lst	*cur;
+	char	buffer[BUFFER_SIZE];
+	char	*check;
 
 	i = 0;
+	check = getcwd(buffer, BUFFER_SIZE);
+	if (check)
+		data->pwd = ft_strdup(buffer);
+	else
+		perror("Error getcwd");
 	get_shell_pid(data);
+	data->old_pwd = NULL;
+	data->pwd = ft_strdup(buffer);
 	data->line = NULL;
 	data->token = NULL;
 	data->cmd = NULL;
@@ -96,6 +105,8 @@ void	prompt(t_data *data)
 {
 	char	*input;
 
+	// signal(SIGINT, parent_signal_handler);
+	// signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
 		input = readline("$> ");

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/23 09:35:49 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:36:49 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # include "minishell.h"
 # include <stdbool.h>
+
+# define BUFFER_SIZE 1000
 
 enum				e_type
 {
@@ -55,6 +57,8 @@ typedef struct s_lst
 
 typedef struct s_data
 {
+	char			*pwd;
+	char			*old_pwd;
 	char			*line;
 	char			*shell_pid;
 	int				fd[2];

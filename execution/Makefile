@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/22 11:32:45 by inowak--         ###   ########.fr        #
+#    Updated: 2025/01/23 11:27:13 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,17 +24,19 @@ SRC = src/utils/command.c\
 		src/parsing/main.c\
 		src/parsing/parsing_utils.c\
 		src/parsing/token.c\
-		src/exec/utils_cd.c\
 		src/exec/main_cd.c\
+		src/exec/utils_cd.c\
 		src/exec/main_pwd.c\
 		src/exec/main_echo.c\
 		src/exec/write_utils_echo.c\
 		src/exec/main_env.c\
 		src/exec/main_export.c\
-		src/exec/lst_funct.c\
-		src/exec/lst_funct_utils.c\
 		src/exec/main_unset.c\
 		src/exec/exec.c\
+		src/exec/lst_funct.c\
+		src/exec/lst_funct_utils.c\
+		src/exec/main_heredoc.c\
+		src/exec/signal.c\
 		# src/exec/main_exit.c\
 
 OBJ_DIR = .objects

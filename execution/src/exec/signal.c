@@ -1,32 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_pwd.c                                         :+:      :+:    :+:   */
+/*   signal.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/23 17:57:12 by inowak--         ###   ########.fr       */
+/*   Created: 2025/01/23 11:22:29 by inowak--          #+#    #+#             */
+/*   Updated: 2025/01/23 15:23:36 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-char	*ft_find_pwd()
+pid_t	g_pid = -1;
+
+void	child_signal_handler(int signum)
 {
-	char	buffer[BUFFER_SIZE];
-
-	if (getcwd(buffer, BUFFER_SIZE))
-		return (ft_strdup(buffer));
-	return (NULL);
+	if (signum == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		exit(1);
+	}
 }
 
-int	ft_pwd(t_data *data)
+void	parent_signal_handler(int signum)
 {
-	char *pwd;
-	
-	pwd = ft_find_pwd();
-	data->pwd = pwd;
-	printf("%s\n", data->pwd = pwd);
-	return (0);
+	if (signum == SIGINT)
+	{
+		if (g_pid <= 0)
+		{
+			write(1, "\n", 1);
+			rl_on_new_line();
+			rl_replace_line("", 0);
+			rl_redisplay();
+		}
+	}
 }

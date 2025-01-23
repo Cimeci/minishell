@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/23 09:56:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 18:22:09 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,10 +40,10 @@ int	is_built_in(t_data *data, t_cmd *cur)
 {
 	if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 2)
-		ft_cd(cur->args);
+		ft_cd(data, cur);
 	else if (!ft_strncmp(cur->args[0], "pwd", ft_strlen(cur->args[0]))
 		&& ft_strlen(cur->args[0]) == 3)
-		ft_pwd();
+		ft_pwd(data);
 	else if (!ft_strncmp(cur->args[0], "echo", ft_strlen(cur->args[0]))
 		&& ft_strlen(cur->args[0]) == 4)
 		ft_echo(cur->args);
@@ -97,11 +97,31 @@ void	files(t_cmd *cur)
 	}
 	if (cur->outfile)
 	{
-		cur->fd_outfile = open(cur->outfile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		cur->fd_outfile = open(cur->outfile, O_CREAT | O_WRONLY | O_TRUNC,
+				0644);
 		if (cur->fd_outfile < 0)
 		{
 			if (errno == EACCES)
 				printf("outfile n'a pas les droits\n");
+		}
+	}
+}
+
+void	unique_cmd(t_data *data, t_cmd *cur)
+{
+	pid_t pid;
+	// heredoc //
+	if (!is_built_in(data, cur))
+	{
+		if (cur->cmd && access(cur->cmd, X_OK) == 0)
+		{
+			pid = fork();
+			if (pid == -1)
+				exit(EXIT_FAILURE);
+			else if (pid == 0)
+				execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env));
+			else if (wait(NULL) == -1)
+				perror("wait failed");
 		}
 	}
 }
@@ -144,6 +164,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 		close(data->fd[1]);
 	}
 	close_files(data, cur);
+	// heredoc //
 	if (!is_built_in(data, cur))
 	{
 		execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env));
@@ -163,6 +184,11 @@ void exec(t_data *data)
 	cur = data->cmd;
 	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
 	i = 0;
+	if (!cur->next)
+	{
+		unique_cmd(data, cur);
+		return ;
+	}
 	while (cur && i < data->nb_cmd)
 	{
 		files(cur);
