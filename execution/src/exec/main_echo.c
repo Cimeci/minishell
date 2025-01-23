@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 14:07:59 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 09:51:39 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,27 +81,21 @@ int	count_trailing_redirects(char **argv, int argc)
 	return (l);
 }
 
-int	ft_echo(int argc, char **argv)
+int	ft_echo(char **argv)
 {
 	int	endl;
-	int	fd;
 	int	save;
 
 	if (ft_strncmp("echo", argv[0], ft_strlen(argv[0])))
 		return (0);
 	if (!argv[1])
 	{
-		ft_putendl_fd("", 1);
+		printf("Error arg\n");
 		return (1);
 	}
 	endl = 0;
 	save = handle_options(argv, &endl);
-	fd = open_output_file(argv, argc);
-	if (fd < 0)
-		return (0);
-	write_no_arguments(argv, endl, save, fd);
-	write_arguments(argv, fd, endl, save);
-	if (fd)
-		close(fd);
+	write_no_arguments(argv, endl, save);
+	write_arguments(argv, endl, save);
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/23 09:36:32 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 09:56:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	is_built_in(t_data *data, t_cmd *cur)
 		ft_pwd();
 	else if (!ft_strncmp(cur->args[0], "echo", ft_strlen(cur->args[0]))
 		&& ft_strlen(cur->args[0]) == 4)
-		ft_echo(ft_strlen_tab(cur->args), cur->args);
+		ft_echo(cur->args);
 	else if (!ft_strncmp(cur->args[0], "env", ft_strlen(cur->args[0]))
 		&& ft_strlen(cur->args[0]) == 3)
 		ft_env(data, cur);
@@ -144,42 +144,14 @@ void	child(t_data *data, t_cmd *cur, int i)
 		close(data->fd[1]);
 	}
 	close_files(data, cur);
-	if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
+	if (!is_built_in(data, cur))
 	{
+		execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env));
+		perror("Error");
 		exit(EXIT_FAILURE);
 	}
+	exit(EXIT_SUCCESS);
 }
-
-// void	exec(t_data *data)
-// {
-// 	int		i;
-// 	t_cmd	*cur;
-// 	pid_t	p;
-
-// 	cur = data->cmd;
-// 	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
-// 	i = 0;
-// 	while (cur && i < data->nb_cmd)
-// 	{
-// 		files(cur);
-// 		if (pipe(data->fd) == -1)
-// 			printf("pipe failed\n");
-// 		p = fork();
-// 		if (p < 0)
-// 			printf("fork failed\n");
-// 		else if (p == 0)
-// 			child(data, cur, i);
-// 		else
-// 		{
-// 			parent(data);
-// 			waitpid(p, NULL, 0);
-// 		}
-// 		i++;
-// 		cur = cur->next;
-// 	}
-// 	close(data->fd[0]);
-// 	close(data->fd[1]);
-// }
 
 void exec(t_data *data)
 {

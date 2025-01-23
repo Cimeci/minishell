@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/22 14:56:21 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 09:50:39 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,12 @@ int		count_file(char **argv);
 int		count_trailing_redirects(char **argv, int argc);
 int		handle_options(char **argv, int *endl);
 int		open_output_file(char **argv, int argc);
-int		ft_echo(int argc, char **argv);
+int		ft_echo(char **argv);
 
-void	write_no_arguments(char **argv, int endl, int save, int fd);
-int		ft_write_argv_space(char **argv, int j, int dif, int fd);
-void	ft_write_argv_endl(char **argv, int j, int endl, int fd);
-void	write_arguments(char **argv, int fd, int endl, int save);
+void	write_no_arguments(char **argv, int endl, int save);
+int		ft_write_argv_space(char **argv, int j, int dif);
+void	ft_write_argv_endl(char **argv, int j, int endl);
+void	write_arguments(char **argv, int endl, int save);
 
 // // env //
 
