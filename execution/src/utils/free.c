@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:46:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 11:08:04 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/23 15:34:52 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,9 @@ void	free_cmd(t_cmd **head)
 		free(cur->cmd);
 		cur->cmd = NULL;
 		ft_free_tab(cur->args);
-		free(cur->outfile);
-		cur->outfile = NULL;
-		free(cur->infile);
-		cur->infile = NULL;
+		ft_free_tab(cur->outfile);
+		ft_free_tab(cur->infile);
+		ft_free_tab(cur->heredoc);
 		free(cur);
 		cur = next_node;
 	}
