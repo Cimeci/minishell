@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/21 10:53:24 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 10:37:23 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,6 +264,7 @@ void	handle_input_loop(char **argv, t_save **save, int *i)
 		if (!cur)
 			exit(EXIT_FAILURE);
 		cur->line = ft_strdup(input);
+		printf("line :%s\n", cur->line);
 		cur->next = NULL;
 		ft_lstadd_back3(save, cur);
 		free(input);
@@ -285,6 +286,9 @@ void	execute_child_process(char *path, char **argv, char **env,
 	args = find_args(argv);
 	if (!args)
 		exit(EXIT_FAILURE);
+	int i = 0;
+	while (args[i])
+		printf("args: %s\n", args[i++]);
 	execve(path, args, env);
 	perror("execve");
 	exit(EXIT_FAILURE);
