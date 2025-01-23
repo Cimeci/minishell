@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/22 17:55:33 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 09:37:11 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,10 +99,8 @@ void	prompt(t_data *data)
 	while (1)
 	{
 		input = readline("$> ");
-		if (!input) {
-			printf("\nERROR\n");
+		if (!input)
 			return ;
-		}
 		add_history(input);
 		parsing(data, input);
 		exec(data);

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/22 14:55:51 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 09:35:49 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ typedef struct s_data
 	char			*shell_pid;
 	int				fd[2];
 	int				nb_cmd;
+	int				original_stdin;
 	t_token			*token;
 	t_cmd			*cmd;
 	t_lst			*env;
