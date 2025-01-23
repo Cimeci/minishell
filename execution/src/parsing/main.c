@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/23 15:16:19 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/23 16:16:07 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,7 +138,10 @@ void	prompt(t_data *data)
 	{
 		input = readline("$> ");
 		if (!input)
+		{
+			printf("\nexit\n");
 			return ;
+		}
 		if (input[0] == '\0')
 			free(input);
 		else
