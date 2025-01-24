@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 11:23:40 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 12:41:28 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,7 +133,7 @@ void	get_flag_redir(t_cmd *cur_cmd, t_token *cur_tok)
 		return ;
 	while (cur_tok && cur_tok->next->type != PIPE)
 	{
-		if (cur_tok->type == OVERWRITE || cur_tok->type == INPUT)
+		if (cur_tok->type == OVERWRITE)
 		{
 			cur_cmd->flag_redir[i] = 1;
 			cur_tok = cur_tok->next->next;
@@ -142,12 +142,6 @@ void	get_flag_redir(t_cmd *cur_cmd, t_token *cur_tok)
 		else if (cur_tok->type == APPEND)
 		{
 			cur_cmd->flag_redir[i] = 2;
-			cur_tok = cur_tok->next->next;
-			i++;
-		}
-		else if (cur_tok->type == HEREDOC)
-		{
-			cur_cmd->flag_redir[i] = 3;
 			cur_tok = cur_tok->next->next;
 			i++;
 		}

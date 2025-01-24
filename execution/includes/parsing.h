@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 10:37:14 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:05:10 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ typedef struct s_data
 	int				fd[2];
 	int				nb_cmd;
 	int				original_stdin;
+	int				original_stdout;
 	t_token			*token;
 	t_cmd			*cmd;
 	t_lst			*env;

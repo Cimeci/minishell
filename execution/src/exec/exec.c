@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/24 09:28:23 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 13:58:30 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	is_built_in(t_data *data, t_cmd *cur)
 	return (1);
 }
 
-void	close_files(t_data *data, t_cmd *cur)
+void	close_files(t_cmd *cur)
 {
 	if (cur->fd_infile != -1 && cur->fd_infile)
 	{
@@ -72,11 +72,6 @@ void	close_files(t_data *data, t_cmd *cur)
 	{
 		close(cur->fd_outfile);
 		cur->fd_outfile = -1;
-	}
-	if (data->original_stdin != -1)
-	{
-		close(data->original_stdin);
-		data->original_stdin = -1;
 	}
 }
 
@@ -90,8 +85,10 @@ void	parent(t_data *data)
 void	files(t_cmd *cur)
 {
 	int	i;
+	int	type;
 
 	i = 0;
+	type = 0;
 	while (cur->infile && cur->infile[i])
 	{
 		if (i == ft_strlen_tab(cur->infile) - 1)
@@ -103,15 +100,30 @@ void	files(t_cmd *cur)
 	i = 0;
 	while (cur->outfile && cur->outfile[i])
 	{
-		if (i == ft_strlen_tab(cur->outfile) - 1)
-			cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC,
-					0644);
-		if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
+		if (cur->flag_redir[type] == 1)
 		{
-			if (errno == EACCES)
-				printf("outfile n'a pas les droits\n");
+			if (i == ft_strlen_tab(cur->outfile) - 1)
+				cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC,
+						0644);
+			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
+			{
+				if (errno == EACCES)
+					printf("outfile n'a pas les droits\n");
+			}
+		}
+		else if (cur->flag_redir[type] == 2)
+		{
+			if (i == ft_strlen_tab(cur->outfile) - 1)
+				cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND,
+						0644);
+			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
+			{
+				if (errno == EACCES)
+					printf("outfile n'a pas les droits\n");
+			}
 		}
 		i++;
+		type++;
 	}
 }
 
@@ -119,6 +131,12 @@ void	unique_cmd(t_data *data, t_cmd *cur)
 {
 	pid_t pid;
 	// heredoc //
+	files(cur);
+	if (cur->fd_infile)
+		dup2(cur->fd_infile, STDIN_FILENO);
+	if (cur->fd_outfile)
+		dup2(cur->fd_outfile, STDOUT_FILENO);
+	close_files(cur);
 	if (!is_built_in(data, cur))
 	{
 		if (cur->cmd && access(cur->cmd, X_OK) == 0)
@@ -171,7 +189,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 			dup2(cur->fd_outfile, STDOUT_FILENO);
 		close(data->fd[1]);
 	}
-	close_files(data, cur);
+	close_files(cur);
 	// heredoc //
 	if (!is_built_in(data, cur))
 	{
@@ -188,34 +206,39 @@ void exec(t_data *data)
 	t_cmd	*cur;
 	pid_t	p;
 
+	if (!data->cmd)
+		return ;
 	data->original_stdin = dup(STDIN_FILENO);
+	data->original_stdout = dup(STDOUT_FILENO);
 	cur = data->cmd;
-	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
 	i = 0;
 	if (!cur->next)
-	{
 		unique_cmd(data, cur);
-		return ;
-	}
-	while (cur && i < data->nb_cmd)
+	else
 	{
-		files(cur);
-		if (pipe(data->fd) == -1)
-			printf("pipe failed\n");
-		p = fork();
-		if (p < 0)
-			printf("fork failed\n");
-		else if (p == 0)
-			child(data, cur, i);
-		else
-			parent(data);
-		i++;
-		cur = cur->next;
+		data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
+		while (cur && i < data->nb_cmd)
+		{
+			files(cur);
+			if (pipe(data->fd) == -1)
+				printf("pipe failed\n");
+			p = fork();
+			if (p < 0)
+				printf("fork failed\n");
+			else if (p == 0)
+				child(data, cur, i);
+			else
+				parent(data);
+			i++;
+			cur = cur->next;
+		}
+		while (wait(NULL) != -1)
+			;
+		close(data->fd[0]);
+		close(data->fd[1]);
 	}
-	while (wait(NULL) != -1)
-		;
 	dup2(data->original_stdin, STDIN_FILENO);
 	close(data->original_stdin);
-	close(data->fd[0]);
-	close(data->fd[1]);
+	dup2(data->original_stdout, STDOUT_FILENO);
+	close(data->original_stdout);
 }
