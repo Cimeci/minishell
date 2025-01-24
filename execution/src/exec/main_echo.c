@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_echo.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/23 09:51:39 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:30:05 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	ft_echo(char **argv)
 		return (0);
 	if (!argv[1])
 	{
-		printf("Error arg\n");
+		printf("\n");
 		return (1);
 	}
 	endl = 0;
