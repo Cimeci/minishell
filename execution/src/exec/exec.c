@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/23 18:22:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/24 09:28:23 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,21 +89,29 @@ void	parent(t_data *data)
 
 void	files(t_cmd *cur)
 {
-	if (cur->infile)
+	int	i;
+
+	i = 0;
+	while (cur->infile && cur->infile[i])
 	{
-		cur->fd_infile = open(cur->infile, O_RDONLY);
-		if (cur->fd_infile < 0)
-			printf("infile n'existe pas/n'a pas les droits\n");
+		if (i == ft_strlen_tab(cur->infile) - 1)
+			cur->fd_infile = open(cur->infile[i], O_RDONLY);
+		if (open(cur->infile[i], O_RDONLY) < 0)
+			printf("%s n'existe pas ou n'a pas les droits", cur->infile[i]);
+		i++;
 	}
-	if (cur->outfile)
+	i = 0;
+	while (cur->outfile && cur->outfile[i])
 	{
-		cur->fd_outfile = open(cur->outfile, O_CREAT | O_WRONLY | O_TRUNC,
-				0644);
-		if (cur->fd_outfile < 0)
+		if (i == ft_strlen_tab(cur->outfile) - 1)
+			cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC,
+					0644);
+		if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
 		{
 			if (errno == EACCES)
 				printf("outfile n'a pas les droits\n");
 		}
+		i++;
 	}
 }
 
