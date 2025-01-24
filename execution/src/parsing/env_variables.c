@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 14:32:07 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 15:00:03 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,17 @@ int	only_dollars(t_data *data, int *quote_tab, int dollars, int i)
 	return (index + dollars);
 }
 
+int	is_separator_env(char c, int pos)
+{
+	if (c == '_')
+		return (0);
+	if (pos == 0 && !ft_isalpha(c))
+		return (1);
+	if (!ft_isalnum(c))
+		return (1);
+	return (0);
+}
+
 void	env_variables(t_data *data)
 {
 	int		i;
@@ -102,7 +113,7 @@ void	env_variables(t_data *data)
 		if (data->line[i] == '$')
 		{
 			result = only_dollars(data, quote_tab, dollars, i);
-			while (data->line[i] && !IS_SEPARATOR(data->line[i]))
+			while (data->line[i] && !is_separator_env(data->line[i], 1))
 				i++;
 			dollars = result - (result % 2);
 			if (data->line[i] != '$')
@@ -111,8 +122,10 @@ void	env_variables(t_data *data)
 			{
 				i++;
 				result = 0;
-				while (data->line[i + result] && !IS_SEPARATOR(data->line[i + result]))
+				while (data->line[i + result] && !is_separator_env(data->line[i + result], result))
 					result++;
+				if (data->line[i + result] == '_')
+					result--;
 				var = ft_substr(data->line, i, result);
 				next = ft_substr(data->line, i + result, ft_strlen(data->line));
 				prev = ft_substr(data->line, 0, i - 1);

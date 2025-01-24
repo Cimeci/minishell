@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 13:05:10 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:16:45 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ typedef struct s_data
 # define DOUBLE_QUOTE 34
 # define SINGLE_QUOTE 39
 # define IS_QUOTE(c) (c == DOUBLE_QUOTE || c == SINGLE_QUOTE)
-# define IS_SEPARATOR(c) ((c) == '=' || (c) == '$' || (c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ' || (c) == '\'' || (c) == '"')
 # define IS_SEPARATOR_TOKEN(c) ((c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ')
 
 // main.c

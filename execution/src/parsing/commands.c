@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 12:41:28 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 14:07:34 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,10 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	tmp = cur_tok;
 	cur_cmd->cmd = find_path(data, cur_tok->str);
 	if (!cur_cmd->cmd)
+	{
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
+		printf("la commande n'existe pas/built in\n");
+	}
 	while (tmp && tmp->type != PIPE)
 	{
 		if (cur_tok->type > 3)
