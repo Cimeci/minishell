@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 09:34:44 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:53:36 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,44 @@ void	parsing(t_data *data, char *input)
 		if (!check_syntax(data))
 			return ;
 		get_cmds(data);
+		int	i = 0;
+		t_cmd *cur;
+		cur = data->cmd;
+		while (cur)
+		{
+			printf("cmd : %s\n", cur->cmd);
+			i = 0;
+			while (cur->args[i])
+			{
+				printf("args[%d] = %s\n", i, cur->args[i]);
+				i++;
+			}
+			i = 0;
+			while (cur->outfile && cur->outfile[i])
+			{
+				printf("outfile[%d] : %s\n", i, cur->outfile[i]);
+				i++;
+			}
+			i = 0;
+			while (cur->infile && cur->infile[i])
+			{
+				printf("infile[%d] : %s\n", i, cur->infile[i]);
+				i++;
+			}
+			i = 0;
+			while (cur->heredoc && cur->heredoc[i])
+			{
+				printf("heredoc[%d] = %s\n", i, cur->heredoc[i]);
+				i++;
+			}
+			i = 0;
+			while (cur->flag_redir && cur->flag_redir[i])
+			{
+				printf("flag_redir[%d] = %d\n", i, cur->flag_redir[i]);
+				i++;
+			}
+			cur = cur->next;
+		}
 		if (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':')
 			return ;
 	}
@@ -117,7 +155,7 @@ void	prompt(t_data *data)
 		input = readline("$> ");
 		if (!input)
 		{
-			printf("\nexit\n");
+			printf("exit\n");
 			return ;
 		}
 		if (input[0] == '\0')
@@ -126,7 +164,7 @@ void	prompt(t_data *data)
 		{
 			add_history(input);
 			parsing(data, input);
-			exec(data);
+			//exec(data);
 			free(input);
 			free_all(data, 1);
 		}

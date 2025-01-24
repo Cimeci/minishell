@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/23 15:48:04 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 11:23:40 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 			|| cur_tok->type == APPEND))
 		{
 			cur_cmd->outfile[j] = ft_strdup(cur_tok->next->str);
-			if (cur_tok->type == APPEND)
-				cur_cmd->flag_redir = 1;
 			cur_tok->next->type = OVERWRITE;
 			cur_tok = cur_tok->next->next;
 			j++;
@@ -121,6 +119,43 @@ int	count_token(t_token *cur, int token)
 	return (count);
 }
 
+void	get_flag_redir(t_cmd *cur_cmd, t_token *cur_tok)
+{
+	int	count;
+	int	i;
+
+	i = 0;
+	count = (count_token(cur_tok, 1) + count_token(cur_tok, 3)) / 2;
+	if (!count)
+		return ;
+	cur_cmd->flag_redir = ft_calloc(sizeof(int), count + 1);
+	if (!cur_cmd->flag_redir)
+		return ;
+	while (cur_tok && cur_tok->next->type != PIPE)
+	{
+		if (cur_tok->type == OVERWRITE || cur_tok->type == INPUT)
+		{
+			cur_cmd->flag_redir[i] = 1;
+			cur_tok = cur_tok->next->next;
+			i++;
+		}
+		else if (cur_tok->type == APPEND)
+		{
+			cur_cmd->flag_redir[i] = 2;
+			cur_tok = cur_tok->next->next;
+			i++;
+		}
+		else if (cur_tok->type == HEREDOC)
+		{
+			cur_cmd->flag_redir[i] = 3;
+			cur_tok = cur_tok->next->next;
+			i++;
+		}
+		else if (cur_tok)
+			cur_tok = cur_tok->next;
+	}
+}
+
 void	get_cmds(t_data *data)
 {
 	t_cmd	*cur_cmd;
@@ -147,6 +182,7 @@ void	get_cmds(t_data *data)
 		}
 		redir_cmd(cur_cmd, cur_tok);
 		parse_heredoc(cur_cmd, cur_tok);
+		get_flag_redir(cur_cmd, cur_tok);
 		while (cur_tok && cur_tok->type != PIPE)
 		{
 			if (cur_tok->type <= 3)
