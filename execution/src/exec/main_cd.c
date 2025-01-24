@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/23 17:56:07 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:45:44 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,6 @@ void	ft_absolut_path(t_data *data, t_cmd *cur)
 		}
 		// printf("%s\n", target_path);
 		// printf("%s\n", ft_find_pwd());
-		if (target_path)
-			free(target_path);
 }
 
 int	ft_cd(t_data *data, t_cmd *cur)
