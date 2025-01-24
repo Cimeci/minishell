@@ -230,8 +230,7 @@ int	ft_export(t_data *data, t_cmd *cur)
 {
 	int		i;
 	char	*var;
-	char	*value;
-	char	*pwd;
+	char	*value;;
 
 	i = 1;
 	if (ft_strlen_tab(cur->args) - count_trailing_redirects(cur->args,
@@ -245,9 +244,7 @@ int	ft_export(t_data *data, t_cmd *cur)
 		if (!ft_strncmp(cur->args[i], "PWD", ft_strlen(cur->args[i]))
 			&& ft_strlen(cur->args[i]) == 3)
 		{
-			pwd = ft_find_pwd();
-			ft_export_assign(data, "PWD", pwd);
-			free(pwd);
+			ft_export_assign(data, "PWD", data->pwd);
 			return (0);
 		}
 		if (!ft_check_env_var(ft_get_var(cur->args[i])))

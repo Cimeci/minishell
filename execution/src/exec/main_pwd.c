@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/23 17:57:12 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/24 17:07:47 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,6 @@ char	*ft_find_pwd()
 
 int	ft_pwd(t_data *data)
 {
-	char *pwd;
-	
-	pwd = ft_find_pwd();
-	data->pwd = pwd;
-	printf("%s\n", data->pwd = pwd);
+	printf("%s\n", data->pwd);
 	return (0);
 }
