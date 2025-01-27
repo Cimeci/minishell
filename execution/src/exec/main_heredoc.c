@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/23 11:02:25 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/27 09:55:44 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ void	handle_input_loop(char **argv, t_lst **save, int *i)
 		if (*i == -1)
 			return ;
 		end = ft_search_end(argv, *i);
-		if (!end || !input || !ft_strncmp(input, end, ft_strlen(end)))
+		if (!end || !input || (!ft_strncmp(input, end, ft_strlen(end))
+				&& ft_strlen(end) == ft_strlen(input)))
 		{
 			free(input);
 			(*i)++;
@@ -101,7 +102,7 @@ void	handle_input_loop(char **argv, t_lst **save, int *i)
 		if (!cur)
 			exit(EXIT_FAILURE);
 		cur->str = ft_strdup(input);
-		printf("str :%s\n", cur->str);
+		// printf("str :%s\n", cur->str);
 		cur->next = NULL;
 		ft_lstadd_back_generic((void **)save, cur, sizeof(t_lst));
 		free(input);
@@ -112,6 +113,7 @@ void	execute_child_process(char *path, char **argv, char **env,
 		int pipe_fd[2])
 {
 	char	**args;
+	int		i;
 
 	close(pipe_fd[1]);
 	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
@@ -123,9 +125,9 @@ void	execute_child_process(char *path, char **argv, char **env,
 	args = find_args(argv);
 	if (!args)
 		exit(EXIT_FAILURE);
-	int i = 0;
-	while (args[i])
-		printf("args: %s\n", args[i++]);
+	// i = 0;
+	// while (args[i])
+	// 	printf("args: %s\n", args[i++]);
 	execve(path, args, env);
 	perror("execve");
 	exit(EXIT_FAILURE);
@@ -196,4 +198,3 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	printf("cur->cmd : %s\n", cur->cmd);
 	process_heredoc_loop(cur->args, ft_convert_lst_to_tab(data->env), cur->cmd);
 }
-
