@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 14:16:45 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/27 10:04:18 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_cmd
 	int				fd_infile;
 	int				fd_outfile;
 	int				*flag_redir;
+	bool			here;
 	struct s_cmd	*next;
 }					t_cmd;
 

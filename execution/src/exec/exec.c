@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/24 13:58:30 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/27 11:24:48 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,8 +130,13 @@ void	files(t_cmd *cur)
 void	unique_cmd(t_data *data, t_cmd *cur)
 {
 	pid_t pid;
-	// heredoc //
+
 	files(cur);
+	if (cur->here == 1)
+	{
+		ft_heredoc(data, cur);
+		return ;
+	}
 	if (cur->fd_infile)
 		dup2(cur->fd_infile, STDIN_FILENO);
 	if (cur->fd_outfile)
@@ -190,12 +195,15 @@ void	child(t_data *data, t_cmd *cur, int i)
 		close(data->fd[1]);
 	}
 	close_files(cur);
-	// heredoc //
+	if (cur->here == 1)
+		ft_heredoc(data, cur);
 	if (!is_built_in(data, cur))
 	{
-		execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env));
-		perror("Error");
-		exit(EXIT_FAILURE);
+		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
+		{
+			perror("Error");
+			exit(EXIT_FAILURE);
+		}
 	}
 	exit(EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 14:07:34 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/27 10:46:13 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok)
 		{
 			cur_cmd->heredoc[i] = ft_strdup(cur_tok->next->str);
 			cur_tok->next->type = HEREDOC;
+			cur_cmd->here = 1;
 			cur_tok = cur_tok->next->next;
 			i++;
 		}
@@ -134,7 +135,7 @@ void	get_flag_redir(t_cmd *cur_cmd, t_token *cur_tok)
 	cur_cmd->flag_redir = ft_calloc(sizeof(int), count + 1);
 	if (!cur_cmd->flag_redir)
 		return ;
-	while (cur_tok && cur_tok->next->type != PIPE)
+	while (cur_tok && cur_tok->type != PIPE)
 	{
 		if (cur_tok->type == OVERWRITE)
 		{
