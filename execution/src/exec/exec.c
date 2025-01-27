@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/27 11:24:48 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:16:27 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,10 +137,10 @@ void	unique_cmd(t_data *data, t_cmd *cur)
 		ft_heredoc(data, cur);
 		return ;
 	}
-	if (cur->fd_infile)
-		dup2(cur->fd_infile, STDIN_FILENO);
 	if (cur->fd_outfile)
 		dup2(cur->fd_outfile, STDOUT_FILENO);
+	if (cur->fd_infile)
+		dup2(cur->fd_infile, STDIN_FILENO);
 	close_files(cur);
 	if (!is_built_in(data, cur))
 	{
@@ -159,6 +159,16 @@ void	unique_cmd(t_data *data, t_cmd *cur)
 
 void	child(t_data *data, t_cmd *cur, int i)
 {
+	int	input_fd;
+
+	input_fd = -1;
+	if (cur->here == 1)
+	{
+		input_fd = ft_heredoc(data, cur);
+		dup2(input_fd, STDOUT_FILENO);
+		close(input_fd);
+		exit(0);
+	}
 	if (i == 0)
 	{
 		close(data->fd[0]);
@@ -195,8 +205,8 @@ void	child(t_data *data, t_cmd *cur, int i)
 		close(data->fd[1]);
 	}
 	close_files(cur);
-	if (cur->here == 1)
-		ft_heredoc(data, cur);
+	// if (cur->here == true)
+	// 	exit (0);
 	if (!is_built_in(data, cur))
 	{
 		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)

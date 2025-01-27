@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/27 13:03:02 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/27 16:25:24 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,44 +35,7 @@ t_lst	*ft_init_save(void)
 	return (save);
 }
 
-// char	**find_args(char **argv)
-// {
-// 	int		i;
-// 	char	**args;
-
-// 	i = 0;
-// 	while (ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
-// 		i++;
-// 	args = malloc(sizeof(char *) * (i + 1));
-// 	i = 0;
-// 	while (ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
-// 	{
-// 		args[i] = ft_strdup(argv[i]);
-// 		i++;
-// 	}
-// 	args[i] = NULL;
-// 	return (args);
-// }
-
-// char	*ft_search_end(char **argv, int i)
-// {
-// 	while (argv[i] && ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
-// 		i++;
-// 	if (!argv[i])
-// 		return (NULL);
-// 	return (argv[i + 1]);
-// }
-
-// int	ft_search_index_end(char **argv, int i)
-// {
-// 	while (argv[i] && ft_strncmp(argv[i], "<<", ft_strlen(argv[i])))
-// 		i++;
-// 	if (!argv[i])
-// 		return (-1);
-// 	return (i);
-// }
-
-void	handle_input_loop(t_cmd *cur, t_lst *save, int i)
+void	handle_input_loop(t_cmd *cur, t_lst **save, int i)
 {
 	char	*input;
 	char	*end;
@@ -86,55 +49,59 @@ void	handle_input_loop(t_cmd *cur, t_lst *save, int i)
 			&& ft_strlen(end) == ft_strlen(input)))
 		{
 			free(input);
-			// (*i)++;
 			break ;
 		}
 		current = malloc(sizeof(t_lst));
 		if (!current)
 			exit(EXIT_FAILURE);
 		current->str = ft_strdup(input);
-		printf("str :%s\n", current->str);
 		current->next = NULL;
-		ft_lstadd_back_generic((void **)&save, current, sizeof(char *));
+		ft_lstadd_back_generic((void **)save, current, sizeof(char *));
 		free(input);
 	}
 }
 
 void	execute_child_process(t_data *data,  t_cmd *cur, int pipe_fd[2])
 {
-	close(pipe_fd[1]);
 	if (dup2(pipe_fd[0], STDIN_FILENO) == -1)
 	{
 		perror("dup2");
 		exit(EXIT_FAILURE);
 	}
 	close(pipe_fd[0]);
-	// int i = 0;
-	// while (cur->args[i])
-	// 	printf("args: %s\n", cur->args[i++]);
-	execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env));
-	perror("execve");
+	if (cur->fd_outfile > 0)
+	{
+		dprintf(2, "LA YA UN OUTFILE\n");
+		dup2(cur->fd_outfile, STDOUT_FILENO);
+		close(cur->fd_outfile);
+		cur->fd_outfile = -1;
+	}
+	else if (cur->next && cur->fd_outfile < 0)
+		dup2(pipe_fd[1], STDOUT_FILENO);
+	close(pipe_fd[1]);
+	// dprintf(2, "Here\n");
+	if (cur->next == NULL)
+	{
+		execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env));
+		perror("execve");
+	}
 	exit(EXIT_FAILURE);
 }
 
 void	handle_parent_process(t_lst *save, int pipe_fd[2])
 {
-	t_lst	*tmp;
-
 	close(pipe_fd[0]);
-	tmp = save;
-	while (tmp)
+	while (save)
 	{
-		dprintf(2, "%s\n", tmp->str);
-		dprintf(pipe_fd[1], "%s\n", tmp->str);
-		tmp = tmp->next;
+		dprintf(pipe_fd[1], "%s\n", save->str);
+		save = save->next;
 	}
 	close(pipe_fd[1]);
 	if (wait(NULL) == -1)
 		perror("wait");
 }
 
-void	process_pipe_and_fork(t_data *data, t_cmd *cur, t_lst *save)
+int	process_pipe_and_fork(t_data *data, t_cmd *cur, t_lst *save)
 {
 	int		pipe_fd[2];
 	pid_t	pid;
@@ -142,72 +109,51 @@ void	process_pipe_and_fork(t_data *data, t_cmd *cur, t_lst *save)
 	if (pipe(pipe_fd) == -1)
 	{
 		perror("pipe");
-		// free(cur->cmd);
-		return ;
+		return (0);
 	}
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
-		// free(cur->cmd);
 		close(pipe_fd[0]);
 		close(pipe_fd[1]);
-		return ;
+		return (0);
 	}
 	if (pid == 0)
 		execute_child_process(data, cur, pipe_fd);
 	else
 		handle_parent_process(save, pipe_fd);
+	int input_fd;
+	input_fd = dup(pipe_fd[0]);
+	close(pipe_fd[0]);
+	close(pipe_fd[1]);
+	return (input_fd);
 }
 
-void	new_args(t_cmd *cur, t_lst *save)
+int	process_heredoc_loop(t_data *data, t_cmd *cur)
 {
+	t_lst	*save;
 	int		i;
-	char	**new;
-
-	i = 0;
-	i = ft_lstsize_generic((void *)save, sizeof(char *)) + ft_strlen_tab(&cur->args[i]);
-	new = malloc((i + 1) * sizeof(char *));
-	if (!new)
-		return ;
-	i = 0;
-	while (cur->args[i])
-	{
-		new[i] = ft_strdup(cur->args[i]);
-		i++;
-	}
-	while (save)
-	{
-		new[i] = ft_strdup(save->str);
-		save = save->next;
-		i++;
-	}
-	new[i] = 0;
-	ft_free_tab(cur->args);
-	cur->args = new;
-}
-
-void	process_heredoc_loop(t_data *data, t_cmd *cur)
-{
-	t_lst	save;
-	int		i;
+	int input_fd;
 
 	i = 0;
 	while (cur->heredoc[i])
 	{
-		//save = NULL;
+		save = NULL;
 		handle_input_loop(cur, &save, i);
-		new_args(cur, &save);
-		process_pipe_and_fork(data, cur, &save);
-		ft_lstclear3(&save);
+		if (ft_strlen_tab(cur->heredoc) - 1 == i)
+			input_fd = process_pipe_and_fork(data, cur, save);
+		ft_lstclear3(save);
 		i++;
 	}
+	return (input_fd);
 }
 
-void	ft_heredoc(t_data *data, t_cmd *cur)
+int	ft_heredoc(t_data *data, t_cmd *cur)
 {
+	int input_fd;
 	if (cur->args[0][0] == '\n')
-		return ;
-	// printf("cur->cmd : %s\n", cur->cmd);
-	process_heredoc_loop(data, cur);
+		return (0);
+    input_fd = process_heredoc_loop(data, cur);
+	return (input_fd);
 }
