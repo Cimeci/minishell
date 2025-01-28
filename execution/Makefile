@@ -6,7 +6,7 @@
 #    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/28 16:11:24 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/01/28 16:33:36 by ncharbog         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,9 +51,9 @@ LIBFT_DIR = libft
 OBJ_LIBFT = $(LIBFT_DIR)/libft.a
 
 all: $(NAME)
-
+	@echo "compilation"
 $(OBJ_LIBFT):
-	@cd $(LIBFT_DIR) && make
+	@cd $(LIBFT_DIR) && make > /dev/null
 
 $(NAME): $(OBJ) $(OBJ_LIBFT)
 	@$(CC) $(CFLAGS) -lreadline $(OBJ) $(OBJ_LIBFT) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -o $(NAME)
@@ -64,7 +64,7 @@ $(OBJ_DIR)/%.o: %.c
 
 clean:
 	@rm -rf $(OBJ_DIR) $(OBJ_LIBFT)
-	@cd $(LIBFT_DIR) && make clean
+	@cd $(LIBFT_DIR) && make clean > /dev/null
 	@echo "clean"
 fclean: clean
 	@rm -f $(NAME)

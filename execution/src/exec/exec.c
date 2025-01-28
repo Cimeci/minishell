@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 15:21:47 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:34:50 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ void	incorrect_outfile(void)
 
 int	exec_built_in(t_data *data, t_cmd *cur)
 {
-	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd) == 4)
+	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
+		&& ft_strlen(cur->cmd) == 4)
 		return (1);
 	if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 2)
@@ -105,8 +106,8 @@ void	files(t_cmd *cur)
 		if (cur->flag_redir[type] == 1)
 		{
 			if (i == ft_strlen_tab(cur->outfile) - 1)
-				cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC,
-						0644);
+				cur->fd_outfile = open(cur->outfile[i],
+						O_CREAT | O_WRONLY | O_TRUNC, 0644);
 			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
 			{
 				if (errno == EACCES)
@@ -116,8 +117,8 @@ void	files(t_cmd *cur)
 		else if (cur->flag_redir[type] == 2)
 		{
 			if (i == ft_strlen_tab(cur->outfile) - 1)
-				cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND,
-						0644);
+				cur->fd_outfile = open(cur->outfile[i],
+						O_CREAT | O_WRONLY | O_APPEND, 0644);
 			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
 			{
 				if (errno == EACCES)
@@ -208,7 +209,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 	exit(EXIT_SUCCESS);
 }
 
-void exec(t_data *data)
+void	exec(t_data *data)
 {
 	int		i;
 	t_cmd	*cur;
@@ -221,6 +222,7 @@ void exec(t_data *data)
 	data->original_stdout = dup(STDOUT_FILENO);
 	cur = data->cmd;
 	i = 0;
+	signal(SIGINT, SIG_IGN);
 	if (!cur->next)
 	{
 		if (cur->here == 1)
@@ -229,9 +231,12 @@ void exec(t_data *data)
 	}
 	else
 	{
-		data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
+		data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd)
+				- sizeof(t_cmd *));
 		while (cur && i < data->nb_cmd)
 		{
+			if (cur->here == 1)
+				cur->file = randomizer();
 			files(cur);
 			if (access(cur->cmd, X_OK) == 0)
 			{
@@ -259,4 +264,5 @@ void exec(t_data *data)
 	close(data->original_stdin);
 	dup2(data->original_stdout, STDOUT_FILENO);
 	close(data->original_stdout);
+	signal(SIGINT, SIG_DFL);
 }

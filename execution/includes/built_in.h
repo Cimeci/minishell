@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 15:13:12 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:33:46 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 # define BUILT_IN_H
 
 # include "minishell.h"
-
-# ifndef G_PID
-extern pid_t	g_pid;
-# endif
 
 // cd //
 
