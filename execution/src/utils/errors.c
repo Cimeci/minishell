@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:03 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 16:14:27 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:44:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	errors(t_data *data, char *str, int type)
 	}
 	else if (type == CMD_NOT_FOUND)
 	{
-		printf("%s: command not found", str);
+		printf("%s: command not found\n", str);
 		data->gexit_code = 127;
 	}
 	return (0);
