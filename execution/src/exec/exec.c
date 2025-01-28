@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 16:34:50 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 17:29:06 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	parent(t_data *data)
 	close(data->fd[0]);
 }
 
-void	files(t_cmd *cur)
+void	files(t_data *data, t_cmd *cur)
 {
 	int	i;
 	int	type;
@@ -97,7 +97,7 @@ void	files(t_cmd *cur)
 		if (i == ft_strlen_tab(cur->infile) - 1)
 			cur->fd_infile = open(cur->infile[i], O_RDONLY);
 		if (open(cur->infile[i], O_RDONLY) < 0)
-			printf("%s n'existe pas ou n'a pas les droits", cur->infile[i]);
+			errors(data, cur->infile[i], FILES);
 		i++;
 	}
 	i = 0;
@@ -111,7 +111,7 @@ void	files(t_cmd *cur)
 			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
 			{
 				if (errno == EACCES)
-					printf("outfile n'a pas les droits\n");
+					errors(data, cur->outfile[i], PERM);
 			}
 		}
 		else if (cur->flag_redir[type] == 2)
@@ -122,7 +122,7 @@ void	files(t_cmd *cur)
 			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
 			{
 				if (errno == EACCES)
-					printf("outfile n'a pas les droits\n");
+					errors(data, cur->outfile[i], PERM);
 			}
 		}
 		i++;
@@ -135,7 +135,7 @@ void	unique_cmd(t_data *data, t_cmd *cur)
 	pid_t	p;
 	//int		status;
 
-	files(cur);
+	files(data, cur);
 	if (cur->here == 1)
 		ft_heredoc(data, cur);
 	if (cur->fd_outfile)
@@ -237,7 +237,7 @@ void	exec(t_data *data)
 		{
 			if (cur->here == 1)
 				cur->file = randomizer();
-			files(cur);
+			files(data, cur);
 			if (access(cur->cmd, X_OK) == 0)
 			{
 				if (cur->here == 1)

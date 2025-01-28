@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 16:33:59 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 17:33:19 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,9 @@ enum				e_error
 {
 	ERROR_SYNTAX,
 	CMD_NOT_FOUND,
+	FILES,
+	PERM,
+	DIRECTORY,
 };
 
 typedef struct s_cmd
