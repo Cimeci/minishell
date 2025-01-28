@@ -3,34 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   main_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 10:05:49 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:11:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	execution_cmd(char **env, char *file)
+void	execution_cmd(t_cmd *cur, char *file)
 {
-	pid_t	pid;
 	char	**args;
-
-	args = malloc(sizeof(char *) * 3);
-	args[0] = ft_strdup("cat");
-	args[1] = ft_strdup(file);
-	args[2] = NULL;
-	pid = fork();
-	if (pid == -1)
-		exit(EXIT_FAILURE);
-	else if (pid == 0)
-		execve("/usr/bin/cat", args, env);
-	else if (wait(NULL) == -1)
+	int		i;
+	
+	i = 0;
+	args = malloc(sizeof(char *) * (ft_strlen_tab(cur->args) + 2));
+	while (cur->args[i])
 	{
-		perror("wait failed");
-		exit(0);
+		args[i] = ft_strdup(cur->args[i]);
+		i++;
 	}
+	args[i] = ft_strdup(file);
+	i++;
+	args[i] = NULL;
+	ft_free_tab(cur->args);
+	cur->args = NULL;
+	cur->args = malloc(sizeof(char *) * (i + 1));
+	if (!cur->args)
+		return ;
+	i = 0;
+	while (args[i])
+	{
+		cur->args[i] = ft_strdup(args[i]);
+		i++;
+	}
+	cur->args[i] = NULL;
+	ft_free_tab(args);
 }
 
 void	write_tmpfile(int fd)
@@ -49,18 +58,31 @@ void	write_tmpfile(int fd)
 			break ;
 		}
 		ft_putendl_fd(input, fd);
+		free(input);
 	}
-	close(fd);
 }
 
-void	ft_heredoc(char **env)
+void	ft_heredoc(t_data *data, t_cmd *cur)
 {
 	char	*file;
 	int		fd;
 
+	(void)data;
 	file = randomizer();
+	// printf("file :%s\n", file);
 	fd = open(file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
+	if (fd < 0)
+	{
+		printf("Error fd\n");
+		return ;
+	}
+	if (access(file, F_OK) == -1)
+	{
+		printf("Error file not find\n");
+		return ;
+	}
 	write_tmpfile(fd);
-	execution_cmd(env, file);
-	unlink(file);
+	execution_cmd(cur, file);
+	close(fd);
+	free(file);
 }

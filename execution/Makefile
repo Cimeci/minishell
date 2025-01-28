@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/28 09:52:14 by inowak--         ###   ########.fr        #
+#    Updated: 2025/01/28 10:19:22 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,9 @@ SRC = src/utils/command.c\
 		src/exec/main_heredoc.c\
 		src/exec/signal.c\
 		src/exec/randomizer.c\
-		# src/exec/main_exit.c\
+		gnl/get_next_line.c\
+		gnl/get_next_line_utils.c\
+		# src/exec/main_exit.c\		
 
 OBJ_DIR = .objects
 INCLUDE_DIR = includes

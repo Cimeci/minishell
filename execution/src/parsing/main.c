@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 10:06:49 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:16:45 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,12 +121,10 @@ void	init_data(t_data *data, char **env)
 	i = 0;
 	check = getcwd(buffer, BUFFER_SIZE);
 	if (check)
-		data->pwd = ft_strdup(buffer);
+		data->pwd = NULL;
 	else
 		perror("Error getcwd");
 	get_shell_pid(data);
-	data->old_pwd = NULL;
-	data->pwd = ft_strdup(buffer);
 	data->line = NULL;
 	data->token = NULL;
 	data->cmd = NULL;
@@ -162,7 +160,7 @@ void	prompt(t_data *data)
 		// input = readline("$> ");
 		if (!input)
 		{
-			free(data->pwd);
+			// free(data->pwd);
 			printf("exit\n");
 			return ;
 		}
@@ -176,7 +174,7 @@ void	prompt(t_data *data)
 			free(input);
 			free_all(data, 1);
 		}
-		free(data->pwd);
+		// free(data->pwd);
 	}
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 10:03:13 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:26:41 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ int				is_built_in(t_data *data, t_cmd *cur);
 
 // // heredoc //
 
-int			ft_heredoc(t_data *data, t_cmd *cur);
+void			ft_heredoc(t_data *data, t_cmd *cur);
 
 // // signal.c //
 

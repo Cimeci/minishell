@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 08:38:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 09:38:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:55:22 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	*convert_ascii(char *str)
 	j = 0;
 	while (str[i])
 	{
-		if (ft_isascii(str[i]))
+		if (ft_isalnum(str[i]))
 			j++;
 		i++;
 	}
@@ -31,7 +31,7 @@ char	*convert_ascii(char *str)
 	j = 0;
 	while (str[i])
 	{
-		if (ft_isascii(str[i]))
+		if (ft_isalnum(str[i]))
 		{
 			// printf("|%c|", str[i]);
 			line[j] = str[i];
@@ -60,12 +60,13 @@ char	*randomizer(void)
 	while (line)
 	{
 		pathname = convert_ascii(line);
-		// printf("%s\n", pathname);
+		free(line);
 		if (ft_strlen(pathname) < 250)
 		{
-			if (access(pathname, F_OK))
+			if (access(pathname, F_OK) <= 0)
 				return (pathname);
 		}
+		free(pathname);
 		line = get_next_line(fd);
 	}
 	return (NULL);

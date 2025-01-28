@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 10:04:22 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 11:09:55 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,6 @@ void	unique_cmd(t_data *data, t_cmd *cur)
 	if (cur->here == 1)
 	{
 		ft_heredoc(data, cur);
-		return ;
 	}
 	if (cur->fd_outfile)
 		dup2(cur->fd_outfile, STDOUT_FILENO);
@@ -164,13 +163,13 @@ void	child(t_data *data, t_cmd *cur, int i)
 	int	input_fd;
 
 	input_fd = -1;
-	if (cur->here == 1)
-	{
-		input_fd = ft_heredoc(data, cur);
-		dup2(input_fd, STDOUT_FILENO);
-		close(input_fd);
-		exit(0);
-	}
+	// if (cur->here == 1)
+	// {
+	// 	input_fd = ft_heredoc(data, cur);
+	// 	dup2(input_fd, STDOUT_FILENO);
+	// 	close(input_fd);
+	// 	exit(0);
+	// }
 	if (i == 0)
 	{
 		close(data->fd[0]);
