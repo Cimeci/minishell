@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 11:09:55 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:14:26 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,8 @@ void	incorrect_outfile(void)
 
 int	is_built_in(t_data *data, t_cmd *cur)
 {
-	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd) == 4)
+	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
+		&& ft_strlen(cur->cmd) == 4)
 		return (1);
 	if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 2)
@@ -105,8 +106,8 @@ void	files(t_cmd *cur)
 		if (cur->flag_redir[type] == 1)
 		{
 			if (i == ft_strlen_tab(cur->outfile) - 1)
-				cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC,
-						0644);
+				cur->fd_outfile = open(cur->outfile[i],
+						O_CREAT | O_WRONLY | O_TRUNC, 0644);
 			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
 			{
 				if (errno == EACCES)
@@ -116,8 +117,8 @@ void	files(t_cmd *cur)
 		else if (cur->flag_redir[type] == 2)
 		{
 			if (i == ft_strlen_tab(cur->outfile) - 1)
-				cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND,
-						0644);
+				cur->fd_outfile = open(cur->outfile[i],
+						O_CREAT | O_WRONLY | O_APPEND, 0644);
 			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
 			{
 				if (errno == EACCES)
@@ -131,7 +132,7 @@ void	files(t_cmd *cur)
 
 void	unique_cmd(t_data *data, t_cmd *cur)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	files(cur);
 	if (cur->here == 1)
@@ -163,13 +164,10 @@ void	child(t_data *data, t_cmd *cur, int i)
 	int	input_fd;
 
 	input_fd = -1;
-	// if (cur->here == 1)
-	// {
-	// 	input_fd = ft_heredoc(data, cur);
-	// 	dup2(input_fd, STDOUT_FILENO);
-	// 	close(input_fd);
-	// 	exit(0);
-	// }
+	if (cur->here == 1)
+	{
+		ft_heredoc(data, cur);
+	}
 	if (i == 0)
 	{
 		close(data->fd[0]);
@@ -206,8 +204,6 @@ void	child(t_data *data, t_cmd *cur, int i)
 		close(data->fd[1]);
 	}
 	close_files(cur);
-	// if (cur->here == true)
-	// 	exit (0);
 	if (!is_built_in(data, cur))
 	{
 		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
@@ -219,7 +215,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 	exit(EXIT_SUCCESS);
 }
 
-void exec(t_data *data)
+void	exec(t_data *data)
 {
 	int		i;
 	t_cmd	*cur;
@@ -232,12 +228,18 @@ void exec(t_data *data)
 	cur = data->cmd;
 	i = 0;
 	if (!cur->next)
+	{
+		if (cur->here == 1)
+			cur->file = randomizer();
 		unique_cmd(data, cur);
+	}
 	else
 	{
 		data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
 		while (cur && i < data->nb_cmd)
 		{
+			if (cur->here == 1)
+				cur->file = randomizer();
 			files(cur);
 			if (pipe(data->fd) == -1)
 				printf("pipe failed\n");
