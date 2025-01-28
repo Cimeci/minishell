@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 09:52:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:53:48 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,16 @@ void	env_variables(t_data *data)
 				free(data->line);
 				if (result == 0 && var[0] == '\0')
 				{
-					prev = ft_strjoin_free(prev, "$");
-					data->line = ft_strjoin(prev, next);
+					if (next[0] == '?')
+					{
+						prev = ft_strjoin_free(prev, ft_itoa(data->gexit_code));
+						data->line = ft_strjoin(prev, next + 1);
+					}
+					else
+					{
+						prev = ft_strjoin_free(prev, "$");
+						data->line = ft_strjoin(prev, next);
+					}
 				}
 				else if (my_getenv(data, var) && quote_tab[dollars] == 1)
 				{

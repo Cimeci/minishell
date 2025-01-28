@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
+#    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/28 10:19:22 by inowak--         ###   ########.fr        #
+#    Updated: 2025/01/28 12:58:59 by ncharbog         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,13 +40,13 @@ SRC = src/utils/command.c\
 		src/exec/randomizer.c\
 		gnl/get_next_line.c\
 		gnl/get_next_line_utils.c\
-		# src/exec/main_exit.c\		
+		# src/exec/main_exit.c\
 
 OBJ_DIR = .objects
 INCLUDE_DIR = includes
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
-LIBFT_DIR = ../libft
+LIBFT_DIR = libft
 OBJ_LIBFT = $(LIBFT_DIR)/libft.a
 
 all: $(NAME)

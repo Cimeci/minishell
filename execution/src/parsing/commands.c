@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/27 10:46:13 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:28:07 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,31 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 		cur_cmd->outfile[j] = NULL;
 }
 
+int	is_built_in(char *str)
+{
+	if (!ft_strncmp(str, "exit", ft_strlen(str)) && ft_strlen(str) == 4)
+		return (1);
+	if (!ft_strncmp(str, "cd", ft_strlen(str))
+		&& ft_strlen(str) == 2)
+		return (1);
+	else if (!ft_strncmp(str, "pwd", ft_strlen(str))
+		&& ft_strlen(str) == 3)
+		return (1);
+	else if (!ft_strncmp(str, "echo", ft_strlen(str))
+		&& ft_strlen(str) == 4)
+		return (1);
+	else if (!ft_strncmp(str, "env", ft_strlen(str))
+		&& ft_strlen(str) == 3)
+		return (1);
+	else if (!ft_strncmp(str, "export", ft_strlen(str))
+		&& ft_strlen(str) == 6)
+		return (1);
+	else if (!ft_strncmp(str, "unset", ft_strlen(str))
+		&& ft_strlen(str) == 5)
+		return (1);
+	return (0);
+}
+
 t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 {
 	t_token	*tmp;
@@ -83,8 +108,14 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	if (!cur_cmd->cmd)
 	{
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
-		printf("la commande n'existe pas/built in\n");
+		if (!is_built_in(cur_tok->str))
+		{
+			data->gexit_code = 127;
+			printf("%s: command not found\n", cur_tok->str);
+		}
 	}
+	else
+		data->gexit_code = 0;
 	while (tmp && tmp->type != PIPE)
 	{
 		if (cur_tok->type > 3)

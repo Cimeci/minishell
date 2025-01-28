@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 11:16:45 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:56:23 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,48 +64,17 @@ void	parsing(t_data *data, char *input)
 	if (data->token)
 	{
 		if (!check_syntax(data))
+		{
+			data->gexit_code = 2;
 			return ;
+		}
 		get_cmds(data);
-		//int	i = 0;
-		// t_cmd *cur;
-		// cur = data->cmd;
-		// while (cur)
-		// {
-		// 	printf("cmd : %s\n", cur->cmd);
-		// 	i = 0;
-		// 	while (cur->args[i])
-		// 	{
-		// 		printf("args[%d] = %s\n", i, cur->args[i]);
-		// 		i++;
-		// 	}
-		// 	i = 0;
-		// 	while (cur->outfile && cur->outfile[i])
-		// 	{
-		// 		printf("outfile[%d] : %s\n", i, cur->outfile[i]);
-		// 		i++;
-		// 	}
-		// 	i = 0;
-		// 	while (cur->infile && cur->infile[i])
-		// 	{
-		// 		printf("infile[%d] : %s\n", i, cur->infile[i]);
-		// 		i++;
-		// 	}
-		// 	i = 0;
-		// 	while (cur->heredoc && cur->heredoc[i])
-		// 	{
-		// 		printf("heredoc[%d] = %s\n", i, cur->heredoc[i]);
-		// 		i++;
-		// 	}
-		// 	i = 0;
-		// 	while (cur->flag_redir && cur->flag_redir[i])
-		// 	{
-		// 		printf("flag_redir[%d] = %d\n", i, cur->flag_redir[i]);
-		// 		i++;
-		// 	}
-		// 	cur = cur->next;
-		// }
 		if (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':')
+		{
+			if (data->cmd->cmd[0] == '!')
+				data->gexit_code = 1;
 			return ;
+		}
 	}
 	else
 		return ;
@@ -157,10 +126,8 @@ void	prompt(t_data *data)
 		user_read = ft_strjoin(data->pwd, "$ ");
 		input = readline(user_read);
 		free(user_read);
-		// input = readline("$> ");
 		if (!input)
 		{
-			// free(data->pwd);
 			printf("exit\n");
 			return ;
 		}
@@ -174,7 +141,6 @@ void	prompt(t_data *data)
 			free(input);
 			free_all(data, 1);
 		}
-		// free(data->pwd);
 	}
 }
 

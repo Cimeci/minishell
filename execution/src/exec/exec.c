@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 11:09:55 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 14:24:40 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	incorrect_outfile(void)
 	}
 }
 
-int	is_built_in(t_data *data, t_cmd *cur)
+int	exec_built_in(t_data *data, t_cmd *cur)
 {
 	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd) == 4)
 		return (1);
@@ -131,29 +131,28 @@ void	files(t_cmd *cur)
 
 void	unique_cmd(t_data *data, t_cmd *cur)
 {
-	pid_t pid;
+	pid_t	p;
+	//int		status;
 
 	files(cur);
 	if (cur->here == 1)
-	{
 		ft_heredoc(data, cur);
-	}
 	if (cur->fd_outfile)
 		dup2(cur->fd_outfile, STDOUT_FILENO);
 	if (cur->fd_infile)
 		dup2(cur->fd_infile, STDIN_FILENO);
 	close_files(cur);
-	if (!is_built_in(data, cur))
+	if (!exec_built_in(data, cur))
 	{
 		if (cur->cmd && access(cur->cmd, X_OK) == 0)
 		{
-			pid = fork();
-			if (pid == -1)
+			p = fork();
+			if (p == -1)
 				exit(EXIT_FAILURE);
-			else if (pid == 0)
+			else if (p == 0)
 				execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env));
-			else if (wait(NULL) == -1)
-				perror("wait failed");
+			while (wait(NULL) > 0)
+				;
 		}
 	}
 }
@@ -208,7 +207,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 	close_files(cur);
 	// if (cur->here == true)
 	// 	exit (0);
-	if (!is_built_in(data, cur))
+	if (!exec_built_in(data, cur))
 	{
 		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
 		{
@@ -224,6 +223,7 @@ void exec(t_data *data)
 	int		i;
 	t_cmd	*cur;
 	pid_t	p;
+	//int		status;
 
 	if (!data->cmd)
 		return ;
@@ -239,19 +239,22 @@ void exec(t_data *data)
 		while (cur && i < data->nb_cmd)
 		{
 			files(cur);
-			if (pipe(data->fd) == -1)
-				printf("pipe failed\n");
-			p = fork();
-			if (p < 0)
-				printf("fork failed\n");
-			else if (p == 0)
-				child(data, cur, i);
-			else
-				parent(data);
+			if (access(cur->cmd, X_OK) == 0)
+			{
+				if (pipe(data->fd) == -1)
+					printf("pipe failed\n");
+				p = fork();
+				if (p < 0)
+					printf("fork failed\n");
+				else if (p == 0)
+					child(data, cur, i);
+				else
+					parent(data);
+			}
 			i++;
 			cur = cur->next;
 		}
-		while (wait(NULL) != -1)
+		while (wait(NULL) > 0)
 			;
 		close(data->fd[0]);
 		close(data->fd[1]);
