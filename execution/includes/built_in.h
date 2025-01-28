@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 15:54:04 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:33:46 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char			*my_getenv_lst(const char *name, t_lst *env);
 
 // // exec.c //
 void			exec(t_data *data);
-int				is_built_in(t_data *data, t_cmd *cur);
+int				is_built_in(char *str);
 
 // // heredoc //
 

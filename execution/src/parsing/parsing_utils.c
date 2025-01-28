@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parsing_utils.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:40:02 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/22 10:19:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:08:36 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	check_quotes(char *input)
+int	check_quotes(t_data *data, char *input)
 {
 	int	i;
 
@@ -25,7 +25,7 @@ int	check_quotes(char *input)
 			while (input[i] && input[i] != '\'')
 				i++;
 			if (input[i] != '\'')
-				return (-1);
+				return (errors(data, "'", ERROR_SYNTAX));
 		}
 		if (input[i] == '"')
 		{
@@ -33,11 +33,11 @@ int	check_quotes(char *input)
 			while (input[i] && input[i] != '"')
 				i++;
 			if (input[i] != '"')
-				return (-1);
+				return (errors(data, "\"", ERROR_SYNTAX));
 		}
 		i++;
 	}
-	return (0);
+	return (1);
 }
 
 void	get_shell_pid(t_data *data)
