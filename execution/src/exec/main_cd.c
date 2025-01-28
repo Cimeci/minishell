@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/24 17:25:31 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 18:00:37 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,12 @@ void	ft_absolut_path(t_data *data, t_cmd *cur)
 		path = ft_strjoin(data->pwd, "/");
 		target_path = ft_strjoin(path, cur->args[1]);
 	}
+	// if (access(target_path, F_OK))
 	if (chdir(target_path))
 	{
-		ft_free_path(path, target_path);
+		// ft_free_path(path, target_path);
+		// error_exec(data, target_path, "cd", 3);
 		perror("Error");
-		return ;
 	}
 	// printf("%s\n", target_path);
 	// printf("%s\n", data->pwd);
@@ -72,7 +73,7 @@ int	ft_cd(t_data *data, t_cmd *cur)
 	if (!cur->args[1] || cur->args[1][0] == '\0'
 		|| ft_strlen_tab(cur->args) != 2)
 	{
-		ft_putendl_fd("Error : No path", 2);
+		ft_putendl_fd("cd : No path", 2);
 		return (-1);
 	}
 	if (cur->args[1] && cur->args[1][0] != '\0')
