@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 09:34:44 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 17:07:41 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,15 +109,21 @@ void	init_data(t_data *data, char **env)
 void	prompt(t_data *data)
 {
 	char	*input;
+	char	*user_read;
 
-	// signal(SIGINT, parent_signal_handler);
-	// signal(SIGQUIT, SIG_IGN);
+	signal(SIGINT, parent_signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		input = readline("$> ");
+		data->pwd = ft_find_pwd();
+		user_read = ft_strjoin(data->pwd, "$ ");
+		input = readline(user_read);
+		free(user_read);
+		// input = readline("$> ");
 		if (!input)
 		{
-			printf("\nexit\n");
+			free(data->pwd);
+			printf("exit\n");
 			return ;
 		}
 		if (input[0] == '\0')
@@ -130,6 +136,7 @@ void	prompt(t_data *data)
 			free(input);
 			free_all(data, 1);
 		}
+		free(data->pwd);
 	}
 }
 

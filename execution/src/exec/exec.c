@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/24 09:28:23 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/24 10:51:49 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	incorrect_outfile(void)
 
 int	is_built_in(t_data *data, t_cmd *cur)
 {
+	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd) == 4)
+		return (1);
 	if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 2)
 		ft_cd(data, cur);
@@ -119,6 +121,8 @@ void	unique_cmd(t_data *data, t_cmd *cur)
 {
 	pid_t pid;
 	// heredoc //
+	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd) == 4)
+		exit(EXIT_SUCCESS);
 	if (!is_built_in(data, cur))
 	{
 		if (cur->cmd && access(cur->cmd, X_OK) == 0)
