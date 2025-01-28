@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 14:14:26 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:49:11 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,6 +163,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 {
 	int	input_fd;
 
+	// signal(SIGINT, child_signal_handler);
 	input_fd = -1;
 	if (cur->here == 1)
 	{
@@ -227,6 +228,7 @@ void	exec(t_data *data)
 	data->original_stdout = dup(STDOUT_FILENO);
 	cur = data->cmd;
 	i = 0;
+	signal(SIGINT, SIG_IGN);
 	if (!cur->next)
 	{
 		if (cur->here == 1)
@@ -235,7 +237,8 @@ void	exec(t_data *data)
 	}
 	else
 	{
-		data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
+		data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd)
+				- sizeof(t_cmd *));
 		while (cur && i < data->nb_cmd)
 		{
 			if (cur->here == 1)
@@ -262,4 +265,5 @@ void	exec(t_data *data)
 	close(data->original_stdin);
 	dup2(data->original_stdout, STDOUT_FILENO);
 	close(data->original_stdout);
+	signal(SIGINT, SIG_DFL);
 }

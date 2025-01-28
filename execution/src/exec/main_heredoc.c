@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 14:38:35 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:48:21 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ void	write_tmpfile(t_cmd *cur, int fd)
 	int		i;
 
 	i = 0;
+	signal(SIGINT, child_signal_handler);
 	while (cur->heredoc[i])
 	{
 		while (1)
@@ -69,9 +70,10 @@ void	write_tmpfile(t_cmd *cur, int fd)
 
 void	ft_heredoc(t_data *data, t_cmd *cur)
 {
-	int		fd;
+	int	fd;
 
 	(void)data;
+	signal(SIGINT, SIG_IGN);
 	fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
 	if (fd < 0)
 	{
@@ -84,6 +86,7 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 		return ;
 	}
 	write_tmpfile(cur, fd);
+	signal(SIGINT, SIG_DFL);
 	execution_cmd(cur, cur->file);
 	close(fd);
 }

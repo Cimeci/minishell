@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 10:26:41 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:54:04 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,6 @@
 # define BUILT_IN_H
 
 # include "minishell.h"
-
-# ifndef G_PID
-extern pid_t	g_pid;
-# endif
 
 // cd //
 
