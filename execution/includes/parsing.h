@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 11:14:25 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 13:39:42 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef struct s_cmd
 	int				fd_outfile;
 	int				*flag_redir;
 	bool			here;
+	char			*file;
 	struct s_cmd	*next;
 }					t_cmd;
 

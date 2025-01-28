@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/28 10:19:22 by inowak--         ###   ########.fr        #
+#    Updated: 2025/01/28 13:34:32 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -46,13 +46,13 @@ OBJ_DIR = .objects
 INCLUDE_DIR = includes
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
-LIBFT_DIR = ../libft
+LIBFT_DIR = libft
 OBJ_LIBFT = $(LIBFT_DIR)/libft.a
 
 all: $(NAME)
-
+	@echo "compilation"
 $(OBJ_LIBFT):
-	@cd $(LIBFT_DIR) && make
+	@cd $(LIBFT_DIR) && make > /dev/null
 
 $(NAME): $(OBJ) $(OBJ_LIBFT)
 	@$(CC) $(CFLAGS) -lreadline $(OBJ) $(OBJ_LIBFT) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -o $(NAME)
@@ -63,7 +63,7 @@ $(OBJ_DIR)/%.o: %.c
 
 clean:
 	@rm -rf $(OBJ_DIR) $(OBJ_LIBFT)
-	@cd $(LIBFT_DIR) && make clean
+	@cd $(LIBFT_DIR) && make clean > /dev/null
 	@echo "clean"
 fclean: clean
 	@rm -f $(NAME)
