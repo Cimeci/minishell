@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/27 16:16:27 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:04:22 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	incorrect_outfile(void)
 
 int	is_built_in(t_data *data, t_cmd *cur)
 {
+	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd) == 4)
+		return (1);
 	if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 2)
 		ft_cd(data, cur);

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/27 13:29:32 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:07:36 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,7 @@ void	handle_input_loop(char **argv, t_save **save, int *i)
 		if (*i == -1)
 			return ;
 		end = ft_search_end(argv, *i);
-		if (!end || !input || !ft_strncmp(input, end, ft_strlen(end)))
+		if (!end || !input || (!ft_strncmp(input, end, ft_strlen(end)) && ft_strlen(end) == ft_strlen(input)))
 		{
 			free(input);
 			(*i)++;
@@ -386,7 +386,7 @@ int	main(int argc, char **argv, char **env)
 	while (input)
 	{
 		input = readline("Minishell> ");
-		if (input)
+		if (input && input[0] != '\0')
 		{
 			add_history(input);
 			argv = ft_split(input, ' ');

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/27 16:08:58 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 10:03:13 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,12 @@ int				ft_check_env_var(char *var);
 char			*my_getenv_lst(const char *name, t_lst *env);
 void			ft_print_env_export(t_lst *env, char **argv);
 
+int				ft_handle_existing_update(t_data *data, char *arg);
+int				ft_handle_new_var_addition(t_data *data, char *arg);
+int				ft_add_to_list(t_lst **list, char *arg);
+void			ft_print_export_env(t_lst *export_env);
+int				ft_export(t_data *data, t_cmd *cur);
+
 // // pwd //
 
 char			*ft_find_pwd(void);
@@ -96,5 +102,9 @@ int			ft_heredoc(t_data *data, t_cmd *cur);
 
 void			child_signal_handler(int signum);
 void			parent_signal_handler(int signum);
+
+// // randomizer.c //
+
+char			*randomizer(void);
 
 #endif
