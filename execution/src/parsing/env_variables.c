@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 13:53:48 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:11:06 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	*expansion_quotes(char *line, int nb_var)
 	return (quote_tab);
 }
 
-int	only_dollars(t_data *data, int *quote_tab, int dollars, int i)
+int	only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
 {
 	char	*tmp;
 	char	*save;
@@ -54,19 +54,19 @@ int	only_dollars(t_data *data, int *quote_tab, int dollars, int i)
 	int		index;
 
 	cur = 0;
-	while (data->line[i + cur] && data->line[i + cur] == '$' && quote_tab[dollars + cur] == 1)
+	while (line[i + cur] && line[i + cur] == '$' && quote_tab[dollars + cur] == 1)
 		cur++;
 	index = cur;
-	while (data->line[i] && cur > 0)
+	while (line[i] && cur > 0)
 	{
 		if (cur == 1)
 			break ;
-		tmp = ft_substr(data->line, 0, i);
+		tmp = ft_substr(line, 0, i);
 		tmp = ft_strjoin_free(tmp, data->shell_pid);
-		save = ft_strdup(data->line);
-		free(data->line);
-		data->line = NULL;
-		data->line = ft_strjoin(tmp, save + i + 2);
+		save = ft_strdup(line);
+		free(line);
+		line = NULL;
+		line = ft_strjoin(tmp, save + i + 2);
 		i = ft_strlen(tmp);
 		free(tmp);
 		tmp = NULL;
@@ -86,7 +86,7 @@ int	is_separator_env(char c, int pos)
 	return (0);
 }
 
-void	env_variables(t_data *data)
+char *env_variables(t_data *data, char *line)
 {
 	int		i;
 	int		result;
@@ -99,62 +99,54 @@ void	env_variables(t_data *data)
 	i = 0;
 	dollars = 0;
 	result = 0;
-	while (data->line[i])
+	while (line[i])
 	{
-		if (data->line[i] == '$')
+		if (line[i] == '$')
 			dollars++;
 		i++;
 	}
-	quote_tab = expansion_quotes(data->line, dollars);
+	quote_tab = expansion_quotes(line, dollars);
 	dollars = 0;
 	i = 0;
-	while (data->line[i])
+	while (line[i])
 	{
-		if (data->line[i] == '$')
+		if (line[i] == '$')
 		{
-			result = only_dollars(data, quote_tab, dollars, i);
-			while (data->line[i] && !is_separator_env(data->line[i], 1))
+			result = only_dollars(data, line, quote_tab, dollars, i);
+			while (line[i] && !is_separator_env(line[i], 1))
 				i++;
 			dollars = result - (result % 2);
-			if (data->line[i] != '$')
+			if (line[i] != '$')
 				;
 			else
 			{
 				i++;
 				result = 0;
-				while (data->line[i + result] && !is_separator_env(data->line[i + result], result))
+				while (line[i + result] && !is_separator_env(line[i + result], result))
 					result++;
-				if (data->line[i + result] == '_')
+				if (line[i + result] == '_')
 					result--;
-				var = ft_substr(data->line, i, result);
-				next = ft_substr(data->line, i + result, ft_strlen(data->line));
-				prev = ft_substr(data->line, 0, i - 1);
-				free(data->line);
+				var = ft_substr(line, i, result);
+				next = ft_substr(line, i + result, ft_strlen(line));
+				prev = ft_substr(line, 0, i - 1);
+				free(line);
 				if (result == 0 && var[0] == '\0')
 				{
-					if (next[0] == '?')
-					{
-						prev = ft_strjoin_free(prev, ft_itoa(data->gexit_code));
-						data->line = ft_strjoin(prev, next + 1);
-					}
-					else
-					{
-						prev = ft_strjoin_free(prev, "$");
-						data->line = ft_strjoin(prev, next);
-					}
+					prev = ft_strjoin_free(prev, "$");
+					line = ft_strjoin(prev, next);
 				}
 				else if (my_getenv(data, var) && quote_tab[dollars] == 1)
 				{
 					prev = ft_strjoin_free(prev, my_getenv(data, var));
-					data->line = ft_strjoin(prev, next);
+					line = ft_strjoin(prev, next);
 				}
 				else if (!my_getenv(data, var) && quote_tab[dollars] == 1)
-					data->line = ft_strjoin(prev, next);
+					line = ft_strjoin(prev, next);
 				else if (quote_tab[dollars] == 0)
 				{
 					prev = ft_strjoin_free(prev, "$");
 					prev = ft_strjoin_free(prev, var);
-					data->line = ft_strjoin(prev, next);
+					line = ft_strjoin(prev, next);
 				}
 				free(next);
 				free(prev);
@@ -165,4 +157,5 @@ void	env_variables(t_data *data)
 			i++;
 	}
 	free(quote_tab);
+	return (line);
 }

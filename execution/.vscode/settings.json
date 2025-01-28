@@ -1,0 +1,8 @@
+{
+	"files.associations": {
+		"minishell.h": "c",
+		"get_next_line.h": "c",
+		"libft.h": "c",
+		"parsing.h": "c"
+	}
+}

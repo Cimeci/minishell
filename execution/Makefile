@@ -6,7 +6,7 @@
 #    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/01/28 12:58:59 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/01/28 16:11:24 by ncharbog         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ NAME = minishell
 SRC = src/utils/command.c\
 		src/utils/free.c\
 		src/utils/size.c\
+		src/utils/errors.c\
 		src/parsing/commands.c\
 		src/parsing/env_variables.c\
 		src/parsing/main.c\

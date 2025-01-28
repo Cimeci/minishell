@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 14:24:40 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:21:47 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,16 +159,8 @@ void	unique_cmd(t_data *data, t_cmd *cur)
 
 void	child(t_data *data, t_cmd *cur, int i)
 {
-	int	input_fd;
-
-	input_fd = -1;
-	// if (cur->here == 1)
-	// {
-	// 	input_fd = ft_heredoc(data, cur);
-	// 	dup2(input_fd, STDOUT_FILENO);
-	// 	close(input_fd);
-	// 	exit(0);
-	// }
+	if (cur->here == 1)
+		ft_heredoc(data, cur);
 	if (i == 0)
 	{
 		close(data->fd[0]);
@@ -205,8 +197,6 @@ void	child(t_data *data, t_cmd *cur, int i)
 		close(data->fd[1]);
 	}
 	close_files(cur);
-	// if (cur->here == true)
-	// 	exit (0);
 	if (!exec_built_in(data, cur))
 	{
 		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
@@ -232,7 +222,11 @@ void exec(t_data *data)
 	cur = data->cmd;
 	i = 0;
 	if (!cur->next)
+	{
+		if (cur->here == 1)
+			cur->file = randomizer();
 		unique_cmd(data, cur);
+	}
 	else
 	{
 		data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
@@ -241,6 +235,8 @@ void exec(t_data *data)
 			files(cur);
 			if (access(cur->cmd, X_OK) == 0)
 			{
+				if (cur->here == 1)
+					cur->file = randomizer();
 				if (pipe(data->fd) == -1)
 					printf("pipe failed\n");
 				p = fork();

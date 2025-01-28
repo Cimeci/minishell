@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 11:14:25 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:08:08 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ enum				e_type
 	EMPTY_QUOTE,
 };
 
+enum				e_error
+{
+	ERROR_SYNTAX,
+	CMD_NOT_FOUND,
+};
+
 typedef struct s_cmd
 {
 	char			*cmd;
@@ -40,6 +46,7 @@ typedef struct s_cmd
 	int				fd_outfile;
 	int				*flag_redir;
 	bool			here;
+	char			*file;
 	struct s_cmd	*next;
 }					t_cmd;
 
@@ -85,7 +92,7 @@ void	init_data(t_data *data, char **env);
 void	parsing(t_data *data, char *input);
 
 // env_variables.c
-void env_variables(t_data *data);
+char *env_variables(t_data *data, char *line);
 int *expansion_quotes(char *line, int nb_var);
 
 // token.c
@@ -104,7 +111,7 @@ void	get_cmds(t_data *data);
 // parsing_utils.c
 char	*find_path(t_data *data, char *str);
 char	*my_getenv(t_data *data, char *name);
-int		check_quotes(char *input);
+int		check_quotes(t_data *data, char *input);
 void	get_shell_pid(t_data *data);
 
 // free.c

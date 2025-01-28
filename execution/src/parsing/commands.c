@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 14:28:07 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:15:08 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	{
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
 		if (!is_built_in(cur_tok->str))
-		{
-			data->gexit_code = 127;
-			printf("%s: command not found\n", cur_tok->str);
-		}
+			errors(data, cur_tok->str, CMD_NOT_FOUND);
 	}
 	else
 		data->gexit_code = 0;

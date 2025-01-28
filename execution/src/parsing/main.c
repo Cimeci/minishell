@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 13:56:23 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 16:26:16 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,32 +19,22 @@ int	check_syntax(t_data *data)
 
 	i = 0;
 	last_token = data->token;
+	if (data->token->type == PIPE)
+		return (errors(data, "|", ERROR_SYNTAX));
 	while (last_token->next != NULL)
 	{
 		if (last_token->type <= 3 && last_token->next->type == PIPE)
-		{
-			printf("erreur de syntaxe\n");
-			return (0);
-		}
+			return (errors(data, "|", ERROR_SYNTAX));
 		if (last_token->type <= 3 && last_token->next->type <= 3)
-		{
-			printf("erreur de syntaxe\n");
-			return (0);
-		}
+			return (errors(data, last_token->str, ERROR_SYNTAX));
 		last_token = last_token->next;
 	}
-	if (data->token->type == PIPE)
-	{
-		printf("erreur de syntaxe\n");
-		return (0);
-	}
+	if (last_token->next == NULL && last_token->type <= 3)
+		return (errors(data, "newline", ERROR_SYNTAX));
 	while (i < 5)
 	{
 		if (last_token->type == i)
-		{
-			printf("erreur de syntaxe\n");
-			return (0);
-		}
+			return (errors(data, last_token->str, ERROR_SYNTAX));
 		i++;
 	}
 	return (1);
@@ -52,22 +42,14 @@ int	check_syntax(t_data *data)
 
 void	parsing(t_data *data, char *input)
 {
-	if (check_quotes(input) == -1)
-	{
-		printf("erreur quote");
-		data->gexit_code = 1;
+	if (!check_quotes(data, input))
 		return ;
-	}
-	data->line = ft_strdup(input);
-	env_variables(data);
+	data->line = env_variables(data, ft_strdup(input));
 	tokenise(data);
 	if (data->token)
 	{
 		if (!check_syntax(data))
-		{
-			data->gexit_code = 2;
 			return ;
-		}
 		get_cmds(data);
 		if (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':')
 		{
