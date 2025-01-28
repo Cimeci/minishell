@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/24 13:44:33 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/28 09:45:52 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void	parsing(t_data *data, char *input)
 	if (check_quotes(input) == -1)
 	{
 		printf("erreur quote");
+		data->gexit_code = 1;
 		return ;
 	}
 	data->line = ft_strdup(input);
@@ -130,6 +131,7 @@ void	init_data(t_data *data, char **env)
 	data->token = NULL;
 	data->cmd = NULL;
 	data->env = NULL;
+	data->gexit_code = 0;
 	cur = data->env;
 	while (env[i])
 	{
