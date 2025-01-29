@@ -6,11 +6,12 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 16:35:58 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 12:57:09 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
+
 void	execution_cmd(t_cmd *cur, char *file)
 {
 	char	**args;

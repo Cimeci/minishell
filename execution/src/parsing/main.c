@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/29 10:54:16 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:07:13 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,8 @@ void	parsing(t_data *data, char *input)
 		if (!check_syntax(data))
 			return ;
 		get_cmds(data);
-		if (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':')
+		if (data->cmd->cmd
+			&& (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':'))
 		{
 			if (data->cmd->cmd[0] == '!')
 				data->gexit_code = 1;

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/29 11:17:50 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:06:40 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -224,12 +224,6 @@ void	get_cmds(t_data *data)
 				cur_tok = cur_tok->next;
 			else if (cur_tok->type == WORD)
 				cur_tok = build_cmd(data, cur_cmd, cur_tok);
-		}
-		if (!cur_cmd->cmd)
-		{
-			cur_cmd->cmd = ft_calloc(1, 1);
-			cur_cmd->args = ft_calloc(1, sizeof(char *)); // à modifier : rajout condition dans exec
-			cur_cmd->args[0] = ft_calloc(1, 1);
 		}
 		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, (sizeof(t_cmd) - sizeof(t_cmd *)));
 		if (cur_tok)
