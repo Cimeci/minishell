@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 11:22:29 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 16:40:42 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:53:07 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,21 @@ void	child_signal_handler(int signum)
 	}
 }
 
+void	child_signal_handler_re(int signum)
+{
+	if (signum == SIGINT)
+	{
+		write(1, "\n", 1);
+	}
+}
+
 void	parent_signal_handler(int signum)
 {
 	if (signum == SIGINT)
 	{
-			write(1, "\n", 1);
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }

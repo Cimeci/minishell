@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/24 13:36:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/28 17:58:51 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,10 @@ int	ft_env(t_data *data, t_cmd *cur)
 {
 	t_lst	*tmp;
 
+	if (!my_getenv_lst("PATH", data->env))
+		return(error_exec(data, NULL, "env", 1));
+	if (ft_strlen_tab(cur->args) != 1)
+		return(error_exec(data, cur->args[1], "env", 2));
 	if (!ft_strncmp(cur->cmd, "env", ft_strlen(cur->cmd)))
 		return (-1);
 	tmp = data->env;
