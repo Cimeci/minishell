@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 10:05:21 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:52:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,6 @@ int	ft_echo(char **argv)
 	int	endl;
 	int	save;
 
-	if (ft_strncmp("echo", argv[0], ft_strlen(argv[0])))
-		return (0);
 	if (!argv[1])
 	{
 		printf("\n");
