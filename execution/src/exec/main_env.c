@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 17:58:51 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:33:20 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,11 +63,15 @@ int	ft_env(t_data *data, t_cmd *cur)
 	t_lst	*tmp;
 
 	if (!my_getenv_lst("PATH", data->env))
-		return(error_exec(data, NULL, "env", 1));
+	{
+		errors(data, "env", FILES);
+		exit (127);
+	}
 	if (ft_strlen_tab(cur->args) != 1)
-		return(error_exec(data, cur->args[1], "env", 2));
-	if (!ft_strncmp(cur->cmd, "env", ft_strlen(cur->cmd)))
-		return (-1);
+	{
+		errors(data, "env", ARGS);
+		exit (1);
+	}
 	tmp = data->env;
 	while (tmp)
 	{

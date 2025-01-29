@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/29 13:06:40 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 16:18:10 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,22 +105,12 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	len = 0;
 	tmp = cur_tok;
 	if (ft_strchr(cur_tok->str, '/'))
-	{
-		if (opendir(cur_tok->str) != NULL)
-			errors(data, cur_tok->str, DIRECTORY);
-		else
-			errors(data, cur_tok->str, FILES);
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
-	}
 	else
 	{
 		cur_cmd->cmd = find_path(data, cur_tok->str);
 		if (!cur_cmd->cmd)
-		{
 			cur_cmd->cmd = ft_strdup(cur_tok->str);
-			if (!is_built_in(cur_tok->str))
-					errors(data, cur_tok->str, CMD_NOT_FOUND);
-		}
 	}
 	while (tmp && tmp->type != PIPE)
 	{

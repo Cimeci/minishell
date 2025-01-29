@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 14:05:16 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 17:34:47 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,9 +164,15 @@ void	child(t_data *data, t_cmd *cur, int i)
 		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
 		{
 			if (access(cur->cmd, X_OK) != 0)
+			{
+				errors(data, cur->cmd, CMD_NOT_FOUND);
 				exit(127);
+			}
 			if (opendir(cur->cmd) != NULL)
+			{
+				errors(data, cur->cmd, DIRECTORY);
 				exit(126);
+			}
 		}
 	}
 	exit(EXIT_SUCCESS);
@@ -200,6 +206,8 @@ void	exec(t_data *data)
 			printf("fork failed\n");
 		else if (p == 0)
 		{
+			signal(SIGINT, SIG_DFL);
+			signal(SIGQUIT, SIG_DFL);
 			if (cur->fd_infile == -1 || cur->fd_outfile == -1)
 				exit(1);
 			child(data, cur, i);
@@ -214,11 +222,12 @@ void	exec(t_data *data)
 		if (WIFEXITED(status))
 			data->gexit_code = WEXITSTATUS(status);
 	}
+	signal(SIGINT, parent_signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 	close(data->fd[0]);
 	close(data->fd[1]);
 	dup2(data->original_stdin, STDIN_FILENO);
 	close(data->original_stdin);
 	dup2(data->original_stdout, STDOUT_FILENO);
 	close(data->original_stdout);
-	signal(SIGINT, SIG_DFL);
 }
