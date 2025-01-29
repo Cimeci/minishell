@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 17:29:06 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 11:27:22 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ void	incorrect_outfile(void)
 
 int	exec_built_in(t_data *data, t_cmd *cur)
 {
+	if (cur->fd_infile == -1 || cur->fd_outfile == -1)
+		exit(1);
 	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 4)
 		return (1);
@@ -92,6 +94,8 @@ void	files(t_data *data, t_cmd *cur)
 
 	i = 0;
 	type = 0;
+	if (cur->here == 1)
+		cur->file = randomizer();
 	while (cur->infile && cur->infile[i])
 	{
 		if (i == ft_strlen_tab(cur->infile) - 1)
@@ -133,28 +137,39 @@ void	files(t_data *data, t_cmd *cur)
 void	unique_cmd(t_data *data, t_cmd *cur)
 {
 	pid_t	p;
-	//int		status;
+	int		status;
 
 	files(data, cur);
+	if (cur->fd_infile == -1 || cur->fd_outfile == -1)
+	{
+		data->gexit_code = 1;
+		return ;
+	}
 	if (cur->here == 1)
 		ft_heredoc(data, cur);
-	if (cur->fd_outfile)
-		dup2(cur->fd_outfile, STDOUT_FILENO);
-	if (cur->fd_infile)
-		dup2(cur->fd_infile, STDIN_FILENO);
-	close_files(cur);
 	if (!exec_built_in(data, cur))
 	{
-		if (cur->cmd && access(cur->cmd, X_OK) == 0)
+		p = fork();
+		if (p == -1)
+			exit(EXIT_FAILURE);
+		else if (p == 0)
 		{
-			p = fork();
-			if (p == -1)
-				exit(EXIT_FAILURE);
-			else if (p == 0)
-				execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env));
-			while (wait(NULL) > 0)
-				;
+			if (cur->fd_outfile)
+				dup2(cur->fd_outfile, STDOUT_FILENO);
+			if (cur->fd_infile)
+				dup2(cur->fd_infile, STDIN_FILENO);
+			close_files(cur);
+			if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
+			{
+				if (access(cur->cmd, X_OK) != 0)
+					exit(127);
+			}
 		}
+	}
+	while (waitpid(-1, &status, 0) > 0)
+	{
+		if (WIFEXITED(status))
+			data->gexit_code = WEXITSTATUS(status);
 	}
 }
 
@@ -202,8 +217,10 @@ void	child(t_data *data, t_cmd *cur, int i)
 	{
 		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
 		{
-			perror("Error");
-			exit(EXIT_FAILURE);
+			if (access(cur->cmd, X_OK) != 0)
+				exit(127);
+			if (opendir(cur->cmd) != NULL)
+				exit(126);
 		}
 	}
 	exit(EXIT_SUCCESS);
@@ -214,7 +231,7 @@ void	exec(t_data *data)
 	int		i;
 	t_cmd	*cur;
 	pid_t	p;
-	//int		status;
+	int		status;
 
 	if (!data->cmd)
 		return ;
@@ -223,40 +240,38 @@ void	exec(t_data *data)
 	cur = data->cmd;
 	i = 0;
 	signal(SIGINT, SIG_IGN);
+	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd)
+			- sizeof(t_cmd *));
 	if (!cur->next)
-	{
-		if (cur->here == 1)
-			cur->file = randomizer();
 		unique_cmd(data, cur);
-	}
 	else
 	{
-		data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd)
-				- sizeof(t_cmd *));
 		while (cur && i < data->nb_cmd)
 		{
+			files(data, cur);
 			if (cur->here == 1)
 				cur->file = randomizer();
-			files(data, cur);
-			if (access(cur->cmd, X_OK) == 0)
+			if (pipe(data->fd) == -1)
+				printf("pipe failed\n");
+			p = fork();
+			if (p < 0)
+				printf("fork failed\n");
+			else if (p == 0)
 			{
-				if (cur->here == 1)
-					cur->file = randomizer();
-				if (pipe(data->fd) == -1)
-					printf("pipe failed\n");
-				p = fork();
-				if (p < 0)
-					printf("fork failed\n");
-				else if (p == 0)
-					child(data, cur, i);
-				else
-					parent(data);
+				if (cur->fd_infile == -1 || cur->fd_outfile == -1)
+					exit(1);
+				child(data, cur, i);
 			}
+			else
+				parent(data);
 			i++;
 			cur = cur->next;
 		}
-		while (wait(NULL) > 0)
-			;
+		while (waitpid(-1, &status, 0) > 0)
+		{
+			if (WIFEXITED(status))
+				data->gexit_code = WEXITSTATUS(status);
+		}
 		close(data->fd[0]);
 		close(data->fd[1]);
 	}
