@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   main_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 16:35:58 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 13:58:22 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-void	execution_cmd(t_cmd *cur, char *file)
+void	reset_args(t_cmd *cur, char *file)
 {
 	char	**args;
 	int		i;
@@ -45,7 +45,6 @@ void	write_tmpfile(t_data *data, t_cmd *cur, int fd)
 	int		i;
 
 	i = 0;
-	signal(SIGINT, child_signal_handler);
 	while (cur->heredoc[i])
 	{
 		while (1)
@@ -72,7 +71,8 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	int	fd;
 
 	(void)data;
-	signal(SIGINT, SIG_IGN);
+	if (cur->next != NULL)
+		signal(SIGINT, child_signal_handler);
 	fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
 	if (fd < 0)
 	{
@@ -81,11 +81,12 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	}
 	if (access(cur->file, F_OK) == -1)
 	{
-		printf("Error file not find\n");
+		printf("Error tmpfile not find\n");
 		return ;
 	}
 	write_tmpfile(data, cur, fd);
-	signal(SIGINT, SIG_DFL);
-	execution_cmd(cur, cur->file);
+	if (cur->next != NULL)
+		signal(SIGINT, SIG_DFL);
+	reset_args(cur, cur->file);
 	close(fd);
 }

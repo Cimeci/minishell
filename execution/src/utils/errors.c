@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:03 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 17:51:11 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/29 14:01:16 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,15 @@ int	error_exec(t_data *data, char *msg, char *cmd, int type)
 	}
 	else if (type == 3)
 	{
-		printf("%s: ‘%s’: No such file or directory\n", cmd, msg);
+		printf("%s: %s: No such file or directory\n", cmd, msg);
+		data->gexit_code = 1;
+	}
+	else if (type == 4)
+	{
+		printf("%s: too many arguments\n", cmd);
 		data->gexit_code = 1;
 	}
 	return (0);
 }
+
+
