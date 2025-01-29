@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 17:48:52 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:15:33 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,12 +32,10 @@
 # include <term.h>
 # include <termios.h>
 # include <unistd.h>
+# include <stdarg.h>
 
 // void	execution_cmd(t_data *data);
 int		ft_strlen_tab(char **table);
 t_lst	*ft_dup_lst(t_lst *env);
-
-int		errors(t_data *data, char *str, int type);
-int     error_exec(t_data *data, char *msg, char *cmd, int type);
 
 #endif

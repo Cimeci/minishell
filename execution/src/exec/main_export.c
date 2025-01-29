@@ -79,16 +79,25 @@ int	ft_check_env_var(char *var)
 	if (!ft_isalpha(var[0]))
 	{
 		if (var[0] != '_')
-			return (0);
+		{
+			errors_exec(var, "export", IDENTIFIER);
+			exit (1);
+		}
 	}
 	if (!ft_isalnum(var[argc]))
-		return (0);
+	{
+		errors_exec(var, "export", IDENTIFIER);
+		exit (1);
+	}
 	while (i < argc)
 	{
 		if (!ft_isalnum(var[i]))
 		{
 			if (var[i] != '_')
-				return (0);
+			{
+				errors_exec(var, "export", IDENTIFIER);
+				exit (1);
+			}
 		}
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 10:03:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:50:07 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ void	ft_absolut_path(t_data *data, t_cmd *cur)
 	if (chdir(target_path))
 	{
 		// ft_free_path(target_path, path);
-		error_exec(data, cur->args[1], "cd", 3);
+		errors_exec(cur->args[1], "cd", FILES);
+		exit (1);
 	}
 }
 
@@ -68,21 +69,19 @@ int	ft_cd(t_data *data, t_cmd *cur)
 	if (!cur->args[1] || cur->args[1][0] == '\0')
 	{
 		ft_putendl_fd("cd : No path", 2);
-		return (-1);
+		exit (2);
 	}
 	if (ft_strlen_tab(cur->args) != 2)
-		return (error_exec(data, NULL, "cd", 4));
+	{
+		errors(data, "cd", ARGS);
+		exit (1);
+	}
 	if (cur->args[1] && cur->args[1][0] != '\0')
 	{
 		ft_update_pwd(data, 0);
 		if (!ft_strncmp(cur->args[1], "/", ft_strlen(cur->args[1])))
 		{
 			data->pwd = ft_strdup("/");
-			if (chdir("/"))
-			{
-				perror("Error");
-				return (-1);
-			}
 			ft_update_pwd(data, 1);
 			return (1);
 		}

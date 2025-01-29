@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 17:33:19 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/01/29 15:59:28 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ enum				e_error
 	FILES,
 	PERM,
 	DIRECTORY,
+	ARGS,
+	IDENTIFIER,
 };
 
 typedef struct s_cmd
@@ -124,5 +126,10 @@ void free_env(t_lst **head);
 void free_all(t_data *data, int flag);
 char *ft_strjoin_free(char *s1, char *s2);
 void free_cmd(t_cmd **head);
+
+//errors.c
+void	print_errors(char *str, ...);
+int		errors(t_data *data, char *str, int type);
+void	errors_exec(char *msg, char *cmd, int type);
 
 #endif
