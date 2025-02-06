@@ -6,11 +6,11 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/21 14:31:59 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:14:46 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	remove_quotes(char *str, t_token *cur)
 {
@@ -86,6 +86,7 @@ int	get_token_len(char *str)
 
 void	add_token(t_data *data, t_token *cur, int i)
 {
+	t_token	*last;
 	int		len;
 	char	*str;
 
@@ -93,8 +94,11 @@ void	add_token(t_data *data, t_token *cur, int i)
 		return ;
 	cur->str = malloc(1);
 	cur->str[0] = '\0';
+	last = ft_lstlast_generic(data->token, (sizeof(t_token) - sizeof (t_token *)));
 	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
+	if (ft_strchr(str, '$') && (!last || last->type != HEREDOC))
+		str = env_variables(data, str);
 	remove_quotes(str, cur);
 	free(str);
 	ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));

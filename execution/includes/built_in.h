@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/29 15:16:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/06 12:37:49 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int		ft_unset(t_data *data, t_cmd *cur);
 void	*ft_lstnew_generic(size_t data_size);
 void	ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
 int		ft_lstsize_generic(void *lst, size_t offset);
+void	*ft_lstlast_generic(void *lst, size_t offset);
 
 // // lst_funct.c //
 char	**ft_convert_lst_to_tab(t_lst *env);

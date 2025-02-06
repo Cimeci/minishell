@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/29 17:48:14 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/06 15:23:24 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	check_syntax(t_data *data)
 {
@@ -44,7 +44,7 @@ void	parsing(t_data *data, char *input)
 {
 	if (!check_quotes(data, input))
 		return ;
-	data->line = env_variables(data, ft_strdup(input));
+	data->line = ft_strdup(input);
 	tokenise(data);
 	if (data->token)
 	{

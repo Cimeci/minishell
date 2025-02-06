@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 16:47:44 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/06 15:04:46 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	*expansion_quotes(char *line, int nb_var)
 	return (quote_tab);
 }
 
-int	only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
+char	*only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
 {
 	char	*tmp;
 	char	*save;
@@ -72,7 +72,7 @@ int	only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
 		tmp = NULL;
 		cur -= 2;
 	}
-	return (index + dollars);
+	return (line);
 }
 
 int	is_separator_env(char c, int pos)
@@ -86,6 +86,22 @@ int	is_separator_env(char c, int pos)
 	return (0);
 }
 
+int	count_char(char *str, char c)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;
+	}
+	return (count);
+}
+
 char *env_variables(t_data *data, char *line)
 {
 	int		i;
@@ -97,14 +113,8 @@ char *env_variables(t_data *data, char *line)
 	char	*prev;
 
 	i = 0;
-	dollars = 0;
+	dollars = count_char(line, '$');
 	result = 0;
-	while (line[i])
-	{
-		if (line[i] == '$')
-			dollars++;
-		i++;
-	}
 	quote_tab = expansion_quotes(line, dollars);
 	dollars = 0;
 	i = 0;
@@ -112,10 +122,9 @@ char *env_variables(t_data *data, char *line)
 	{
 		if (line[i] == '$')
 		{
-			result = only_dollars(data, line, quote_tab, dollars, i);
+			line = only_dollars(data, line, quote_tab, dollars, i);
 			while (line[i] && !is_separator_env(line[i], 1))
 				i++;
-			dollars = result - (result % 2);
 			if (line[i] != '$')
 				;
 			else

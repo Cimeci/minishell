@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lst_funct_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:23:53 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 10:21:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/06 14:14:00 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	*ft_lstnew_generic(size_t data_size)
 {
@@ -57,4 +57,20 @@ int	ft_lstsize_generic(void *lst, size_t offset)
 		i++;
 	}
 	return (i);
+}
+
+void	*ft_lstlast_generic(void *lst, size_t offset)
+{
+	void	**last;
+	void	*cur;
+
+	if (!lst)
+		return (NULL);
+	cur = lst;
+	while (*(void **)((char *)cur + offset) != NULL)
+	{
+		last = (void **)((char *)cur + offset);
+		cur = *last;
+	}
+	return (cur);
 }
