@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 17:51:06 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/01/29 18:09:34 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,23 +193,26 @@ void	exec(t_data *data)
 	data->original_stdout = dup(STDOUT_FILENO);
 	signal(SIGINT, SIG_IGN);
 	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
-	if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
-		&& ft_strlen(cur->cmd) == 2)
+	if (data->nb_cmd == 1)
 	{
-		ft_cd(data, cur);
-		i++;
-	}
-	else if (!ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0]))
-		&& ft_strlen(cur->args[0]) == 6)
-	{
-		ft_export(data, cur);
-		i++;
-	}
-	else if (!ft_strncmp(cur->args[0], "unset", ft_strlen(cur->args[0]))
-		&& ft_strlen(cur->args[0]) == 5)
-	{
-		ft_unset(data, cur);
-		i++;
+		if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
+			&& ft_strlen(cur->cmd) == 2)
+		{
+			ft_cd(data, cur);
+			i++;
+		}
+		else if (!ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0]))
+			&& ft_strlen(cur->args[0]) == 6)
+		{
+			ft_export(data, cur);
+			i++;
+		}
+		else if (!ft_strncmp(cur->args[0], "unset", ft_strlen(cur->args[0]))
+			&& ft_strlen(cur->args[0]) == 5)
+		{
+			ft_unset(data, cur);
+			i++;
+		}
 	}
 	while (cur && i < data->nb_cmd)
 	{
