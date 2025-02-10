@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/29 15:59:28 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:29:22 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ enum				e_error
 	DIRECTORY,
 	ARGS,
 	IDENTIFIER,
+	MALLOC,
+	ERRNO,
 };
 
 typedef struct s_cmd

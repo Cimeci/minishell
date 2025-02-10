@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/29 16:18:10 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:20:28 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ int	count_token(t_token *cur, int token)
 	return (count);
 }
 
-void	get_flag_redir(t_cmd *cur_cmd, t_token *cur_tok)
+void	get_flag_redir(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 {
 	int	count;
 	int	i;
@@ -161,7 +161,7 @@ void	get_flag_redir(t_cmd *cur_cmd, t_token *cur_tok)
 		return ;
 	cur_cmd->flag_redir = ft_calloc(sizeof(int), count + 1);
 	if (!cur_cmd->flag_redir)
-		return ;
+		errors(data, NULL, MALLOC);
 	while (cur_tok && cur_tok->type != PIPE)
 	{
 		if (cur_tok->type == OVERWRITE)
@@ -192,22 +192,22 @@ void	get_cmds(t_data *data)
 	{
 		cur_cmd = (t_cmd *)ft_lstnew_generic(sizeof(t_cmd));
 		if (!cur_cmd)
-			return ;
+			errors(data, NULL, MALLOC);
 		if (count_token(cur_tok, 0) > 0)
 		{
 			cur_cmd->infile = malloc((count_token(cur_tok, 0) + 1) * sizeof(char *));
 			if (!cur_cmd->infile)
-				return ;
+				errors(data, NULL, MALLOC);
 		}
 		if (count_token(cur_tok, 3) > 0)
 		{
 			cur_cmd->outfile = malloc((count_token(cur_tok, 3) + 1) * sizeof(char *));
 			if (!cur_cmd->outfile)
-				return ;
+				errors(data, NULL, MALLOC);
 		}
 		redir_cmd(cur_cmd, cur_tok);
 		parse_heredoc(cur_cmd, cur_tok);
-		get_flag_redir(cur_cmd, cur_tok);
+		get_flag_redir(data, cur_cmd, cur_tok);
 		while (cur_tok && cur_tok->type != PIPE)
 		{
 			if (cur_tok->type <= 3)

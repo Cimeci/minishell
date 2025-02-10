@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:03 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/29 16:09:14 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:30:09 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,14 @@ int	errors(t_data *data, char *str, int type)
 		print_errors(str, ": is a directory", NULL);
 	else if (type == ARGS)
 		print_errors(str, ": too many arguments", NULL);
+	else if (type == MALLOC)
+	{
+		print_errors("Malloc error", NULL);
+		free_all(data, 0);
+		exit(EXIT_FAILURE);
+	}
+	else if (type == ERRNO)
+		print_errors(str, ": ", strerror(errno), NULL);
 	return (0);
 }
 

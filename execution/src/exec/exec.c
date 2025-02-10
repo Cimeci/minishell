@@ -3,38 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 18:09:34 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 11:30:38 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-void	incorrect_infile(void)
-{
-	int	null;
-
-	null = open("/dev/null", O_RDONLY);
-	if (null != -1)
-	{
-		dup2(null, STDIN_FILENO);
-		close(null);
-	}
-}
-
-void	incorrect_outfile(void)
-{
-	int	null;
-
-	null = open("/dev/null", O_WRONLY);
-	if (null != -1)
-	{
-		dup2(null, STDOUT_FILENO);
-		close(null);
-	}
-}
 
 int	exec_built_in(t_data *data, t_cmd *cur)
 {
@@ -114,8 +90,8 @@ void	files(t_data *data, t_cmd *cur)
 						O_CREAT | O_WRONLY | O_TRUNC, 0644);
 			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
 			{
-				if (errno == EACCES)
-					errors(data, cur->outfile[i], PERM);
+				if (errno)
+					errors(data, cur->outfile[i], ERRNO);
 			}
 		}
 		else if (cur->flag_redir[type] == 2)
@@ -125,8 +101,8 @@ void	files(t_data *data, t_cmd *cur)
 						O_CREAT | O_WRONLY | O_APPEND, 0644);
 			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
 			{
-				if (errno == EACCES)
-					errors(data, cur->outfile[i], PERM);
+				if (errno)
+					errors(data, cur->outfile[i], ERRNO);
 			}
 		}
 		i++;
