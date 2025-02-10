@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 18:09:34 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:14:33 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	incorrect_outfile(void)
 int	exec_built_in(t_data *data, t_cmd *cur)
 {
 	if (!cur->cmd)
-		exit (0);
+		exit(0);
 	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 4)
 		return (1);
@@ -184,6 +184,7 @@ void	exec(t_data *data)
 	t_cmd	*cur;
 	pid_t	p;
 	int		status;
+	int		cd_status;
 
 	if (!data->cmd)
 		return ;
@@ -195,10 +196,20 @@ void	exec(t_data *data)
 	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
 	if (data->nb_cmd == 1)
 	{
+		if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
+			&& ft_strlen(cur->cmd) == 4)
+		{
+			ft_exit(data, cur);
+			i++;
+		}
 		if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 			&& ft_strlen(cur->cmd) == 2)
 		{
-			ft_cd(data, cur);
+			cd_status = ft_cd(data, cur);
+			if (cd_status != 0)
+			{
+				data->gexit_code = 1;
+			}
 			i++;
 		}
 		else if (!ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0]))

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:46:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 14:14:02 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:55:10 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void	free_all(t_data *data, int flag)
 		free_token(&data->token);
 	if (data->env && flag == 0)
 		free_env(&data->env);
-	if (data->export_env)
+	if (data->export_env && flag == 0)
 		free_env(&data->export_env);
 	if (data->shell_pid && flag == 0)
 		free(data->shell_pid);
