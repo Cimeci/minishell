@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 14:32:05 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:36:27 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	}
 	write_tmpfile(data, cur, fd);
 	signal(SIGINT, SIG_DFL);
-	// signal(SIGQUIT, SIG_IGN);
 	reset_args(cur, cur->file);
 	close(fd);
 }
