@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 11:30:38 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:58:12 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,31 +83,20 @@ void	files(t_data *data, t_cmd *cur)
 	i = 0;
 	while (cur->outfile && cur->outfile[i])
 	{
-		if (cur->flag_redir[type] == 1)
+		if (i == ft_strlen_tab(cur->outfile) - 1)
 		{
-			if (i == ft_strlen_tab(cur->outfile) - 1)
+			if (cur->flag_redir[type] == 1)
 				cur->fd_outfile = open(cur->outfile[i],
-						O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
-			{
-				if (errno)
-					errors(data, cur->outfile[i], ERRNO);
-			}
+					O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			else if (cur->flag_redir[type] == 2)
+				cur->fd_outfile = open(cur->outfile[i],
+					O_CREAT | O_WRONLY | O_APPEND, 0644);
 		}
-		else if (cur->flag_redir[type] == 2)
-		{
-			if (i == ft_strlen_tab(cur->outfile) - 1)
-				cur->fd_outfile = open(cur->outfile[i],
-						O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
-			{
-				if (errno)
-					errors(data, cur->outfile[i], ERRNO);
-			}
+		if (cur->fd_outfile < 0)
+			errors(data, cur->outfile[i], ERRNO);
 		}
 		i++;
 		type++;
-	}
 }
 
 void	child(t_data *data, t_cmd *cur, int i)
@@ -139,15 +128,15 @@ void	child(t_data *data, t_cmd *cur, int i)
 	{
 		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
 		{
-			if (access(cur->cmd, X_OK) != 0)
-			{
-				errors(data, cur->cmd, CMD_NOT_FOUND);
-				exit(127);
-			}
 			if (opendir(cur->cmd) != NULL)
 			{
 				errors(data, cur->cmd, DIRECTORY);
 				exit(126);
+			}
+			if (access(cur->cmd, X_OK) != 0)
+			{
+				errors(data, cur->cmd, CMD_NOT_FOUND);
+				exit(127);
 			}
 		}
 	}
@@ -171,19 +160,19 @@ void	exec(t_data *data)
 	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
 	if (data->nb_cmd == 1)
 	{
-		if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
+		if (cur->cmd && !ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 			&& ft_strlen(cur->cmd) == 2)
 		{
 			ft_cd(data, cur);
 			i++;
 		}
-		else if (!ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0]))
+		else if (cur->cmd && !ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0]))
 			&& ft_strlen(cur->args[0]) == 6)
 		{
 			ft_export(data, cur);
 			i++;
 		}
-		else if (!ft_strncmp(cur->args[0], "unset", ft_strlen(cur->args[0]))
+		else if (cur->cmd && !ft_strncmp(cur->args[0], "unset", ft_strlen(cur->args[0]))
 			&& ft_strlen(cur->args[0]) == 5)
 		{
 			ft_unset(data, cur);

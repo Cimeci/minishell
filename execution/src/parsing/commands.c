@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 11:20:28 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:24:25 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,10 @@ void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok)
 		{
 			cur_cmd->heredoc[i] = ft_strdup(cur_tok->next->str);
 			cur_tok->next->type = HEREDOC;
+			if (cur_tok->next->expand == true)
+				cur_cmd->expand = true;
+			else
+				cur_cmd->expand = false;
 			cur_cmd->here = 1;
 			cur_tok = cur_tok->next->next;
 			i++;
@@ -109,7 +113,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	else
 	{
 		cur_cmd->cmd = find_path(data, cur_tok->str);
-		if (!cur_cmd->cmd)
+		if (!cur_cmd->cmd || cur_tok->type == EMPTY_QUOTE)
 			cur_cmd->cmd = ft_strdup(cur_tok->str);
 	}
 	while (tmp && tmp->type != PIPE)
@@ -212,7 +216,7 @@ void	get_cmds(t_data *data)
 		{
 			if (cur_tok->type <= 3)
 				cur_tok = cur_tok->next;
-			else if (cur_tok->type == WORD)
+			else if (cur_tok->type >= 4)
 				cur_tok = build_cmd(data, cur_cmd, cur_tok);
 		}
 		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, (sizeof(t_cmd) - sizeof(t_cmd *)));

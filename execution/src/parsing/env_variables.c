@@ -6,13 +6,13 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/06 15:04:46 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:38:09 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	*expansion_quotes(char *line, int nb_var)
+int	*expansion_quotes(char *line, int nb_var, bool heredoc)
 {
 	int		i;
 	int		j;
@@ -32,9 +32,9 @@ int	*expansion_quotes(char *line, int nb_var)
 			i++;
 			while (line[i] && line[i] != quote)
 			{
-				if (line[i] == '$' && quote == SINGLE_QUOTE)
+				if (line[i] == '$' && (quote == SINGLE_QUOTE && heredoc == false))
 					quote_tab[j++] = 0;
-				if (line[i] == '$' && quote == DOUBLE_QUOTE)
+				if (line[i] == '$' && (quote == DOUBLE_QUOTE || heredoc == true))
 					quote_tab[j++] = 1;
 				i++;
 			}
@@ -102,7 +102,7 @@ int	count_char(char *str, char c)
 	return (count);
 }
 
-char *env_variables(t_data *data, char *line)
+char *env_variables(t_data *data, char *line, bool heredoc)
 {
 	int		i;
 	int		result;
@@ -115,7 +115,9 @@ char *env_variables(t_data *data, char *line)
 	i = 0;
 	dollars = count_char(line, '$');
 	result = 0;
-	quote_tab = expansion_quotes(line, dollars);
+	quote_tab = expansion_quotes(line, dollars, heredoc);
+	if (heredoc == false)
+		line = remove_quotes(ft_strdup(line));
 	dollars = 0;
 	i = 0;
 	while (line[i])

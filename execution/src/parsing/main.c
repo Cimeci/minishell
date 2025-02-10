@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 11:01:31 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:05:39 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,20 +44,13 @@ void	parsing(t_data *data, char *input)
 {
 	if (!check_quotes(data, input))
 		return ;
-	data->line = ft_strdup(input);
+	data->line = input;
 	tokenise(data);
 	if (data->token)
 	{
 		if (!check_syntax(data))
 			return ;
 		get_cmds(data);
-		if (data->cmd->cmd
-			&& (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':'))
-		{
-			if (data->cmd->cmd[0] == '!')
-				data->gexit_code = 1;
-			return ;
-		}
 	}
 	else
 		return ;
@@ -116,12 +109,16 @@ void	prompt(t_data *data)
 		}
 		if (input[0] == '\0')
 			free(input);
+		else if ((input[0] == '!' || input[0] == ':') && ft_strlen(input) == 1)
+		{
+			if (input[0] == '!')
+				data->gexit_code = 1;
+		}
 		else
 		{
 			add_history(input);
 			parsing(data, input);
 			exec(data);
-			free(input);
 			free_all(data, 1);
 		}
 	}

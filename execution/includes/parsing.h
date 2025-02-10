@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 11:29:22 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:03:54 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ typedef struct s_cmd
 	int				fd_outfile;
 	int				*flag_redir;
 	bool			here;
+	bool			expand;
 	char			*file;
 	struct s_cmd	*next;
 }					t_cmd;
@@ -61,7 +62,7 @@ typedef struct s_token
 {
 	char			*str;
 	int				type;
-	bool			quotes;
+	bool			expand;
 	struct s_token	*next;
 }					t_token;
 
@@ -99,15 +100,15 @@ void	init_data(t_data *data, char **env);
 void	parsing(t_data *data, char *input);
 
 // env_variables.c
-char *env_variables(t_data *data, char *line);
-int *expansion_quotes(char *line, int nb_var);
+char	*env_variables(t_data *data, char *line, bool heredoc);
+int		*expansion_quotes(char *line, int nb_var, bool heredoc);
 
 // token.c
-void remove_quotes(char *str, t_token *cur);
-int get_token_len(char *str);
-void add_token(t_data *data, t_token *cur, int i);
-void get_token(char *str, t_token *cur);
-void tokenise(t_data *data);
+char	*remove_quotes(char *str);
+int		get_token_len(char *str);
+void	add_token(t_data *data, t_token *cur, int i);
+void	get_token(char *str, t_token *cur);
+void	tokenise(t_data *data);
 
 // commands.c
 void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok);

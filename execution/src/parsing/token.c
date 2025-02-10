@@ -6,15 +6,16 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 11:20:16 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:27:45 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	remove_quotes(char *str, t_token *cur)
+char	*remove_quotes(char *str)
 {
 	char	*tmp;
+	char	*dest;
 	char	quote;
 	int		i;
 	int		start;
@@ -24,13 +25,15 @@ void	remove_quotes(char *str, t_token *cur)
 	len = 0;
 	start = 0;
 	tmp = NULL;
+	dest = malloc(1);
+	dest[0] = '\0';
 	while (str[i])
 	{
 		start = i;
 		while (str[i + len] && !IS_QUOTE(str[i + len]))
 			len++;
 		tmp = ft_substr(str, start, len);
-		cur->str = ft_strjoin_free(cur->str, tmp);
+		dest = ft_strjoin_free(dest, tmp);
 		if (tmp)
 			free(tmp);
 		tmp = NULL;
@@ -43,7 +46,7 @@ void	remove_quotes(char *str, t_token *cur)
 			while (str[i + len] && str[i + len] != quote)
 				len++;
 			tmp = ft_substr(str, i, len);
-			cur->str = ft_strjoin_free(cur->str, tmp);
+			dest = ft_strjoin_free(dest, tmp);
 			if (tmp)
 				free(tmp);
 			tmp = NULL;
@@ -53,6 +56,8 @@ void	remove_quotes(char *str, t_token *cur)
 	}
 	if (tmp)
 		free(tmp);
+	free(str);
+	return (dest);
 }
 
 int	get_token_len(char *str)
@@ -94,19 +99,20 @@ void	add_token(t_data *data, t_token *cur, int i)
 	if (!cur->str)
 		errors(data, NULL, MALLOC);
 	cur->str[0] = '\0';
+	cur->expand = true;
 	last = ft_lstlast_generic(data->token, (sizeof(t_token) - sizeof (t_token *)));
 	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
+	if ((ft_strnstr(str, "\"", len) || ft_strnstr(str, "'", len))
+		&& last && last->type == HEREDOC)
+		cur->expand = false;
 	if (ft_strchr(str, '$') && (!last || last->type != HEREDOC))
 	{
-		cur->str = env_variables(data, str);
 		cur->type = WORD;
+		cur->str = env_variables(data, str, false);
 	}
 	else
-	{
-		remove_quotes(str, cur);
-		free(str);
-	}
+		cur->str = remove_quotes(str);
 	ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
 }
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 17:42:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:13:18 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,12 @@ void	write_tmpfile(t_data *data, t_cmd *cur, int fd)
 				break ;
 			}
 			if (i == ft_strlen_tab(cur->heredoc) - 1)
-				ft_putendl_fd(env_variables(data, ft_strdup(input)), fd);
+			{
+				if (cur->expand == true)
+					ft_putendl_fd(env_variables(data, ft_strdup(input), true), fd);
+				else
+					ft_putendl_fd(input, fd);
+			}
 			free(input);
 		}
 		i++;
