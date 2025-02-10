@@ -74,21 +74,18 @@ int	ft_check_env_var(char *var)
 	if (!var)
 		return (1);
 	argc = ft_strlen(var) - 1;
-	// printf("%s|%c|%c|\n", var, var[0], var[argc]);
 	i = 1;
 	if (!ft_isalpha(var[0]))
 	{
 		if (var[0] != '_')
 		{
 			errors_exec(var, "export", IDENTIFIER);
-			// printf("HERE1\n");
 			exit (1);
 		}
 	}
 	if (!ft_isalnum(var[argc]))
 	{
 		errors_exec(var, "export", IDENTIFIER);
-		// printf("HERE2\n");
 		exit (1);
 	}
 	while (i < argc)
@@ -98,7 +95,6 @@ int	ft_check_env_var(char *var)
 			if (var[i] != '_')
 			{
 				errors_exec(var, "export", IDENTIFIER);
-				// printf("HERE3\n");
 				exit (1);
 			}
 		}
@@ -161,12 +157,6 @@ char	*ft_get_value(char *argv)
 		return (ft_substr(argv, i + 1, ft_strlen(argv) - i));
 	return (NULL);
 }
-
-int		ft_export_append(t_data *data, char *arg);
-int		ft_export_assign(t_data *data, char *var, char *value);
-int		ft_add_to_list(t_lst **list, char *arg);
-void	ft_print_export_env(t_lst *export_env);
-int		ft_export(t_data *data, t_cmd *cur);
 
 int	ft_add_to_list(t_lst **list, char *arg)
 {
