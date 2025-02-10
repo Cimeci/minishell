@@ -6,11 +6,11 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 14:21:22 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:05:42 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int	check_syntax(t_data *data)
 {
@@ -51,8 +51,8 @@ void	parsing(t_data *data, char *input)
 		if (!check_syntax(data))
 			return ;
 		get_cmds(data);
-		if (data->cmd->cmd
-			&& (data->cmd->cmd[0] == '!' || data->cmd->cmd[0] == ':'))
+		if (data->cmd->cmd && (data->cmd->cmd[0] == '!'
+				|| data->cmd->cmd[0] == ':'))
 		{
 			if (data->cmd->cmd[0] == '!')
 				data->gexit_code = 1;
@@ -102,11 +102,10 @@ void	prompt(t_data *data)
 	char	*user_read;
 
 	signal(SIGINT, parent_signal_handler);
-	// signal(SIGQUIT, parent_signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		data->pwd = ft_find_pwd();
+		data->pwd = ft_find_pwd(data);
 		user_read = ft_strjoin(data->pwd, "$ ");
 		input = readline(user_read);
 		free(user_read);

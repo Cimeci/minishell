@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 13:15:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:13:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,15 +71,17 @@ void	ft_exit(t_data *data, t_cmd *cur)
 
 	error = 0;
 	len = ft_strlen_tab(cur->args) - 1;
+	// printf("%d\n", len);
 	i = 0;
-	if (!strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd)
-		&& cur->args[1])
+	if (!strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd))
 	{
 		if (len + 1 == 1)
 		{
 			free_all(data, 0);
-			exit(0);
+			exit(data->gexit_code);
 		}
+		if (!cur->args[1] || cur->args[1][0] == '\0')
+			return ;
 		if (cur->args[1][0] == '-' || cur->args[1][0] == '+')
 			i++;
 		while (cur->args[1][i])

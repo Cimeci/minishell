@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 13:48:32 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:46:01 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int		ft_export(t_data *data, t_cmd *cur);
 
 // // pwd //
 
-char	*ft_find_pwd(void);
+char	*ft_find_pwd(t_data *data);
 int		ft_pwd(t_data *data);
 
 // // unset //

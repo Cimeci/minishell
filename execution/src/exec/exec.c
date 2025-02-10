@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 14:28:14 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/10 15:14:33 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,7 @@ void	exec(t_data *data)
 	t_cmd	*cur;
 	pid_t	p;
 	int		status;
+	int		cd_status;
 
 	if (!data->cmd)
 		return ;
@@ -204,7 +205,11 @@ void	exec(t_data *data)
 		if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 			&& ft_strlen(cur->cmd) == 2)
 		{
-			ft_cd(data, cur);
+			cd_status = ft_cd(data, cur);
+			if (cd_status != 0)
+			{
+				data->gexit_code = 1;
+			}
 			i++;
 		}
 		else if (!ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0]))

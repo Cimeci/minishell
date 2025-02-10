@@ -6,9 +6,23 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/10 10:08:42 by inowak--         ###   ########.fr        #
+#    Updated: 2025/02/10 16:57:22 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+########################
+#        Color         #
+########################
+
+RED    = \033[1;31m
+GREEN  = \033[1;32m
+YELLOW = \033[1;33m
+BLUE   = \033[1;34m
+CYAN   = \033[1;36m
+PURPLE = \033[1;35m
+SPRUCE_GREEN = \033[38;2;0;102;51m
+KING_BLUE = \033[38;2;65;105;225m
+RESET  = \033[0m
 
 CC = cc
 
@@ -51,12 +65,19 @@ LIBFT_DIR = libft
 OBJ_LIBFT = $(LIBFT_DIR)/libft.a
 
 all: $(NAME)
-	@echo "compilation"
+
 $(OBJ_LIBFT):
 	@cd $(LIBFT_DIR) && make > /dev/null
 
 $(NAME): $(OBJ) $(OBJ_LIBFT)
 	@$(CC) $(CFLAGS) -lreadline $(OBJ) $(OBJ_LIBFT) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -o $(NAME)
+	@printf "$(PURPLE)            _       _     _          _ _ \n"
+	@printf "$(PURPLE)           (_)     (_)   | |        | | |\n"
+	@printf "$(PURPLE)  _ __ ___  _ _ __  _ ___| |__   ___| | |\n"
+	@printf "$(KING_BLUE) | '_ \` _ \| | '_ \| / __| '_ \ / _ \ | |\n"
+	@printf "$(KING_BLUE) | | | | | | | | | | \__ \ | | |  __/ | |\n"
+	@printf "$(KING_BLUE) |_| |_| |_|_|_| |_|_|___/_| |_|\___|_|_|\n"
+	@printf "$(RESET)\n"
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(@D)
