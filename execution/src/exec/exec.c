@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 17:33:33 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:54:36 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,9 @@ void	files(t_data *data, t_cmd *cur)
 		}
 		if (cur->fd_outfile < 0)
 			errors(data, cur->outfile[i], ERRNO);
-		}
 		i++;
 		type++;
+	}
 }
 
 void	child(t_data *data, t_cmd *cur, int i)
