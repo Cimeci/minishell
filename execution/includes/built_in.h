@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/06 12:37:49 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:48:32 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ int		ft_unset(t_data *data, t_cmd *cur);
 
 // // exit //
 
-// void	ft_exit(char **argv);
+void	ft_exit(t_data *data, t_cmd *cur);
 
 // // lst_funct_utils.c //
 

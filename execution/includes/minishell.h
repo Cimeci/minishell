@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 15:15:33 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:14:45 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@
 # include <termios.h>
 # include <unistd.h>
 # include <stdarg.h>
+# include <limits.h>
 
 // void	execution_cmd(t_data *data);
 int		ft_strlen_tab(char **table);

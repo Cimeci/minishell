@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/06 15:23:24 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 14:21:22 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ void	prompt(t_data *data)
 	char	*user_read;
 
 	signal(SIGINT, parent_signal_handler);
+	// signal(SIGQUIT, parent_signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{

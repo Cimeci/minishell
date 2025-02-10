@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 09:41:12 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:48:46 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,18 +111,18 @@ void	get_token(char *str, t_token *cur)
 
 	len = get_token_len(str);
 	only_token = ft_substr(str, 0, len);
-	if (ft_strlen(only_token) == 1 && ft_strncmp(str, "|", len))
+	if (ft_strlen(only_token) == 1 && !ft_strncmp(str, "|", len))
 		cur->type = PIPE;
-	else if (ft_strlen(only_token) == 2 && ft_strncmp(str, "<<", len))
+	else if (ft_strlen(only_token) == 2 && !ft_strncmp(str, "<<", len))
 		cur->type = HEREDOC;
-	else if (ft_strlen(only_token) == 1 && ft_strncmp(str, "<", len))
+	else if (ft_strlen(only_token) == 1 && !ft_strncmp(str, "<", len))
 		cur->type = INPUT;
-	else if (ft_strlen(only_token) == 2 && ft_strncmp(str, ">>", len))
+	else if (ft_strlen(only_token) == 2 && !ft_strncmp(str, ">>", len))
 		cur->type = APPEND;
-	else if (ft_strlen(only_token) == 1 && ft_strncmp(str, ">", len))
+	else if (ft_strlen(only_token) == 1 && !ft_strncmp(str, ">", len))
 		cur->type = OVERWRITE;
 	else if (ft_strlen(only_token) == 2
-		&& (ft_strncmp(str, "''", len) || ft_strncmp(str, "\"\"", len)))
+		&& (!ft_strncmp(str, "''", len) || !ft_strncmp(str, "\"\"", len)))
 		cur->type = EMPTY_QUOTE;
 	else
 		cur->type = WORD;
