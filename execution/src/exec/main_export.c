@@ -71,11 +71,10 @@ int	ft_check_env_var(char *var)
 	int	i;
 	int	argc;
 
-	argc = ft_strlen(var) - 1;
-	// printf("%s|%c|%c|\n", var, var[0], var[argc]);
-	i = 1;
 	if (!var)
-		return (0);
+		return (1);
+	argc = ft_strlen(var) - 1;
+	i = 1;
 	if (!ft_isalpha(var[0]))
 	{
 		if (var[0] != '_')
@@ -159,12 +158,6 @@ char	*ft_get_value(char *argv)
 	return (NULL);
 }
 
-int		ft_export_append(t_data *data, char *arg);
-int		ft_export_assign(t_data *data, char *var, char *value);
-int		ft_add_to_list(t_lst **list, char *arg);
-void	ft_print_export_env(t_lst *export_env);
-int		ft_export(t_data *data, t_cmd *cur);
-
 int	ft_add_to_list(t_lst **list, char *arg)
 {
 	t_lst	*node;
@@ -173,16 +166,19 @@ int	ft_add_to_list(t_lst **list, char *arg)
 	if (!node)
 		return (0);
 	node->str = ft_strdup(arg);
-	ft_lstadd_back_generic((void *)list, node, sizeof(char *));
+	ft_lstadd_back_generic((void **)list, node, sizeof(char *));
 	return (1);
 }
 
 void	ft_print_export_env(t_lst *export_env)
 {
-	while (export_env)
+	t_lst *tmp;
+
+	tmp = export_env;
+	while (tmp)
 	{
-		printf("%s\n", export_env->str);
-		export_env = export_env->next;
+		printf("%s\n", tmp->str);
+		tmp = tmp->next;
 	}
 }
 
@@ -245,6 +241,8 @@ int	ft_export(t_data *data, t_cmd *cur)
 	if (ft_strlen_tab(cur->args) - count_trailing_redirects(cur->args,
 			ft_strlen_tab(cur->args)) == 1)
 	{
+		printf("HERE\n");
+
 		ft_print_export_env(data->export_env);
 		return (1);
 	}
@@ -256,18 +254,21 @@ int	ft_export(t_data *data, t_cmd *cur)
 			ft_export_assign(data, "PWD", data->pwd);
 			return (0);
 		}
-		if (!ft_check_env_var(ft_get_var(cur->args[i])))
+		if (!ft_check_env_var(ft_get_pvar(cur->args[i])))
 		{
-			if (!ft_check_env_var(ft_get_pvar(cur->args[i])))
+			// printf("HERE var1\n");
+			if (!ft_check_env_var(ft_get_var(cur->args[i])))
 				perror("Export Error\n");
 		}
 		if (ft_get_pvar(cur->args[i]))
 		{
+			// printf("HERE var2\n");
 			if (!ft_export_append(data, cur->args[i]))
 				return (0);
 		}
 		else if (ft_get_var(cur->args[i]))
 		{
+			// printf("HERE var3\n");
 			var = ft_get_var(cur->args[i]);
 			value = ft_get_value(cur->args[i]);
 			if (!ft_export_assign(data, var, value))
@@ -277,6 +278,7 @@ int	ft_export(t_data *data, t_cmd *cur)
 		}
 		else if (!ft_add_to_list(&data->export_env, cur->args[i]))
 			return (0);
+		// printf("HERE end\n");
 		i++;
 	}
 	return (1);

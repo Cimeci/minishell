@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 15:52:14 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:35:27 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	handle_options(char **argv, int *endl)
 	while (argv[i])
 	{
 		w = 0;
-		if (argv[i][w] == '-')
+		if (argv[i][w] == '-' && argv[i][w + 1])
 		{
 			w++;
 			while (argv[i][w] == 'n')

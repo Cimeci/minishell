@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 15:58:12 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:33:33 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 int	exec_built_in(t_data *data, t_cmd *cur)
 {
 	if (!cur->cmd)
-		exit (0);
+		exit(0);
 	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 4)
 		return (1);
@@ -160,6 +160,12 @@ void	exec(t_data *data)
 	data->nb_cmd = ft_lstsize_generic((void *)cur, sizeof(t_cmd) - sizeof(t_cmd *));
 	if (data->nb_cmd == 1)
 	{
+		if (cur->cmd && !ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
+			&& ft_strlen(cur->cmd) == 4)
+		{
+			ft_exit(data, cur);
+			i++;
+		}
 		if (cur->cmd && !ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 			&& ft_strlen(cur->cmd) == 2)
 		{

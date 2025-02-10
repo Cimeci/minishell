@@ -6,11 +6,11 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 14:05:39 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/10 17:34:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 int	check_syntax(t_data *data)
 {
@@ -98,7 +98,7 @@ void	prompt(t_data *data)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		data->pwd = ft_find_pwd();
+		data->pwd = ft_find_pwd(data);
 		user_read = ft_strjoin(data->pwd, "$ ");
 		input = readline(user_read);
 		free(user_read);
