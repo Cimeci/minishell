@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 13:14:45 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 08:34:42 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,8 @@
 # include <unistd.h>
 # include <stdarg.h>
 # include <limits.h>
+
+extern int g_exit_code_sig;
 
 // void	execution_cmd(t_data *data);
 int		ft_strlen_tab(char **table);

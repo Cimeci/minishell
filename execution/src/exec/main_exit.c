@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 15:13:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:42:26 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ int	check_max_min(long long nb, char *str)
 	i = ft_strlen(str) - 1;
 	if (nb == LLONG_MIN)
 	{
-		if (ft_strncmp(str, "-9223372036854775808", ft_strlen(str))
+		if (!ft_strncmp(str, "-9223372036854775808", ft_strlen(str))
 			&& ft_strlen(str) == 20)
-			return (1);
-		return (0);
+			return (0);
+		return (1);
 	}
 	if (nb < 0)
 		nb = nb * -1;
@@ -71,7 +71,6 @@ void	ft_exit(t_data *data, t_cmd *cur)
 
 	error = 0;
 	len = ft_strlen_tab(cur->args) - 1;
-	// printf("%d\n", len);
 	i = 0;
 	if (!strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd))
 	{

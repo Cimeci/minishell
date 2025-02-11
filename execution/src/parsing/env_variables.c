@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 15:38:09 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:18:29 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,10 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				{
 					if (next[0] == '?')
 					{
-						prev = ft_strjoin_free(prev, ft_itoa(data->gexit_code));
+						if (g_exit_code_sig)
+							prev = ft_strjoin_free(prev, ft_itoa(g_exit_code_sig));
+						else
+							prev = ft_strjoin_free(prev, ft_itoa(data->gexit_code));
 						line = ft_strjoin(prev, next + 1);
 					}
 					else

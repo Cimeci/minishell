@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 17:54:36 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:19:53 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ void	exec(t_data *data)
 			ft_exit(data, cur);
 			i++;
 		}
-		if (cur->cmd && !ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
+		else if (cur->cmd && !ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 			&& ft_strlen(cur->cmd) == 2)
 		{
 			ft_cd(data, cur);
