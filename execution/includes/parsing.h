@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 13:24:48 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:10:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,12 +101,13 @@ void	init_data(t_data *data, char **env);
 void	parsing(t_data *data, char *input);
 
 // env_variables.c
-char	*env_variables(t_data *data, char *line, bool heredoc);
+char 	*env_variables(t_data *data, t_token *cur, char *line, bool heredoc);
 int		*expansion_quotes(char *line, int nb_var, bool heredoc);
-void	rebuild_cmd(t_data *data, char *str);
+void	rebuild_cmd(t_data *data, t_token *first, char *str);
 
 // token.c
 char	*remove_quotes(char *str);
+int		count_words(char *str);
 int		get_token_len(char *str);
 void	add_token(t_data *data, t_token *cur, int i);
 void	get_token(char *str, t_token *cur);

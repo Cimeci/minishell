@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 11:21:35 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:23:25 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,19 +52,18 @@ void	parsing(t_data *data, char *input)
 		if (!check_syntax(data))
 			return ;
 		get_cmds(data);
-		t_cmd *cur;
-		cur = data->cmd;
-		while (cur)
-		{
-			printf("cmd = %s\n", cur->cmd);
-			int i = 0;
-			while (cur->args[i])
-			{
-				printf("args[%d] = %s\n", i, cur->args[i]);
-				i++;
-			}
-			cur = cur->next;
-		}
+		// t_cmd *cur;
+		// cur = data->cmd;
+		// while (cur)
+		// {
+		// 	printf("cmd = %s\n", cur->cmd);
+		// 	int i = 0;
+		// 	while (cur->args[i])
+		// 	{
+		// 		printf("args[%d] = %s\n", i, cur->args[i]);
+		// 		i++;
+		// 	}
+		// 	cur = cur->next;
 	}
 	else
 		return ;
@@ -88,6 +87,7 @@ void	init_data(t_data *data, char **env)
 	data->token = NULL;
 	data->cmd = NULL;
 	data->env = NULL;
+	data->env_cp = NULL;
 	data->gexit_code = 0;
 	cur = data->env;
 	while (env[i])

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 13:47:55 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:00:30 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	count_char(char *str, char c)
 	return (count);
 }
 
-char *env_variables(t_data *data, char *line, bool heredoc)
+char *env_variables(t_data *data, t_token *cur, char *line, bool heredoc)
 {
 	int		i;
 	int		result;
@@ -154,8 +154,8 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				}
 				else if (my_getenv(data, var) && quote_tab[dollars] >= 1)
 				{
-					if (heredoc == false && quote_tab[dollars] == 2)
-						rebuild_cmd(data, ft_strjoin(prev, my_getenv(data, var)));
+					if (heredoc == false && quote_tab[dollars] == 2 && count_words(ft_strjoin(prev, my_getenv(data, var))) > 1)
+						rebuild_cmd(data, cur, ft_strjoin(prev, my_getenv(data, var)));
 					else
 					{
 						prev = ft_strjoin_free(prev, my_getenv(data, var));
@@ -174,12 +174,16 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				free(prev);
 				free(var);
 				dollars++;
-				i += result;
+				i = 0;
 			}
 		}
 		else
 			i++;
 	}
 	free(quote_tab);
-	return (line);
+	if (heredoc == true)
+		return (line);
+	cur->str = line;
+	ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
+	return (NULL);
 }
