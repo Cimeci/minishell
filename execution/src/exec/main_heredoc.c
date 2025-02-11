@@ -6,39 +6,39 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 13:18:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 18:31:22 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	reset_args(t_cmd *cur, char *file)
-{
-	char	**args;
-	int		i;
+// void	reset_args(t_cmd *cur, char *file)
+// {
+	// char	**args;
+	// int		i;
 
-	i = 0;
-	args = malloc(sizeof(char *) * (ft_strlen_tab(cur->args) + 2));
-	while (cur->args[i])
-	{
-		args[i] = ft_strdup(cur->args[i]);
-		i++;
-	}
-	args[i++] = ft_strdup(file);
-	args[i] = NULL;
-	ft_free_tab(cur->args);
-	cur->args = malloc(sizeof(char *) * (i + 1));
-	if (!cur->args)
-		return ;
-	i = 0;
-	while (args[i])
-	{
-		cur->args[i] = ft_strdup(args[i]);
-		i++;
-	}
-	cur->args[i] = NULL;
-	ft_free_tab(args);
-}
+	// i = 0;
+	// args = malloc(sizeof(char *) * (ft_strlen_tab(cur->args) + 2));
+	// while (cur->args[i])
+	// {
+	// 	args[i] = ft_strdup(cur->args[i]);
+	// 	i++;
+	// }
+	// args[i++] = ft_strdup(file);
+	// args[i] = NULL;
+	// ft_free_tab(cur->args);
+	// cur->args = malloc(sizeof(char *) * (i + 1));
+	// if (!cur->args)
+	// 	return ;
+	// i = 0;
+	// while (args[i])
+	// {
+	// 	cur->args[i] = ft_strdup(args[i]);
+	// 	i++;
+	// }
+	// cur->args[i] = NULL;
+	// ft_free_tab(args);
+// }
 
 void	write_tmpfile(t_data *data, t_cmd *cur, int fd)
 {
@@ -92,6 +92,6 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	}
 	write_tmpfile(data, cur, fd);
 	signal(SIGINT, SIG_DFL);
-	reset_args(cur, cur->file);
+	// reset_args(cur, cur->file);
 	close(fd);
 }

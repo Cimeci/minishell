@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 15:17:34 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 18:51:12 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,16 @@ void	parent(t_data *data)
 	close(data->fd[0]);
 }
 
+void	open_redir(t_cmd *cur, int type, int i)
+{
+	if (cur->flag_redir[type] == 1)
+		cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC,
+				0644);
+	else if (cur->flag_redir[type] == 2)
+		cur->fd_outfile = open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND,
+				0644);
+}
+
 void	files(t_data *data, t_cmd *cur)
 {
 	int	i;
@@ -82,14 +92,7 @@ void	files(t_data *data, t_cmd *cur)
 	while (cur->outfile && cur->outfile[i])
 	{
 		if (i == ft_strlen_tab(cur->outfile) - 1)
-		{
-			if (cur->flag_redir[type] == 1)
-				cur->fd_outfile = open(cur->outfile[i],
-						O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			else if (cur->flag_redir[type] == 2)
-				cur->fd_outfile = open(cur->outfile[i],
-						O_CREAT | O_WRONLY | O_APPEND, 0644);
-		}
+			open_redir(cur, type, i);
 		if (cur->fd_outfile < 0)
 			errors(data, cur->outfile[i], ERRNO);
 		i++;
@@ -119,14 +122,24 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 
 void	child(t_data *data, t_cmd *cur, int i)
 {
+	int	fd;
+
 	if (cur->here == 1)
 		ft_heredoc(data, cur);
 	if (i == data->nb_cmd - 1)
 	{
 		close(data->fd[1]);
 		close(data->fd[0]);
-		if (cur->infile)
-			dup2(cur->fd_infile, STDIN_FILENO);
+		if (cur->infile || cur->here == 1)
+		{
+			if (cur->here == 1)
+			{
+				fd = open(cur->file, O_RDONLY);
+				dup2(fd, STDIN_FILENO);
+			}
+			else
+				dup2(cur->fd_infile, STDIN_FILENO);
+		}
 		if (cur->outfile)
 			dup2(cur->fd_outfile, STDOUT_FILENO);
 	}
@@ -141,8 +154,11 @@ void	child(t_data *data, t_cmd *cur, int i)
 			dup2(cur->fd_outfile, STDOUT_FILENO);
 		close(data->fd[1]);
 	}
+	// dprintf(2, "%d|%d\n", cur->fd_infile, cur->fd_outfile);
 	close_files(cur);
 	handle_commande_execution(data, cur);
+	// if (cur->here == 1)
+	// 	close(fd);
 	exit(EXIT_SUCCESS);
 }
 
@@ -169,9 +185,9 @@ void	setup_execution(t_data *data)
 {
 	data->original_stdin = dup(STDIN_FILENO);
 	data->original_stdout = dup(STDOUT_FILENO);
-	signal(SIGINT, SIG_IGN);
-	data->nb_cmd = ft_lstsize_generic((void *)data->cmd,
-			sizeof(t_cmd) - sizeof(t_cmd *));
+	signal(SIGINT, parent_signal_handler_exec);
+	data->nb_cmd = ft_lstsize_generic((void *)data->cmd, sizeof(t_cmd)
+			- sizeof(t_cmd *));
 	handle_unique_builtin(data, data->cmd);
 }
 

@@ -84,7 +84,6 @@ int	ft_check_env_var(t_data *data, char *var)
 			return (1);
 		}
 	}
-	// printf("Here\n");
 	if (!ft_isalnum(var[len]))
 	{
 		errors_exec(var, "export", IDENTIFIER);
@@ -200,9 +199,7 @@ int	ft_export_append(t_data *data, char *arg)
 	path = my_getenv_lst(var, data->env);
 	new_value = ft_get_value(arg);
 	if (!path)
-	{
 		ft_export_assign(data, var, new_value);
-	}
 	else
 	{
 		current_value = ft_get_var_and_value(path, data->env);
@@ -244,62 +241,59 @@ int	ft_export_assign(t_data *data, char *var, char *value)
 	return (1);
 }
 
-int	ft_export(t_data *data, t_cmd *cur)
+int	print_export(t_data *data, t_cmd *cur)
 {
-	int		i;
-	char	*var;
-	char	*value;
-	char	*pvar;
-
-	i = 1;
 	if (ft_strlen_tab(cur->args) - count_trailing_redirects(cur->args,
 			ft_strlen_tab(cur->args)) == 1)
 	{
 		ft_print_export_env(data->export_env);
-		return (1);
+		return (0);
 	}
+	return (1);
+}
+
+int	ft_export(t_data *data, t_cmd *cur)
+{
+	int		i;
+	int		info;
+	char	*var;
+	char	*value;
+	char	*pvar;
+
+	info = 0;
+	i = 1;
+	if (!print_export(data, cur))
+		return (0);
 	while (cur->args[i])
 	{
 		var = ft_get_var(cur->args[i]);
 		pvar = ft_get_pvar(cur->args[i]);
-		// data->gexit_code = 0;
-		// printf("|%s|%s|%s|\n", var, pvar, cur->args[i]);
+		info = 0;
 		if (pvar)
 		{
 			if (ft_check_env_var(data, pvar))
-			{
-				free(pvar);
-				free(var);
-				return (1);
-			}
-			ft_export_append(data, cur->args[i]);
-			free(pvar);
-			free(var);
+				info = 1;
+			else
+				ft_export_append(data, cur->args[i]);
 		}
-		else if (var)
+		else if (var && !info)
 		{
 			if (ft_check_env_var(data, var))
+				info = 1;
+			else
 			{
-				free(var);
-				return (1);
+				value = ft_get_value(cur->args[i]);
+				ft_export_assign(data, var, value);
+				free(value);
 			}
-			value = ft_get_value(cur->args[i]);
-			ft_export_assign(data, var, value);
-			free(value);
-			free(var);
 		}
-		else if (ft_check_env_var(data, cur->args[i]))
-		{
-			return (1);
-		}
-		else
+		else if (!ft_check_env_var(data, cur->args[i]))
 		{
 			if (!ft_add_to_list(&data->export_env, cur->args[i]))
-			{
 				data->gexit_code = 1;
-				return (1);
-			}
 		}
+		free(var);
+		free(pvar);
 		i++;
 	}
 	return (0);

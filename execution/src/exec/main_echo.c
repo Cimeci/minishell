@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_echo.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 17:35:27 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:27:58 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,10 +69,10 @@ int	count_trailing_redirects(char **argv, int argc)
 	j = argc - 1;
 	while (j > 0)
 	{
-		if (!ft_strncmp(argv[j], ">", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j - 1], ">", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j - 1], ">>", ft_strlen(argv[j])))
+		if (!ft_strncmp(argv[j], ">", ft_strlen(argv[j])) || !ft_strncmp(argv[j
+				- 1], ">", ft_strlen(argv[j])) || !ft_strncmp(argv[j], ">>",
+				ft_strlen(argv[j])) || !ft_strncmp(argv[j - 1], ">>",
+				ft_strlen(argv[j])))
 			l++;
 		else
 			break ;
