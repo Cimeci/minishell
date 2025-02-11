@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 17:34:54 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 09:43:36 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,53 @@ int	get_token_len(char *str)
 	return (i);
 }
 
+int	count_words(char *str)
+{
+	int	i;
+	int	words;
+
+	i = 0;
+	words = 0;
+	while (str[i])
+	{
+		while (str[i] && str[i] == ' ')
+			i++;
+		if (str[i] && str[i] != ' ')
+			words++;
+		while (str[i] && str[i] != ' ')
+			i++;
+	}
+	return (words);
+}
+
+void	rebuild_cmd(t_data *data, char *str)
+{
+	t_token	*cur;
+	int		i;
+	int		start;
+	int		len;
+
+	i = 0;
+	start = 0;
+	len = 0;
+	while (str[i])
+	{
+		cur = (t_token *)ft_lstnew_generic(sizeof(t_token));
+			if (!cur)
+				errors(data, NULL, MALLOC);
+		while (str[i] && str[i] == ' ')
+			i++;
+		start = i;
+		len = 0;
+		while (str[i + len] && str[i + len] != ' ')
+			len++;
+		cur->str = ft_substr(str, start, len);
+		cur->type = WORD;
+		i += len;
+		ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
+	}
+}
+
 void	add_token(t_data *data, t_token *cur, int i)
 {
 	t_token	*last;
@@ -108,8 +155,11 @@ void	add_token(t_data *data, t_token *cur, int i)
 		cur->expand = false;
 	if (ft_strchr(str, '$') && (!last || last->type != HEREDOC))
 	{
-		cur->type = WORD;
-		cur->str = env_variables(data, str, false);
+		str = env_variables(data, str, false);
+		if (count_words(str) == 1)
+			cur->str = str;
+		else
+			rebuild_cmd(data, str);
 	}
 	else
 		cur->str = remove_quotes(str);
