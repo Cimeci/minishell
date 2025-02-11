@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 09:19:53 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:42:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,6 @@ void	files(t_data *data, t_cmd *cur)
 
 	i = 0;
 	type = 0;
-	if (cur->here == 1)
-		cur->file = randomizer();
 	while (cur->infile && cur->infile[i])
 	{
 		if (i == ft_strlen_tab(cur->infile) - 1)
@@ -162,34 +160,29 @@ void	exec(t_data *data)
 	{
 		if (cur->cmd && !ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
 			&& ft_strlen(cur->cmd) == 4)
-		{
 			ft_exit(data, cur);
-			i++;
-		}
 		else if (cur->cmd && !ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 			&& ft_strlen(cur->cmd) == 2)
-		{
 			ft_cd(data, cur);
-			i++;
-		}
 		else if (cur->cmd && !ft_strncmp(cur->args[0], "export", ft_strlen(cur->args[0]))
 			&& ft_strlen(cur->args[0]) == 6)
-		{
 			ft_export(data, cur);
-			i++;
-		}
 		else if (cur->cmd && !ft_strncmp(cur->args[0], "unset", ft_strlen(cur->args[0]))
 			&& ft_strlen(cur->args[0]) == 5)
-		{
 			ft_unset(data, cur);
-			i++;
-		}
 	}
 	while (cur && i < data->nb_cmd)
 	{
-		files(data, cur);
 		if (cur->here == 1)
+		{
 			cur->file = randomizer();
+			if (!cur->file)
+			{
+				data->gexit_code = 1;
+				return ;
+			}
+		}
+		files(data, cur);
 		if (pipe(data->fd) == -1)
 			printf("pipe failed\n");
 		p = fork();

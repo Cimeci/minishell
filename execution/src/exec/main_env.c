@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/29 15:33:20 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:25:51 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,15 @@ void	ft_sort_env(char **env, int size)
 int	ft_env(t_data *data, t_cmd *cur)
 {
 	t_lst	*tmp;
+	char	*path;
 
-	if (!my_getenv_lst("PATH", data->env))
+	path = my_getenv_lst("PATH", data->env);
+	if (!path)
 	{
 		errors(data, "env", FILES);
 		exit (127);
 	}
+	free(path);
 	if (ft_strlen_tab(cur->args) != 1)
 	{
 		errors(data, "env", ARGS);

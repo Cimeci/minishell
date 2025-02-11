@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 15:56:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:59:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ void	ft_absolut_path(t_data *data, t_cmd *cur)
 	}
 	if (chdir(target_path))
 	{
-		// ft_free_path(target_path, path);
 		errors_exec(cur->args[1], "cd", FILES);
+		data->gexit_code = 1;
 	}
 }
 
@@ -77,6 +77,7 @@ int	ft_cd(t_data *data, t_cmd *cur)
 	if (ft_strlen_tab(cur->args) != 2)
 	{
 		errors(data, "cd", ARGS);
+		data->gexit_code = 1;
 		return (2);
 	}
 	if (cur->args[1] && cur->args[1][0] != '\0')
