@@ -66,7 +66,7 @@ void	ft_print_env_export(t_lst *env, char **argv)
 	}
 }
 
-int	ft_check_env_var(char *var)
+int	ft_check_env_var(t_data *data, char *var)
 {
 	int	i;
 	int	len;
@@ -80,12 +80,15 @@ int	ft_check_env_var(char *var)
 		if (var[0] != '_')
 		{
 			errors_exec(var, "export", IDENTIFIER);
+			data->gexit_code = 1;
 			return (1);
 		}
 	}
+	// printf("Here\n");
 	if (!ft_isalnum(var[len]))
 	{
 		errors_exec(var, "export", IDENTIFIER);
+		data->gexit_code = 1;
 		return (1);
 	}
 	while (i < len)
@@ -95,6 +98,7 @@ int	ft_check_env_var(char *var)
 			if (var[i] != '_')
 			{
 				errors_exec(var, "export", IDENTIFIER);
+				data->gexit_code = 1;
 				return (1);
 			}
 		}
@@ -258,12 +262,12 @@ int	ft_export(t_data *data, t_cmd *cur)
 	{
 		var = ft_get_var(cur->args[i]);
 		pvar = ft_get_pvar(cur->args[i]);
-		data->gexit_code = 0;
+		// data->gexit_code = 0;
+		// printf("|%s|%s|%s|\n", var, pvar, cur->args[i]);
 		if (pvar)
 		{
-			if (ft_check_env_var(pvar))
+			if (ft_check_env_var(data, pvar))
 			{
-				data->gexit_code = 1;
 				free(pvar);
 				free(var);
 				return (1);
@@ -274,30 +278,27 @@ int	ft_export(t_data *data, t_cmd *cur)
 		}
 		else if (var)
 		{
-			if (ft_check_env_var(var))
+			if (ft_check_env_var(data, var))
 			{
-				data->gexit_code = 1;
 				free(var);
 				return (1);
 			}
 			value = ft_get_value(cur->args[i]);
-			if (!ft_export_assign(data, var, value))
-			{
-				free(var);
-				return (1);
-			}
+			ft_export_assign(data, var, value);
 			free(value);
 			free(var);
 		}
-		else if (ft_check_env_var(cur->args[i]))
+		else if (ft_check_env_var(data, cur->args[i]))
 		{
-			data->gexit_code = 1;
 			return (1);
 		}
 		else
 		{
 			if (!ft_add_to_list(&data->export_env, cur->args[i]))
+			{
+				data->gexit_code = 1;
 				return (1);
+			}
 		}
 		i++;
 	}

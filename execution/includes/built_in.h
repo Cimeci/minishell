@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 17:14:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 14:06:58 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int		ft_export(t_data *data, t_cmd *cur);
 char	*ft_get_value(char *argv);
 char	*ft_get_var_and_value(char *var, t_lst *env);
 char	*ft_get_pvar(char *argv);
-int		ft_check_env_var(char *var);
+int		ft_check_env_var(t_data *data, char *var);
 char	*my_getenv_lst(const char *name, t_lst *env);
 void	ft_print_env_export(t_lst *env, char **argv);
 

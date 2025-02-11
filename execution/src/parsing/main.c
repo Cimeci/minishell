@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 09:11:27 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:27:47 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ void	prompt(t_data *data)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
-		if (g_exit_code_sig != 0)
+		if (g_exit_code_sig)
 		{
 			data->gexit_code = g_exit_code_sig;
 			g_exit_code_sig = 0;
@@ -132,6 +132,7 @@ void	prompt(t_data *data)
 int	main(int argc, char **argv, char **env)
 {
 	t_data	data;
+	int		last_exit;
 
 	(void)argv;
 	if (argc != 1)
@@ -141,5 +142,7 @@ int	main(int argc, char **argv, char **env)
 	}
 	init_data(&data, env);
 	prompt(&data);
+	last_exit = data.gexit_code;
 	free_all(&data, 0);
+	exit(last_exit);
 }
