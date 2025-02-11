@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 10:40:53 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:24:48 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ void	parsing(t_data *data, char *input);
 // env_variables.c
 char	*env_variables(t_data *data, char *line, bool heredoc);
 int		*expansion_quotes(char *line, int nb_var, bool heredoc);
+void	rebuild_cmd(t_data *data, char *str);
 
 // token.c
 char	*remove_quotes(char *str);

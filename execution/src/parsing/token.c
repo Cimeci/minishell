@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 11:29:45 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:40:51 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,6 @@ void	rebuild_cmd(t_data *data, char *str)
 		i += len;
 		ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
 	}
-	free(str);
 }
 
 void	add_token(t_data *data, t_token *cur, int i)
@@ -142,8 +141,7 @@ void	add_token(t_data *data, t_token *cur, int i)
 	t_token	*last;
 	int		len;
 	char	*str;
-	char	*tmp;
-
+	
 	last = ft_lstlast_generic(data->token, (sizeof(t_token) - sizeof (t_token *)));
 	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
@@ -152,11 +150,7 @@ void	add_token(t_data *data, t_token *cur, int i)
 		cur->expand = false;
 	if (ft_strchr(str, '$') && (!last || last->type != HEREDOC))
 	{
-		tmp = env_variables(data, str, false);
-		if (count_words(tmp) >= 1 && is_in_quote)
-			rebuild_cmd(data, tmp);
-		else
-			cur->str = tmp;
+		cur->str = env_variables(data, str, false);
 		free(str);
 	}
 	else

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 10:11:37 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:47:55 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	*expansion_quotes(char *line, int nb_var, bool heredoc)
 			}
 		}
 		if (line[i] && line[i] == '$')
-			quote_tab[j++] = 1;
+			quote_tab[j++] = 2;
 		i++;
 	}
 	return (quote_tab);
@@ -127,9 +127,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 			line = only_dollars(data, line, quote_tab, dollars, i);
 			while (line[i] && !is_separator_env(line[i], 1))
 				i++;
-			if (line[i] != '$')
-				;
-			else
+			if (line[i] == '$')
 			{
 				i++;
 				result = 0;
@@ -141,7 +139,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				next = ft_substr(line, i + result, ft_strlen(line));
 				prev = ft_substr(line, 0, i - 1);
 				free(line);
-				if (result == 0 && var[0] == '\0')
+				if (result == 0 && var[0] == '\0' && quote_tab[dollars] >= 1)
 				{
 					if (next[0] == '?')
 					{
@@ -154,12 +152,17 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 						line = ft_strjoin(prev, next);
 					}
 				}
-				else if (my_getenv(data, var) && quote_tab[dollars] == 1)
+				else if (my_getenv(data, var) && quote_tab[dollars] >= 1)
 				{
-					prev = ft_strjoin_free(prev, my_getenv(data, var));
-					line = ft_strjoin(prev, next);
+					if (heredoc == false && quote_tab[dollars] == 2)
+						rebuild_cmd(data, ft_strjoin(prev, my_getenv(data, var)));
+					else
+					{
+						prev = ft_strjoin_free(prev, my_getenv(data, var));
+						line = ft_strjoin(prev, next);
+					}
 				}
-				else if (!my_getenv(data, var) && quote_tab[dollars] == 1)
+				else if (!my_getenv(data, var) && quote_tab[dollars] >= 1)
 					line = ft_strjoin(prev, next);
 				else if (quote_tab[dollars] == 0)
 				{
@@ -171,6 +174,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				free(prev);
 				free(var);
 				dollars++;
+				i += result;
 			}
 		}
 		else
