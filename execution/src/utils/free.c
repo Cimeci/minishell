@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:46:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 13:55:10 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:48:50 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,12 @@ void	free_all(t_data *data, int flag)
 		free_cmd(&data->cmd);
 	if (data->pwd)
 		free(data->pwd);
+	if (data->env_cp)
+		ft_free_tab(data->env_cp);
 	data->line = NULL;
 	data->token = NULL;
+	data->cmd = NULL;
+	data->env_cp = NULL;
 }
 
 char	*ft_strjoin_free(char *s1, char *s2)

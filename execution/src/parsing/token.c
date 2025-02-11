@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 09:43:36 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 11:29:45 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,7 @@ void	rebuild_cmd(t_data *data, char *str)
 		i += len;
 		ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
 	}
+	free(str);
 }
 
 void	add_token(t_data *data, t_token *cur, int i)
@@ -141,12 +142,8 @@ void	add_token(t_data *data, t_token *cur, int i)
 	t_token	*last;
 	int		len;
 	char	*str;
+	char	*tmp;
 
-	cur->str = malloc(1);
-	if (!cur->str)
-		errors(data, NULL, MALLOC);
-	cur->str[0] = '\0';
-	cur->expand = true;
 	last = ft_lstlast_generic(data->token, (sizeof(t_token) - sizeof (t_token *)));
 	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
@@ -155,11 +152,12 @@ void	add_token(t_data *data, t_token *cur, int i)
 		cur->expand = false;
 	if (ft_strchr(str, '$') && (!last || last->type != HEREDOC))
 	{
-		str = env_variables(data, str, false);
-		if (count_words(str) == 1)
-			cur->str = str;
+		tmp = env_variables(data, str, false);
+		if (count_words(tmp) >= 1 && is_in_quote)
+			rebuild_cmd(data, tmp);
 		else
-			rebuild_cmd(data, str);
+			cur->str = tmp;
+		free(str);
 	}
 	else
 		cur->str = remove_quotes(str);
@@ -207,6 +205,10 @@ void	tokenise(t_data *data)
 			cur = (t_token *)ft_lstnew_generic(sizeof(t_token));
 			if (!cur)
 				errors(data, NULL, MALLOC);
+			// cur->str = ft_calloc(1, 1);
+			// if (!cur->str)
+			// 	errors(data, NULL, MALLOC);
+			cur->expand = true;
 			get_token(data->line + i, cur);
 			add_token(data, cur, i);
 			i += get_token_len(data->line + i);

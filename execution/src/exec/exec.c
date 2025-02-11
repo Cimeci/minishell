@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 17:33:33 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:45:28 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 	close_files(cur);
 	if (!exec_built_in(data, cur))
 	{
-		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
+		if (execve(cur->cmd, cur->args, data->env_cp) == -1)
 		{
 			if (opendir(cur->cmd) != NULL)
 			{

@@ -69,38 +69,38 @@ void	ft_print_env_export(t_lst *env, char **argv)
 int	ft_check_env_var(char *var)
 {
 	int	i;
-	int	argc;
+	int	len;
 
 	if (!var)
 		return (1);
-	argc = ft_strlen(var) - 1;
+	len = ft_strlen(var) - 1;
 	i = 1;
 	if (!ft_isalpha(var[0]))
 	{
 		if (var[0] != '_')
 		{
 			errors_exec(var, "export", IDENTIFIER);
-			exit (1);
+			return (1);
 		}
 	}
-	if (!ft_isalnum(var[argc]))
+	if (!ft_isalnum(var[len]))
 	{
 		errors_exec(var, "export", IDENTIFIER);
-		exit (1);
+		return (1);
 	}
-	while (i < argc)
+	while (i < len)
 	{
 		if (!ft_isalnum(var[i]))
 		{
 			if (var[i] != '_')
 			{
 				errors_exec(var, "export", IDENTIFIER);
-				exit (1);
+				return (1);
 			}
 		}
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 char	*ft_get_pvar(char *argv)
@@ -172,7 +172,7 @@ int	ft_add_to_list(t_lst **list, char *arg)
 
 void	ft_print_export_env(t_lst *export_env)
 {
-	t_lst *tmp;
+	t_lst	*tmp;
 
 	tmp = export_env;
 	while (tmp)
@@ -235,50 +235,60 @@ int	ft_export(t_data *data, t_cmd *cur)
 {
 	int		i;
 	char	*var;
-	char	*value;;
+	char	*value;
+	char	*pvar;
 
+	;
 	i = 1;
 	if (ft_strlen_tab(cur->args) - count_trailing_redirects(cur->args,
 			ft_strlen_tab(cur->args)) == 1)
 	{
-		printf("HERE\n");
-
 		ft_print_export_env(data->export_env);
 		return (1);
 	}
 	while (cur->args[i])
 	{
-		if (!ft_strncmp(cur->args[i], "PWD", ft_strlen(cur->args[i]))
-			&& ft_strlen(cur->args[i]) == 3)
+		// if (!ft_strncmp(cur->args[i], "PWD", ft_strlen(cur->args[i]))
+		// 	&& ft_strlen(cur->args[i]) == 3)
+		// {
+		// 	ft_export_assign(data, "PWD", data->pwd);
+		// 	return (0);
+		// }
+		var = ft_get_var(cur->args[i]);
+		pvar = ft_get_pvar(cur->args[i]);
+		// printf("|%s|%s|%s|\n", var, pvar, cur->args[i]);
+		data->gexit_code = 0;
+		if (pvar)
 		{
-			ft_export_assign(data, "PWD", data->pwd);
-			return (0);
+			if (ft_check_env_var(pvar))
+			{
+				data->gexit_code = 1;
+				return (1);
+			}
+			ft_export_append(data, cur->args[i]);
 		}
-		if (!ft_check_env_var(ft_get_pvar(cur->args[i])))
+		else if (var)
 		{
-			// printf("HERE var1\n");
-			if (!ft_check_env_var(ft_get_var(cur->args[i])))
-				perror("Export Error\n");
-		}
-		if (ft_get_pvar(cur->args[i]))
-		{
-			// printf("HERE var2\n");
-			if (!ft_export_append(data, cur->args[i]))
-				return (0);
-		}
-		else if (ft_get_var(cur->args[i]))
-		{
-			// printf("HERE var3\n");
-			var = ft_get_var(cur->args[i]);
+			if (ft_check_env_var(var))
+			{
+				data->gexit_code = 1;
+				return (1);
+			}
 			value = ft_get_value(cur->args[i]);
 			if (!ft_export_assign(data, var, value))
 				return (0);
-			free(var);
 			free(value);
 		}
-		else if (!ft_add_to_list(&data->export_env, cur->args[i]))
-			return (0);
-		// printf("HERE end\n");
+		else if (ft_check_env_var(cur->args[i]))
+		{
+			data->gexit_code = 1;
+			return (1);
+		}
+		else
+		{
+			if (!ft_add_to_list(&data->export_env, cur->args[i]))
+				return (0);
+		}
 		i++;
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 17:03:54 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:40:53 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ typedef struct s_data
 	char			*pwd;
 	char			*line;
 	char			*shell_pid;
+	char			**env_cp;
 	int				fd[2];
 	int				nb_cmd;
 	int				original_stdin;
