@@ -168,7 +168,13 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					if (heredoc == false && quote_tab[dollars] == 2 && count_words(ft_strjoin(prev, my_getenv(data, var))) > 1)
 					{
 						rebuild_cmd(data, ft_strjoin(prev, my_getenv(data, var)));
-						line = ft_strjoin(prev, next);
+						line = ft_strdup(next);
+						printf("line %s\n", line);
+						if (!line )
+						{
+							free(line);
+							return (NULL);
+						} 
 					}
 					else
 					{

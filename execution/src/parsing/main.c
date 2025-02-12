@@ -52,18 +52,6 @@ void	parsing(t_data *data, char *input)
 		if (!check_syntax(data))
 			return ;
 		get_cmds(data);
-		// t_cmd *cur;
-		// cur = data->cmd;
-		// while (cur)
-		// {
-		// 	printf("cmd = %s\n", cur->cmd);
-		// 	int i = 0;
-		// 	while (cur->args[i])
-		// 	{
-		// 		printf("args[%d] = %s\n", i, cur->args[i]);
-		// 		i++;
-		// 	}
-		// 	cur = cur->next;
 	}
 	else
 		return ;
