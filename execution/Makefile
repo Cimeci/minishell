@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
+#    By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/10 16:57:22 by inowak--         ###   ########.fr        #
+#    Updated: 2025/02/12 15:40:26 by noacharbogn      ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ RESET  = \033[0m
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -g -I/usr/local/opt/readline/include
 
 NAME = minishell
 
@@ -70,7 +70,7 @@ $(OBJ_LIBFT):
 	@cd $(LIBFT_DIR) && make > /dev/null
 
 $(NAME): $(OBJ) $(OBJ_LIBFT)
-	@$(CC) $(CFLAGS) -lreadline $(OBJ) $(OBJ_LIBFT) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJ) $(OBJ_LIBFT) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline -o $(NAME)
 	@printf "$(PURPLE)            _       _     _          _ _ \n"
 	@printf "$(PURPLE)           (_)     (_)   | |        | | |\n"
 	@printf "$(PURPLE)  _ __ ___  _ _ __  _ ___| |__   ___| | |\n"

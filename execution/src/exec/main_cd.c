@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 15:56:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/12 15:14:22 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,9 +65,9 @@ void	ft_update_pwd(t_data *data, int info)
 
 int	ft_cd(t_data *data, t_cmd *cur)
 {
-	char	*root;
+	//char	*root;
 
-	root = NULL;
+	//root = NULL;
 	if (!cur->args[1] || cur->args[1][0] == '\0')
 	{
 		ft_putendl_fd("cd : No path", 2);

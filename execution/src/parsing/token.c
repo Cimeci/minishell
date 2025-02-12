@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 16:48:12 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/12 09:50:41 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,9 @@ int	count_words(char *str)
 	return (words);
 }
 
-void	rebuild_cmd(t_data *data, t_token *first, char *str)
+void	rebuild_cmd(t_data *data, char *str)
 {
-	t_token	*cur;
-	int		node_count;
+	t_token	*new;
 	int		i;
 	int		start;
 	int		len;
@@ -119,7 +118,6 @@ void	rebuild_cmd(t_data *data, t_token *first, char *str)
 	i = 0;
 	start = 0;
 	len = 0;
-	node_count = 0;
 	while (str[i])
 	{
 		while (str[i] && str[i] == ' ')
@@ -128,48 +126,43 @@ void	rebuild_cmd(t_data *data, t_token *first, char *str)
 		len = 0;
 		while (str[i + len] && str[i + len] != ' ')
 			len++;
-		if (node_count > 0)
-		{
-			cur = (t_token *)ft_lstnew_generic(sizeof(t_token));
-			if (!cur)
-				errors(data, NULL, MALLOC);
-			cur->str = ft_substr(str, start, len);
-			cur->type = WORD;
-			ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
-		}
-		else
-		{
-			first->str = ft_substr(str, start, len);
-			first->type = WORD;
-			ft_lstadd_back_generic((void **)&data->token, first, (sizeof(t_token) - sizeof(t_token *)));
-		}
+		new = (t_token *)ft_lstnew_generic(sizeof(t_token));
+		if (!new)
+			errors(data, NULL, MALLOC);
+		new->str = ft_substr(str, start, len);
+		new->type = WORD;
+		ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token) - sizeof(t_token *)));
 		i += len;
-		node_count++;
 	}
 }
 
-void	add_token(t_data *data, t_token *cur, int i)
+void	add_token(t_data *data, int i)
 {
 	t_token	*last;
+	t_token	*cur;
 	int		len;
 	char	*str;
 
 	last = ft_lstlast_generic(data->token, (sizeof(t_token) - sizeof (t_token *)));
 	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
-	if ((ft_strnstr(str, "\"", len) || ft_strnstr(str, "'", len))
-		&& last && last->type == HEREDOC)
-		cur->expand = false;
 	if (ft_strchr(str, '$') && (!last || last->type != HEREDOC))
 	{
-		env_variables(data, cur, str, false);
-		free(str);
+		env_variables(data, str, false);
 	}
 	else
 	{
+		cur = (t_token *)ft_lstnew_generic(sizeof(t_token));
+		if (!cur)
+			errors(data, NULL, MALLOC);
 		cur->str = remove_quotes(str);
+		if ((ft_strnstr(str, "\"", len) || ft_strnstr(str, "'", len))
+			&& last && last->type == HEREDOC)
+			cur->expand = false;
+		get_token(data->line + i, cur);
 		ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
 	}
+	free(str);
 	t_token *cure;
 	cure = data->token;
 	while (cure)
@@ -207,25 +200,19 @@ void	get_token(char *str, t_token *cur)
 void	tokenise(t_data *data)
 {
 	int		i;
-	t_token	*cur;
 
 	i = 0;
-	cur = NULL;
 	while (data->line[i])
 	{
 		while (data->line[i] && data->line[i] == ' ')
 			i++;
 		if (data->line[i])
 		{
-			cur = (t_token *)ft_lstnew_generic(sizeof(t_token));
-			if (!cur)
-				errors(data, NULL, MALLOC);
 			// cur->str = ft_calloc(1, 1);
 			// if (!cur->str)
 			// 	errors(data, NULL, MALLOC);
-			cur->expand = true;
-			get_token(data->line + i, cur);
-			add_token(data, cur, i);
+			//cur->expand = true;
+			add_token(data, i);
 			i += get_token_len(data->line + i);
 		}
 		if (!data->line[i])

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 17:00:30 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/12 15:12:54 by noacharbogn      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,10 @@ char	*only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
 	char	*tmp;
 	char	*save;
 	int		cur;
-	int		index;
 
 	cur = 0;
 	while (line[i + cur] && line[i + cur] == '$' && quote_tab[dollars + cur] == 1)
 		cur++;
-	index = cur;
 	while (line[i] && cur > 0)
 	{
 		if (cur == 1)
@@ -102,7 +100,20 @@ int	count_char(char *str, char c)
 	return (count);
 }
 
-char *env_variables(t_data *data, t_token *cur, char *line, bool heredoc)
+void	add_env_token(t_data *data, char *line, int flag_expand)
+{
+	t_token	*new;
+
+	new = (t_token *)ft_lstnew_generic(sizeof(t_token));
+	if (!new)
+		errors(data, NULL, MALLOC);
+	new->str = line;
+	new->type = WORD;
+	new->expand = flag_expand;
+	ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token) - sizeof(t_token *)));
+}
+
+char *env_variables(t_data *data, char *line, bool heredoc)
 {
 	int		i;
 	int		result;
@@ -155,7 +166,10 @@ char *env_variables(t_data *data, t_token *cur, char *line, bool heredoc)
 				else if (my_getenv(data, var) && quote_tab[dollars] >= 1)
 				{
 					if (heredoc == false && quote_tab[dollars] == 2 && count_words(ft_strjoin(prev, my_getenv(data, var))) > 1)
-						rebuild_cmd(data, cur, ft_strjoin(prev, my_getenv(data, var)));
+					{
+						rebuild_cmd(data, ft_strjoin(prev, my_getenv(data, var)));
+						line = ft_strjoin(prev, next);
+					}
 					else
 					{
 						prev = ft_strjoin_free(prev, my_getenv(data, var));
@@ -183,7 +197,7 @@ char *env_variables(t_data *data, t_token *cur, char *line, bool heredoc)
 	free(quote_tab);
 	if (heredoc == true)
 		return (line);
-	cur->str = line;
-	ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
+	else
+		add_env_token(data, line, true);
 	return (NULL);
 }
