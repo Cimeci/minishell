@@ -169,8 +169,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					{
 						rebuild_cmd(data, ft_strjoin(prev, my_getenv(data, var)));
 						line = ft_strdup(next);
-						printf("line %s\n", line);
-						if (!line )
+						if (!line || line[0] == '\0')
 						{
 							free(line);
 							return (NULL);
