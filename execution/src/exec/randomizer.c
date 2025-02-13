@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 08:38:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 14:57:49 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/13 14:51:00 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,18 +39,26 @@ char	*convert_ascii(char *str)
 	return (line);
 }
 
-char	*randomizer(void)
+int	open_random(void)
 {
-	int fd;
-	char *pathname;
-	char *line;
+	int	fd;
 
 	fd = open("/dev/urandom", W_OK);
 	if (fd < 0)
 	{
 		printf("Error fd\n");
-		exit(0);
+		exit(1);
 	}
+	return (fd);
+}
+
+char	*randomizer(void)
+{
+	int		fd;
+	char	*pathname;
+	char	*line;
+
+	fd = open_random();
 	line = get_next_line(fd);
 	while (line)
 	{
@@ -59,10 +67,14 @@ char	*randomizer(void)
 		if (ft_strlen(pathname) < 250)
 		{
 			if (access(pathname, F_OK) <= 0)
+			{
+				close(fd);
 				return (pathname);
+			}
 		}
 		free(pathname);
 		line = get_next_line(fd);
 	}
+	close(fd);
 	return (NULL);
 }

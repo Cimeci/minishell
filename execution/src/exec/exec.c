@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 18:51:12 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/13 13:36:24 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int	exec_built_in(t_data *data, t_cmd *cur)
 	return (1);
 }
 
-void	close_files(t_cmd *cur)
+void	close_files(t_cmd *cur, t_data *data, int fd)
 {
 	if (cur->fd_infile != -1 && cur->fd_infile)
 	{
@@ -54,6 +54,9 @@ void	close_files(t_cmd *cur)
 		close(cur->fd_outfile);
 		cur->fd_outfile = -1;
 	}
+	close(fd);
+	close(data->original_stdin);
+	close(data->original_stdout);
 }
 
 void	parent(t_data *data)
@@ -124,6 +127,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 {
 	int	fd;
 
+	fd = -1;
 	if (cur->here == 1)
 		ft_heredoc(data, cur);
 	if (i == data->nb_cmd - 1)
@@ -135,6 +139,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 			if (cur->here == 1)
 			{
 				fd = open(cur->file, O_RDONLY);
+				unlink(cur->file);
 				dup2(fd, STDIN_FILENO);
 			}
 			else
@@ -154,11 +159,8 @@ void	child(t_data *data, t_cmd *cur, int i)
 			dup2(cur->fd_outfile, STDOUT_FILENO);
 		close(data->fd[1]);
 	}
-	// dprintf(2, "%d|%d\n", cur->fd_infile, cur->fd_outfile);
-	close_files(cur);
+	close_files(cur, data, fd);
 	handle_commande_execution(data, cur);
-	// if (cur->here == 1)
-	// 	close(fd);
 	exit(EXIT_SUCCESS);
 }
 

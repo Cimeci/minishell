@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:12:58 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 11:30:04 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/13 14:51:19 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	ft_unset_extension(char *unset_path, t_lst *env)
 
 int	ft_unset(t_data *data, t_cmd *cur)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (cur->args[i])

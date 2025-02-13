@@ -34,7 +34,6 @@ void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var, char *arg)
 	while (cur)
 	{
 		path = ft_get_var(cur->str);
-		// printf("%s|%s|%s\n", var, arg, path);
 		if (path)
 		{
 			if (!ft_strncmp(var, path, ft_strlen(var)))
@@ -47,21 +46,6 @@ void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var, char *arg)
 		}
 		free(path);
 		path = NULL;
-		cur = cur->next;
-	}
-}
-
-void	ft_print_env_export(t_lst *env, char **argv)
-{
-	t_lst	*cur;
-	int		fd;
-
-	fd = open_output_file(argv, ft_strlen_tab(argv));
-	cur = env;
-	while (cur)
-	{
-		ft_putstr_fd("declare -x ", fd);
-		ft_putendl_fd(cur->str, fd);
 		cur = cur->next;
 	}
 }
@@ -243,8 +227,7 @@ int	ft_export_assign(t_data *data, char *var, char *value)
 
 int	print_export(t_data *data, t_cmd *cur)
 {
-	if (ft_strlen_tab(cur->args) - count_trailing_redirects(cur->args,
-			ft_strlen_tab(cur->args)) == 1)
+	if (ft_strlen_tab(cur->args) == 1)
 	{
 		ft_print_export_env(data->export_env);
 		return (0);

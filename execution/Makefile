@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/10 16:57:22 by inowak--         ###   ########.fr        #
+#    Updated: 2025/02/13 14:28:22 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -43,7 +43,6 @@ SRC = src/utils/command.c\
 		src/exec/utils_cd.c\
 		src/exec/main_pwd.c\
 		src/exec/main_echo.c\
-		src/exec/write_utils_echo.c\
 		src/exec/main_env.c\
 		src/exec/main_export.c\
 		src/exec/main_unset.c\
