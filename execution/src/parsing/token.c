@@ -156,19 +156,13 @@ void	add_token(t_data *data, int i)
 		cur = (t_token *)ft_lstnew_generic(sizeof(t_token));
 		if (!cur)
 			errors(data, NULL, MALLOC);
+		cur->expand = true;
 		if ((ft_strnstr(str, "\"", len) || ft_strnstr(str, "'", len))
 			&& last && last->type == HEREDOC)
 			cur->expand = false;
 		cur->str = remove_quotes(str);
 		get_token(data->line + i, cur);
 		ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token) - sizeof(t_token *)));
-	}
-	t_token *cure;
-	cure = data->token;
-	while (cure)
-	{
-		printf("token = %s\n", cure->str);
-		cure = cure->next;
 	}
 }
 
