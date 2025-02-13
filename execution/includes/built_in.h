@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 17:18:16 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/13 17:21:31 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,24 +17,17 @@
 
 // cd //
 
-void	ft_free_path(char *path, char *target_path);
-char	*ft_strsstr(char *pwd, char *cmd);
 void	ft_absolut_path(t_data *data, t_cmd *cur);
+void	ft_update_extension(t_data *data, t_lst *tmp, char *var);
+void	ft_update_pwd(t_data *data, int info);
+int		ft_cd_root(t_data *data, t_cmd *cur);
 int		ft_cd(t_data *data, t_cmd *cur);
 
 // // echo //
 
-int		count_file(char **argv);
-
-int		count_trailing_redirects(char **argv, int argc);
 int		handle_options(char **argv, int *endl);
-int		open_output_file(char **argv, int argc);
-int		ft_echo(char **argv);
-
-void	write_no_arguments(char **argv, int endl, int save);
-int		ft_write_argv_space(char **argv, int j, int dif);
-void	ft_write_argv_endl(char **argv, int j, int endl);
 void	write_arguments(char **argv, int endl, int save);
+int		ft_echo(char **argv);
 
 // // env //
 
@@ -44,21 +37,25 @@ int		ft_env(t_data *data, t_cmd *cur);
 
 // // export //
 
-char	*ft_get_var(char *str);
 void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var, char *arg);
+int		ft_export_append(t_data *data, char *arg);
+int		ft_export_assign(t_data *data, char *var, char *value);
 int		ft_export(t_data *data, t_cmd *cur);
+
+// // // get //
+
+char	*ft_get_var(char *str);
 char	*ft_get_value(char *argv);
 char	*ft_get_var_and_value(char *var, t_lst *env);
 char	*ft_get_pvar(char *argv);
-int		ft_check_env_var(t_data *data, char *var);
-char	*my_getenv_lst(const char *name, t_lst *env);
-void	ft_print_env_export(t_lst *env, char **argv);
 
-int		ft_export_append(t_data *data, char *arg);
-int		ft_export_assign(t_data *data, char *var, char *value);
-int		ft_add_to_list(t_lst **list, char *arg);
+// // // check_print //
+
+int		ft_check_env_var(t_data *data, char *var);
+int		ft_check_isalnum(t_data *data, char *var, int i);
+
 void	ft_print_export_env(t_lst *export_env);
-int		ft_export(t_data *data, t_cmd *cur);
+int		print_export(t_data *data, t_cmd *cur);
 
 // // pwd //
 
@@ -76,6 +73,7 @@ void	ft_exit(t_data *data, t_cmd *cur);
 
 // // lst_funct_utils.c //
 
+int		ft_add_to_list(t_lst **list, char *arg);
 void	*ft_lstnew_generic(size_t data_size);
 void	ft_lstadd_back_generic(void **lst, void *new_node, size_t next_offset);
 int		ft_lstsize_generic(void *lst, size_t offset);
@@ -87,8 +85,22 @@ t_lst	*ft_dup_lst(t_lst *env);
 char	*my_getenv_lst(const char *name, t_lst *env);
 
 // // exec.c //
+void	setup_execution(t_data *data);
+void	execute_pipeline(t_data *data);
 void	exec(t_data *data);
+void	child(t_data *data, t_cmd *cur, int i);
 int		is_built_in(char *str);
+void	handle_unique_builtin(t_data *data, t_cmd *cur);
+int		exec_built_in(t_data *data, t_cmd *cur);
+void	close_files(t_cmd *cur, t_data *data, int fd);
+void	open_redir(t_cmd *cur, int type, int i);
+void	files(t_data *data, t_cmd *cur);
+int		handle_here_doc(t_data *data, t_cmd *cur);
+void	handle_commande_execution(t_data *data, t_cmd *cur);
+void	check_exec_cmd(t_data *data, t_cmd *cur);
+void	parent(t_data *data);
+void	handle_parent_process(t_data *data);
+void	cleanup_execution(t_data *data);
 
 // // heredoc //
 

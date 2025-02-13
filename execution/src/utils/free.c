@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:46:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/13 11:34:46 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/13 17:26:55 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	free_cmd(t_cmd **head)
 		cur->flag_redir = 0;
 		if (cur->file)
 		{
-			free(cur->file);	
+			free(cur->file);
 			cur->file = NULL;
 		}
 		free(cur);

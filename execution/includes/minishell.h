@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 18:15:54 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/13 17:26:04 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,9 @@ extern int	g_exit_code_sig;
 // void	execution_cmd(t_data *data);
 int			ft_strlen_tab(char **table);
 t_lst		*ft_dup_lst(t_lst *env);
+
+// utils/ft_strsstr.c //
+
+char		*ft_strsstr(char *pwd, char *cmd);
 
 #endif

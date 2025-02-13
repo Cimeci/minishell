@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/13 14:28:22 by inowak--         ###   ########.fr        #
+#    Updated: 2025/02/13 17:14:51 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -34,27 +34,35 @@ SRC = src/utils/command.c\
 		src/utils/free.c\
 		src/utils/size.c\
 		src/utils/errors.c\
+		src/utils/ft_strsstr.c\
 		src/parsing/commands.c\
 		src/parsing/env_variables.c\
 		src/parsing/main.c\
 		src/parsing/parsing_utils.c\
 		src/parsing/token.c\
 		src/exec/main_cd.c\
-		src/exec/utils_cd.c\
 		src/exec/main_pwd.c\
 		src/exec/main_echo.c\
 		src/exec/main_env.c\
+		src/exec/export_check_print.c\
+		src/exec/export_get.c\
+		src/exec/export_handle.c\
 		src/exec/main_export.c\
 		src/exec/main_unset.c\
+		src/exec/exec_file.c\
+		src/exec/exec_built_in.c\
+		src/exec/exec_handle.c\
+		src/exec/exec_parent.c\
+		src/exec/exec_child.c\
 		src/exec/exec.c\
 		src/exec/lst_funct.c\
 		src/exec/lst_funct_utils.c\
 		src/exec/main_heredoc.c\
 		src/exec/signal.c\
 		src/exec/randomizer.c\
+		src/exec/main_exit.c\
 		gnl/get_next_line.c\
 		gnl/get_next_line_utils.c\
-		src/exec/main_exit.c\
 
 OBJ_DIR = .objects
 INCLUDE_DIR = includes
