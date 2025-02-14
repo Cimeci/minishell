@@ -6,13 +6,13 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/14 14:32:38 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/14 14:54:17 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	setup_execution(t_data *data)
+int	setup_execution(t_data *data)
 {
 	data->original_stdin = dup(STDIN_FILENO);
 	data->original_stdout = dup(STDOUT_FILENO);
@@ -20,7 +20,9 @@ void	setup_execution(t_data *data)
 	signal(SIGQUIT, parent_signal_handler_exec);
 	data->nb_cmd = ft_lstsize_generic((void *)data->cmd, sizeof(t_cmd)
 			- sizeof(t_cmd *));
-	handle_unique_builtin(data, data->cmd);
+	if (handle_unique_builtin(data, data->cmd))
+		return (1);
+	return (0);
 }
 
 void	execute_pipeline(t_data *data)
@@ -56,7 +58,11 @@ void	exec(t_data *data)
 {
 	if (!data->cmd)
 		return ;
-	setup_execution(data);
+	if (setup_execution(data))
+	{
+		cleanup_execution(data);
+		return ;
+	}
 	execute_pipeline(data);
 	handle_parent_process(data);
 	cleanup_execution(data);

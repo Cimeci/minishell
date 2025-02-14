@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/14 13:50:07 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/14 14:54:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,12 @@ t_lst	*ft_dup_lst(t_lst *env);
 char	*my_getenv_lst(const char *name, t_lst *env);
 
 // // exec.c //
-void	setup_execution(t_data *data);
+int		setup_execution(t_data *data);
 void	execute_pipeline(t_data *data);
 void	exec(t_data *data);
 void	child(t_data *data, t_cmd *cur, int i);
 int		is_built_in(char *str);
-void	handle_unique_builtin(t_data *data, t_cmd *cur);
+int		handle_unique_builtin(t_data *data, t_cmd *cur);
 int		exec_built_in(t_data *data, t_cmd *cur);
 void	close_files(t_cmd *cur, t_data *data, int fd);
 void	open_redir(t_cmd *cur, int type, int i);
