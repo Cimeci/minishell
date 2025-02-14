@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/14 14:54:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:15:08 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ int		handle_unique_builtin(t_data *data, t_cmd *cur);
 int		exec_built_in(t_data *data, t_cmd *cur);
 void	close_files(t_cmd *cur, t_data *data, int fd);
 void	open_redir(t_cmd *cur, int type, int i);
-void	files(t_data *data, t_cmd *cur);
+int		files(t_data *data, t_cmd *cur);
 int		handle_here_doc(t_data *data, t_cmd *cur);
 void	handle_commande_execution(t_data *data, t_cmd *cur);
 void	check_exec_cmd(t_data *data, t_cmd *cur);

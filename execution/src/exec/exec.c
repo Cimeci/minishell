@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/14 14:54:17 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:33:01 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,20 @@ void	execute_pipeline(t_data *data)
 	{
 		if (handle_here_doc(data, cur))
 			return ;
-		files(data, cur);
-		if (pipe(data->fd) == -1)
-			printf("pipe failed\n");
-		if (cur->here == 1)
-			signal(SIGINT, parent_signal_handler_here);
-		p = fork();
-		if (p < 0)
-			printf("fork failed\n");
-		else if (p == 0)
-			child(data, cur, i);
-		else
-			parent(data);
+		if (!files(data, cur))
+		{
+			if (pipe(data->fd) == -1)
+				printf("pipe failed\n");
+			if (cur->here == 1)
+				signal(SIGINT, parent_signal_handler_here);
+			p = fork();
+			if (p < 0)
+				printf("fork failed\n");
+			else if (p == 0)
+				child(data, cur, i);
+			else
+				parent(data);
+		}
 		i++;
 		cur = cur->next;
 	}

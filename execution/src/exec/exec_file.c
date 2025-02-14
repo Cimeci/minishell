@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:58:21 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/13 17:16:58 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:15:42 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	open_redir(t_cmd *cur, int type, int i)
 				0644);
 }
 
-void	files(t_data *data, t_cmd *cur)
+int	files(t_data *data, t_cmd *cur)
 {
 	int	i;
 	int	type;
@@ -51,7 +51,10 @@ void	files(t_data *data, t_cmd *cur)
 		if (i == ft_strlen_tab(cur->infile) - 1)
 			cur->fd_infile = open(cur->infile[i], O_RDONLY);
 		if (open(cur->infile[i], O_RDONLY) < 0)
+		{
 			errors(data, cur->infile[i], FILES);
+			return (1);
+		}
 		i++;
 	}
 	i = 0;
@@ -60,8 +63,12 @@ void	files(t_data *data, t_cmd *cur)
 		if (i == ft_strlen_tab(cur->outfile) - 1)
 			open_redir(cur, type, i);
 		if (cur->fd_outfile < 0)
+		{
 			errors(data, cur->outfile[i], ERRNO);
+			return (1);
+		}
 		i++;
 		type++;
 	}
+	return (0);
 }
