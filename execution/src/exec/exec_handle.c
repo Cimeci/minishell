@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/13 17:16:59 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/14 11:18:52 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ int	handle_here_doc(t_data *data, t_cmd *cur)
 		if (!cur->file)
 		{
 			data->gexit_code = 1;
-			return (0);
+			return (1);
 		}
 	}
-	return (1);
+	return (0);
 }

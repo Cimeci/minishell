@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/13 17:21:31 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/14 13:50:07 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,7 @@ void	ft_heredoc(t_data *data, t_cmd *cur);
 void	child_signal_handler(int signum);
 void	parent_signal_handler(int signum);
 void	parent_signal_handler_exec(int signum);
+void	parent_signal_handler_here(int signum);
 
 // // randomizer.c //
 
