@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/12 09:50:41 by noacharbogn      ###   ########.fr       */
+/*   Updated: 2025/02/17 14:25:35 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,10 +147,7 @@ void	add_token(t_data *data, int i)
 	len = get_token_len(data->line + i);
 	str = ft_substr(data->line, i, len);
 	if (ft_strchr(str, '$') && (!last || last->type != HEREDOC))
-	{
 		env_variables(data, str, false);
-		free(str);
-	}
 	else
 	{
 		cur = (t_token *)ft_lstnew_generic(sizeof(t_token));

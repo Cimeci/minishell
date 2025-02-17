@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 10:31:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:08:10 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
 	int		cur;
 
 	cur = 0;
-	while (line[i + cur] && line[i + cur] == '$' && quote_tab[dollars + cur] == 1)
+	while (line[i + cur] && line[i + cur] == '$' && quote_tab[dollars + cur] >= 1)
 		cur++;
 	while (line[i] && cur > 0)
 	{
@@ -107,8 +107,10 @@ void	add_env_token(t_data *data, char *line, int flag_expand)
 	new = (t_token *)ft_lstnew_generic(sizeof(t_token));
 	if (!new)
 		errors(data, NULL, MALLOC);
-	new->str = line;
+	new->str = remove_quotes(line);
 	new->type = WORD;
+	if (new->str && new->str[0] == '\0')
+		new->type = EMPTY_QUOTE;
 	new->expand = flag_expand;
 	ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token) - sizeof(t_token *)));
 }
@@ -127,8 +129,8 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 	dollars = count_char(line, '$');
 	result = 0;
 	quote_tab = expansion_quotes(line, dollars, heredoc);
-	if (heredoc == false)
-		line = remove_quotes(ft_strdup(line));
+	// if (heredoc == false)
+	// 	line = remove_quotes(ft_strdup(line));
 	dollars = 0;
 	i = 0;
 	while (line[i])
@@ -149,6 +151,10 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				var = ft_substr(line, i, result);
 				next = ft_substr(line, i + result, ft_strlen(line));
 				prev = ft_substr(line, 0, i - 1);
+				printf("line = %s\n", line);
+				printf("var = %s\n", var);
+				printf("next = %s\n", next);
+				printf("prev = %s\n", prev);
 				free(line);
 				if (result == 0 && var[0] == '\0' && quote_tab[dollars] >= 1)
 				{
@@ -162,7 +168,8 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					}
 					else
 					{
-						prev = ft_strjoin_free(prev, "$");
+						if (prev[ft_strlen(prev) - 1] == '"' || prev[ft_strlen(prev) - 1] == '\'')
+							prev = ft_strjoin_free(prev, "$");
 						line = ft_strjoin(prev, next);
 					}
 				}
