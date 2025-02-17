@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 08:38:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/28 10:55:22 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/13 14:51:00 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 char	*convert_ascii(char *str)
 {
-	int	i;
-	int	j;
+	int		i;
+	int		j;
 	char	*line;
 
 	i = 0;
@@ -32,16 +32,24 @@ char	*convert_ascii(char *str)
 	while (str[i])
 	{
 		if (ft_isalnum(str[i]))
-		{
-			// printf("|%c|", str[i]);
-			line[j] = str[i];
-			j++;
-		}
+			line[j++] = str[i];
 		i++;
 	}
 	line[j] = '\0';
-	// printf("\n\n");
 	return (line);
+}
+
+int	open_random(void)
+{
+	int	fd;
+
+	fd = open("/dev/urandom", W_OK);
+	if (fd < 0)
+	{
+		printf("Error fd\n");
+		exit(1);
+	}
+	return (fd);
 }
 
 char	*randomizer(void)
@@ -50,12 +58,7 @@ char	*randomizer(void)
 	char	*pathname;
 	char	*line;
 
-	fd = open("/dev/urandom", W_OK);
-	if (fd < 0)
-	{
-		printf("Error fd\n");
-		exit(0);
-	}
+	fd = open_random();
 	line = get_next_line(fd);
 	while (line)
 	{
@@ -64,10 +67,14 @@ char	*randomizer(void)
 		if (ft_strlen(pathname) < 250)
 		{
 			if (access(pathname, F_OK) <= 0)
+			{
+				close(fd);
 				return (pathname);
+			}
 		}
 		free(pathname);
 		line = get_next_line(fd);
 	}
+	close(fd);
 	return (NULL);
 }

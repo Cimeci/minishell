@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:03 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/10 11:30:09 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:40:02 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,11 +43,11 @@ int	errors(t_data *data, char *str, int type)
 	else if (type == CMD_NOT_FOUND)
 		print_errors(str, ": command not found", NULL);
 	else if (type == FILES)
-		print_errors(str, ": no such file or directory", NULL);
+		print_errors(str, ": No such file or directory", NULL);
 	else if (type == PERM)
-		print_errors(str, ": permission denied", NULL);
+		print_errors(str, ": Permission denied", NULL);
 	else if (type == DIRECTORY)
-		print_errors(str, ": is a directory", NULL);
+		print_errors(str, ": Is a directory", NULL);
 	else if (type == ARGS)
 		print_errors(str, ": too many arguments", NULL);
 	else if (type == MALLOC)
