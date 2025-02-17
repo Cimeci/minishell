@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 15:08:10 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:38:43 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,20 +104,20 @@ void	add_env_token(t_data *data, char *line, int flag_expand)
 {
 	t_token	*new;
 
+	if (line[0] == '\0')
+		return ;
 	new = (t_token *)ft_lstnew_generic(sizeof(t_token));
 	if (!new)
 		errors(data, NULL, MALLOC);
 	new->str = remove_quotes(line);
 	new->type = WORD;
-	if (new->str && new->str[0] == '\0')
-		new->type = EMPTY_QUOTE;
 	new->expand = flag_expand;
 	ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token) - sizeof(t_token *)));
 }
 
 char *env_variables(t_data *data, char *line, bool heredoc)
 {
-	int		i;
+	size_t	i;
 	int		result;
 	int		dollars;
 	int		*quote_tab;
@@ -129,11 +129,9 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 	dollars = count_char(line, '$');
 	result = 0;
 	quote_tab = expansion_quotes(line, dollars, heredoc);
-	// if (heredoc == false)
-	// 	line = remove_quotes(ft_strdup(line));
 	dollars = 0;
 	i = 0;
-	while (line[i])
+	while (i < ft_strlen(line) && line[i])
 	{
 		if (line[i] == '$')
 		{
@@ -151,10 +149,6 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				var = ft_substr(line, i, result);
 				next = ft_substr(line, i + result, ft_strlen(line));
 				prev = ft_substr(line, 0, i - 1);
-				printf("line = %s\n", line);
-				printf("var = %s\n", var);
-				printf("next = %s\n", next);
-				printf("prev = %s\n", prev);
 				free(line);
 				if (result == 0 && var[0] == '\0' && quote_tab[dollars] >= 1)
 				{

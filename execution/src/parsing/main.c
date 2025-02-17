@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 13:10:12 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:36:58 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,11 @@ void	parsing(t_data *data, char *input)
 	data->env_cp = ft_convert_lst_to_tab(data->env);
 	data->line = input;
 	tokenise(data);
-	if (data->token->type == WORD && data->line[0] == '\0')
-		return ;
 	if (data->token)
 	{
+		get_cmds(data);
 		if (!check_syntax(data))
 			return ;
-		get_cmds(data);
 	}
 	else
 		return ;

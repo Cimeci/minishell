@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 13:03:26 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 18:13:20 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok)
 		if (cur_tok->type == HEREDOC)
 		{
 			cur_cmd->heredoc[i] = ft_strdup(cur_tok->next->str);
-			cur_tok->next->type = HEREDOC;
+			//cur_tok->next->type = HEREDOC;
 			if (cur_tok->next->expand == true)
 				cur_cmd->expand = true;
 			else
@@ -53,7 +53,7 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 		if (cur_tok->type == INPUT && cur_tok->next != NULL)
 		{
 			cur_cmd->infile[i] = ft_strdup(cur_tok->next->str);
-			cur_tok->next->type = INPUT;
+			//cur_tok->next->type = INPUT;
 			cur_tok = cur_tok->next->next;
 			i++;
 		}
@@ -61,7 +61,7 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 			|| cur_tok->type == APPEND))
 		{
 			cur_cmd->outfile[j] = ft_strdup(cur_tok->next->str);
-			cur_tok->next->type = OVERWRITE;
+			//cur_tok->next->type = OVERWRITE;
 			cur_tok = cur_tok->next->next;
 			j++;
 		}
@@ -130,7 +130,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	while (cur_tok && cur_tok->type != PIPE)
 	{
 		if (cur_tok->type <= 3)
-			cur_tok = cur_tok->next;
+			cur_tok = cur_tok->next->next;
 		else
 		{
 			cur_cmd->args[i] = ft_strdup(cur_tok->str);
@@ -162,7 +162,7 @@ void	get_flag_redir(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	int	i;
 
 	i = 0;
-	count = (count_token(cur_tok, 1) + count_token(cur_tok, 3)) / 2;
+	count = (count_token(cur_tok, 1) + count_token(cur_tok, 3));
 	if (!count)
 		return ;
 	cur_cmd->flag_redir = ft_calloc(sizeof(int), count + 1);
@@ -217,7 +217,7 @@ void	get_cmds(t_data *data)
 		while (cur_tok && cur_tok->type != PIPE)
 		{
 			if (cur_tok->type <= 3)
-				cur_tok = cur_tok->next;
+				cur_tok = cur_tok->next->next;
 			else if (cur_tok->type >= 4)
 				cur_tok = build_cmd(data, cur_cmd, cur_tok);
 		}
