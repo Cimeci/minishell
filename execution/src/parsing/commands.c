@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 11:24:54 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:48:18 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,12 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	len = 0;
 	tmp = cur_tok;
 	if (ft_strchr(cur_tok->str, '/') || cur_tok->type == EMPTY_QUOTE)
-		cur_cmd->cmd = ft_strdup(cur_tok->str);
+	{
+		if (!my_getenv_lst("PATH", data->env) && cur_tok->type != EMPTY_QUOTE)
+			cur_cmd->cmd = ft_strjoin("./", cur_tok->str);
+		else
+			cur_cmd->cmd = ft_strdup(cur_tok->str);
+	}
 	else
 	{
 		cur_cmd->cmd = find_path(data, cur_tok->str);

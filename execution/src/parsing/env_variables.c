@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 10:09:29 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:31:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,6 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				free(prev);
 				free(var);
 				dollars++;
-				i = 0;
 			}
 		}
 		else
