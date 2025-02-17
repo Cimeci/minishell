@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/14 14:54:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:08:26 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,9 @@ int	ft_cd_root(t_data *data, t_cmd *cur)
 
 int	ft_cd(t_data *data, t_cmd *cur)
 {
-	char	*root;
+	//char	*root;
 
-	root = NULL;
+	//root = NULL;
 	if (!cur->args[1] || cur->args[1][0] == '\0')
 	{
 		ft_putendl_fd("cd : No path", 2);

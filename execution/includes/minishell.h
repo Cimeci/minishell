@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/13 17:26:04 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:04:30 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "../libft/libft.h"
 # include "parsing.h"
 # include "built_in.h"
+# include <stdio.h>
 # include <dirent.h>
 # include <errno.h>
 # include <fcntl.h>
@@ -26,7 +27,6 @@
 # include <signal.h>
 # include <stdarg.h>
 # include <stdbool.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>

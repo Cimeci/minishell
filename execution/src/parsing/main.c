@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/13 13:37:48 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:10:07 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,16 @@ void	parsing(t_data *data, char *input)
 {
 	if (!check_quotes(data, input))
 		return ;
+	data->env_cp = ft_convert_lst_to_tab(data->env);
 	data->line = input;
 	tokenise(data);
+	t_token *cure;
+	cure = data->token;
+	while (cure)
+	{
+		printf("token = %s\n", cure->str);
+		cure = cure->next;
+	}
 	if (data->token)
 	{
 		if (!check_syntax(data))
@@ -74,6 +82,7 @@ void	init_data(t_data *data, char **env)
 	data->token = NULL;
 	data->cmd = NULL;
 	data->env = NULL;
+	data->env_cp = NULL;
 	data->gexit_code = 0;
 	cur = data->env;
 	while (env[i])

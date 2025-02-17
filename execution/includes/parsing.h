@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 18:15:10 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:05:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ typedef struct s_data
 	char			*pwd;
 	char			*line;
 	char			*shell_pid;
+	char			**env_cp;
 	int				fd[2];
 	int				nb_cmd;
 	int				original_stdin;
@@ -100,15 +101,17 @@ void				init_data(t_data *data, char **env);
 void				parsing(t_data *data, char *input);
 
 // env_variables.c
-char				*env_variables(t_data *data, char *line, bool heredoc);
-int					*expansion_quotes(char *line, int nb_var, bool heredoc);
+char 	*env_variables(t_data *data, char *line, bool heredoc);
+int		*expansion_quotes(char *line, int nb_var, bool heredoc);
+void	rebuild_cmd(t_data *data, char *str);
 
 // token.c
-char				*remove_quotes(char *str);
-int					get_token_len(char *str);
-void				add_token(t_data *data, t_token *cur, int i);
-void				get_token(char *str, t_token *cur);
-void				tokenise(t_data *data);
+char	*remove_quotes(char *str);
+int		count_words(char *str);
+int		get_token_len(char *str);
+void	add_token(t_data *data, int i);
+void	get_token(char *str, t_token *cur);
+void	tokenise(t_data *data);
 
 // commands.c
 void				redir_cmd(t_cmd *cur_cmd, t_token *cur_tok);
