@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/12 15:13:49 by noacharbogn      ###   ########.fr       */
+/*   Updated: 2025/02/17 10:05:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 
 enum				e_type
 {
-	INPUT,     //<//
-	HEREDOC,   //<<//
-	OVERWRITE, //>//
-	APPEND,    //>>//
+	INPUT,		//<//
+	HEREDOC,	//<<//
+	OVERWRITE,	//>//
+	APPEND,		//>>//
 	PIPE,
 	WORD,
 	EMPTY_QUOTE,
@@ -95,10 +95,10 @@ typedef struct s_data
 # define IS_SEPARATOR_TOKEN(c) ((c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ')
 
 // main.c
-int		check_pipes(t_data *data);
-void	prompt(t_data *data);
-void	init_data(t_data *data, char **env);
-void	parsing(t_data *data, char *input);
+int					check_pipes(t_data *data);
+void				prompt(t_data *data);
+void				init_data(t_data *data, char **env);
+void				parsing(t_data *data, char *input);
 
 // env_variables.c
 char 	*env_variables(t_data *data, char *line, bool heredoc);
@@ -114,28 +114,28 @@ void	get_token(char *str, t_token *cur);
 void	tokenise(t_data *data);
 
 // commands.c
-void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok);
-int		count_token(t_token *cur, int token);
-t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok);
-void	get_cmds(t_data *data);
+void				redir_cmd(t_cmd *cur_cmd, t_token *cur_tok);
+int					count_token(t_token *cur, int token);
+t_token				*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok);
+void				get_cmds(t_data *data);
 
 // parsing_utils.c
-char	*find_path(t_data *data, char *str);
-char	*my_getenv(t_data *data, char *name);
-int		check_quotes(t_data *data, char *input);
-void	get_shell_pid(t_data *data);
+char				*find_path(t_data *data, char *str);
+char				*my_getenv(t_data *data, char *name);
+int					check_quotes(t_data *data, char *input);
+void				get_shell_pid(t_data *data);
 
 // free.c
-void ft_free_tab(char **table);
-void free_token(t_token **head);
-void free_env(t_lst **head);
-void free_all(t_data *data, int flag);
-char *ft_strjoin_free(char *s1, char *s2);
-void free_cmd(t_cmd **head);
+void				ft_free_tab(char **table);
+void				free_token(t_token **head);
+void				free_env(t_lst **head);
+void				free_all(t_data *data, int flag);
+char				*ft_strjoin_free(char *s1, char *s2);
+void				free_cmd(t_cmd **head);
 
-//errors.c
-void	print_errors(char *str, ...);
-int		errors(t_data *data, char *str, int type);
-void	errors_exec(char *msg, char *cmd, int type);
+// errors.c
+void				print_errors(char *str, ...);
+int					errors(t_data *data, char *str, int type);
+void				errors_exec(char *msg, char *cmd, int type);
 
 #endif

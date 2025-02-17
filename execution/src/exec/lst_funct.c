@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:22:33 by inowak--          #+#    #+#             */
-/*   Updated: 2025/01/22 10:32:01 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:28:01 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ char	**ft_convert_lst_to_tab(t_lst *env)
 	t_lst	*tmp;
 
 	i = 0;
-	table = malloc(sizeof(char *) * (ft_lstsize_generic((void *)env, sizeof(char *)) + 1));
+	table = malloc(sizeof(char *) * (ft_lstsize_generic((void *)env,
+					sizeof(char *)) + 1));
 	if (!table)
 		return (NULL);
 	tmp = env;

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:49:30 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 11:24:17 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:10:18 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,22 @@ char	*my_getenv(t_data *data, char *name)
 	return (NULL);
 }
 
+char	*extend_find(char *str, char **path_split, int i)
+{
+	char *tmp;
+	char *pathname;
+
+	tmp = ft_strjoin(path_split[i], "/");
+	pathname = ft_strjoin(tmp, str);
+	free(tmp);
+	return (pathname);
+}
+
 char	*find_path(t_data *data, char *str)
 {
 	char	*path;
 	char	**path_split;
 	char	*pathname;
-	char	*tmp;
 	int		i;
 
 	i = 0;
@@ -52,9 +62,7 @@ char	*find_path(t_data *data, char *str)
 	path_split = ft_split(path, ':');
 	while (path_split[i])
 	{
-		tmp = ft_strjoin(path_split[i], "/");
-		pathname = ft_strjoin(tmp, str);
-		free(tmp);
+		pathname = extend_find(str, path_split, i);
 		if (!access(pathname, X_OK))
 		{
 			ft_free_tab(path_split);

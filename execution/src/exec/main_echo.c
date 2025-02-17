@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_echo.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 17:35:27 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/13 14:29:58 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,45 +40,26 @@ int	handle_options(char **argv, int *endl)
 	return (i);
 }
 
-int	open_output_file(char **argv, int argc)
-{
-	int	fd;
-	int	i;
-
-	fd = 0;
-	i = 1;
-	while (i < argc)
-	{
-		if (!ft_strncmp(">", argv[i], ft_strlen(argv[i])))
-			fd = open(argv[i + 1], O_WRONLY | O_TRUNC | O_CREAT, 0664);
-		else if (!ft_strncmp(">>", argv[i], ft_strlen(argv[i])))
-			fd = open(argv[i + 1], O_WRONLY | O_APPEND | O_CREAT, 0664);
-		if (fd < 0)
-			return (-1);
-		i++;
-	}
-	return (fd);
-}
-
-int	count_trailing_redirects(char **argv, int argc)
+void	write_arguments(char **argv, int endl, int save)
 {
 	int	j;
-	int	l;
+	int	argc;
 
-	l = 0;
-	j = argc - 1;
-	while (j > 0)
+	argc = ft_strlen_tab(argv);
+	j = save;
+	while (j < argc - 1)
 	{
-		if (!ft_strncmp(argv[j], ">", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j - 1], ">", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j], ">>", ft_strlen(argv[j]))
-			|| !ft_strncmp(argv[j - 1], ">>", ft_strlen(argv[j])))
-			l++;
-		else
-			break ;
-		j--;
+		if (argv[j] && argv[j][0] != '\0')
+		{
+			printf("%s", argv[j]);
+			printf(" ");
+		}
+		j++;
 	}
-	return (l);
+	if (endl < 0)
+		printf("%s", argv[j]);
+	else
+		printf("%s\n", argv[j]);
 }
 
 int	ft_echo(char **argv)
@@ -86,14 +67,13 @@ int	ft_echo(char **argv)
 	int	endl;
 	int	save;
 
-	if (!argv[1])
+	if ((!argv[1]))
 	{
 		printf("\n");
 		return (1);
 	}
 	endl = 0;
 	save = handle_options(argv, &endl);
-	write_no_arguments(argv, endl, save);
 	write_arguments(argv, endl, save);
 	return (1);
 }

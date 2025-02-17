@@ -3,41 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   main_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: noacharbogne <noacharbogne@student.42.f    +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/12 09:42:01 by noacharbogn      ###   ########.fr       */
+/*   Updated: 2025/02/17 10:09:03 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	reset_args(t_cmd *cur, char *file)
+void	extension_write(t_data *data, t_cmd *cur, char *input, int fd)
 {
-	char	**args;
-	int		i;
-
-	i = 0;
-	args = malloc(sizeof(char *) * (ft_strlen_tab(cur->args) + 2));
-	while (cur->args[i])
-	{
-		args[i] = ft_strdup(cur->args[i]);
-		i++;
-	}
-	args[i++] = ft_strdup(file);
-	args[i] = NULL;
-	ft_free_tab(cur->args);
-	cur->args = malloc(sizeof(char *) * (i + 1));
-	if (!cur->args)
-		return ;
-	i = 0;
-	while (args[i])
-	{
-		cur->args[i] = ft_strdup(args[i]);
-		i++;
-	}
-	cur->args[i] = NULL;
-	ft_free_tab(args);
+	if (cur->expand == true)
+		ft_putendl_fd(env_variables(data, ft_strdup(input), true), fd);
+	else
+		ft_putendl_fd(input, fd);
 }
 
 void	write_tmpfile(t_data *data, t_cmd *cur, int fd)
@@ -62,12 +42,7 @@ void	write_tmpfile(t_data *data, t_cmd *cur, int fd)
 				break ;
 			}
 			if (i == ft_strlen_tab(cur->heredoc) - 1)
-			{
-				if (cur->expand == true)
-					ft_putendl_fd(env_variables(data, ft_strdup(input), true), fd);
-				else
-					ft_putendl_fd(input, fd);
-			}
+				extension_write(data, cur, input, fd);
 			free(input);
 		}
 		i++;
@@ -92,6 +67,5 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	}
 	write_tmpfile(data, cur, fd);
 	signal(SIGINT, SIG_DFL);
-	reset_args(cur, cur->file);
 	close(fd);
 }

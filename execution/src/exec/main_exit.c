@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/10 15:13:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:37:34 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,10 @@ int	check_max_min(long long nb, char *str)
 	i = ft_strlen(str) - 1;
 	if (nb == LLONG_MIN)
 	{
-		if (ft_strncmp(str, "-9223372036854775808", ft_strlen(str))
+		if (!ft_strncmp(str, "-9223372036854775808", ft_strlen(str))
 			&& ft_strlen(str) == 20)
-			return (1);
-		return (0);
+			return (0);
+		return (1);
 	}
 	if (nb < 0)
 		nb = nb * -1;
@@ -62,6 +62,33 @@ int	check_max_min(long long nb, char *str)
 	return (0);
 }
 
+void	ft_error_exit(long long nb, t_data *data, t_cmd *cur, int error)
+{
+	if (error == 0 && !check_max_min(nb, cur->args[1]))
+	{
+		if (ft_strlen_tab(cur->args) - 1 == 1)
+		{
+			free_all(data, 0);
+			exit(nb % 256);
+		}
+		printf("exit\nexit : too many arguments\n");
+		data->gexit_code = 1;
+		return ;
+	}
+	printf("exit\nbash: exit: %s: numeric argument required\n", cur->args[1]);
+	free_all(data, 0);
+	exit(2);
+}
+
+void	ft_unique_exit(int len, t_data *data)
+{
+	if (len + 1 == 1)
+	{
+		free_all(data, 0);
+		exit(data->gexit_code);
+	}
+}
+
 void	ft_exit(t_data *data, t_cmd *cur)
 {
 	int			i;
@@ -71,15 +98,10 @@ void	ft_exit(t_data *data, t_cmd *cur)
 
 	error = 0;
 	len = ft_strlen_tab(cur->args) - 1;
-	// printf("%d\n", len);
 	i = 0;
 	if (!strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd))
 	{
-		if (len + 1 == 1)
-		{
-			free_all(data, 0);
-			exit(data->gexit_code);
-		}
+		ft_unique_exit(len, data);
 		if (!cur->args[1] || cur->args[1][0] == '\0')
 			return ;
 		if (cur->args[1][0] == '-' || cur->args[1][0] == '+')
@@ -91,20 +113,6 @@ void	ft_exit(t_data *data, t_cmd *cur)
 			i++;
 		}
 		nb = ft_atoll(cur->args[1]);
-		if (error == 0 && !check_max_min(nb, cur->args[1]))
-		{
-			if (len == 1)
-			{
-				free_all(data, 0);
-				exit(nb % 256);
-			}
-			printf("exit\nexit : too many arguments\n");
-			data->gexit_code = 1;
-			return ;
-		}
-		printf("exit\nbash: exit: %s: numeric argument required\n",
-			cur->args[1]);
-		free_all(data, 0);
-		exit(2);
+		ft_error_exit(nb, data, cur, error);
 	}
 }

@@ -3,14 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   lst_funct_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:23:53 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/06 14:14:00 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/13 15:20:31 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	ft_add_to_list(t_lst **list, char *arg)
+{
+	t_lst	*node;
+
+	node = ft_lstnew_generic(sizeof(t_lst));
+	if (!node)
+		return (0);
+	node->str = ft_strdup(arg);
+	ft_lstadd_back_generic((void **)list, node, sizeof(char *));
+	return (1);
+}
 
 void	*ft_lstnew_generic(size_t data_size)
 {

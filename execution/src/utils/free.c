@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:46:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 10:48:50 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 10:10:23 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,8 @@ void	free_cmd(t_cmd **head)
 		{
 			unlink(cur->file);
 			free(cur->file);
+			cur->file = NULL;
 		}
-		cur->file = NULL;
 		free(cur);
 		cur = next_node;
 	}
