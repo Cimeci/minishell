@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 10:05:14 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:42:08 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ enum				e_type
 	PIPE,
 	WORD,
 	EMPTY_QUOTE,
+	DOT,
 };
 
 enum				e_error
@@ -86,19 +87,18 @@ typedef struct s_data
 	t_token			*token;
 	t_cmd			*cmd;
 	t_lst			*env;
-	t_lst			*export_env;
 }					t_data;
 
 # define DOUBLE_QUOTE 34
 # define SINGLE_QUOTE 39
 # define IS_QUOTE(c) (c == DOUBLE_QUOTE || c == SINGLE_QUOTE)
-# define IS_SEPARATOR_TOKEN(c) ((c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ')
+# define IS_SEPARATOR_TOKEN(c) ((c) == '>' || (c) == '<' || (c) == '|' || (c) == ' ' || ((c) >= 7 && (c) <= 13))
 
 // main.c
 int					check_pipes(t_data *data);
 void				prompt(t_data *data);
 void				init_data(t_data *data, char **env);
-void				parsing(t_data *data, char *input);
+int					parsing(t_data *data, char *input);
 
 // env_variables.c
 char 	*env_variables(t_data *data, char *line, bool heredoc);

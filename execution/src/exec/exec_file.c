@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:58:21 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/14 15:15:42 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 11:22:18 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	close_files(t_cmd *cur, t_data *data, int fd)
 		close(cur->fd_outfile);
 		cur->fd_outfile = -1;
 	}
-	close(fd);
+	if (fd != -1 && fd)
+		close(fd);
 	close(data->original_stdin);
 	close(data->original_stdout);
 }

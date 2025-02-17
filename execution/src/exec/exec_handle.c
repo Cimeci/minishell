@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/14 11:18:52 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 13:45:24 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,11 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 			}
 			if (access(cur->cmd, X_OK) != 0)
 			{
+				if (errno == EACCES)
+				{
+					errors(data, cur->cmd, PERM);
+					exit(126);
+				}
 				errors(data, cur->cmd, CMD_NOT_FOUND);
 				exit(127);
 			}

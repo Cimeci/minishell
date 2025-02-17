@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/14 14:13:14 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 14:23:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ void	handle_parent_process(t_data *data)
 
 void	cleanup_execution(t_data *data)
 {
-	close(data->fd[0]);
-	close(data->fd[1]);
+	if (data->fd[0] != -1 && data->fd[0])
+		close(data->fd[0]);
+	if (data->fd[1] != -1 && data->fd[1])
+		close(data->fd[1]);
 	dup2(data->original_stdin, STDIN_FILENO);
 	close(data->original_stdin);
 	dup2(data->original_stdout, STDOUT_FILENO);
