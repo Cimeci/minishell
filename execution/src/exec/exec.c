@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 10:39:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:03:31 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ void	execute_pipeline(t_data *data)
 		{
 			if (pipe(data->fd) == -1)
 				printf("pipe failed\n");
-			if (cur->here == 1)
-				signal(SIGINT, parent_signal_handler_here);
 			p = fork();
 			if (p < 0)
 				printf("fork failed\n");
