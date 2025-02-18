@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 10:10:07 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 17:07:51 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,28 +40,31 @@ int	check_syntax(t_data *data)
 	return (1);
 }
 
-void	parsing(t_data *data, char *input)
+int	parsing(t_data *data, char *input)
 {
+	t_cmd	*cur;
+
+	cur = NULL;
 	if (!check_quotes(data, input))
-		return ;
+		return (0);
 	data->env_cp = ft_convert_lst_to_tab(data->env);
 	data->line = input;
 	tokenise(data);
-	t_token *cure;
-	cure = data->token;
-	while (cure)
-	{
-		printf("token = %s\n", cure->str);
-		cure = cure->next;
-	}
 	if (data->token)
 	{
-		if (!check_syntax(data))
-			return ;
 		get_cmds(data);
+		cur = data->cmd; 
+		{
+			handle_here_doc(data, cur);
+			setup_child_process(data, cur);
+			cur = cur->next;
+		}
+		if (!check_syntax(data))
+			return (0);
 	}
 	else
-		return ;
+		return (0);
+	return (1);
 }
 
 void	init_data(t_data *data, char **env)
@@ -83,6 +86,8 @@ void	init_data(t_data *data, char **env)
 	data->cmd = NULL;
 	data->env = NULL;
 	data->env_cp = NULL;
+	data->fd[0] = -1;
+	data->fd[1] = -1;
 	data->gexit_code = 0;
 	cur = data->env;
 	while (env[i])
@@ -95,7 +100,6 @@ void	init_data(t_data *data, char **env)
 		ft_lstadd_back_generic((void **)&data->env, cur, sizeof(char *));
 		i++;
 	}
-	data->export_env = ft_dup_lst(data->env);
 }
 
 void	prompt(t_data *data)
@@ -114,6 +118,7 @@ void	prompt(t_data *data)
 		}
 		data->pwd = ft_find_pwd(data);
 		user_read = ft_strjoin(data->pwd, "$ ");
+		// rl_outstream = stderr; // gere ./minishell | cat -e
 		input = readline(user_read);
 		free(user_read);
 		if (!input)
@@ -131,8 +136,8 @@ void	prompt(t_data *data)
 		else
 		{
 			add_history(input);
-			parsing(data, input);
-			exec(data);
+			if (parsing(data, input))
+				exec(data);
 			free_all(data, 1);
 		}
 	}

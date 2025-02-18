@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
+#    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/17 10:04:11 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/02/17 11:33:20 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,10 +74,10 @@ OBJ_LIBFT = $(LIBFT_DIR)/libft.a
 all: $(NAME)
 
 $(OBJ_LIBFT):
-	@cd $(LIBFT_DIR) && make > /dev/null
+	@cd $(LIBFT_DIR) && make >> /dev/null
 
 $(NAME): $(OBJ) $(OBJ_LIBFT)
-	$(CC) $(CFLAGS) $(OBJ) $(OBJ_LIBFT) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline -o $(NAME)
+	@$(CC) $(CFLAGS) $(OBJ) $(OBJ_LIBFT) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline -o $(NAME)
 	@printf "$(PURPLE)            _       _     _          _ _ \n"
 	@printf "$(PURPLE)           (_)     (_)   | |        | | |\n"
 	@printf "$(PURPLE)  _ __ ___  _ _ __  _ ___| |__   ___| | |\n"
