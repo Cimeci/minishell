@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 10:59:49 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:00:29 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok)
 		if (cur_tok->type == HEREDOC)
 		{
 			cur_cmd->heredoc[i] = ft_strdup(cur_tok->next->str);
-			//cur_tok->next->type = HEREDOC;
 			if (cur_tok->next->expand == true)
 				cur_cmd->expand = true;
 			else

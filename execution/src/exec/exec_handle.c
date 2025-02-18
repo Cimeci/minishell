@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 10:40:54 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:13:15 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,11 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 	{
 		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
 		{
+			if (!ft_strncmp(cur->cmd, ".", 1) || !ft_strncmp(cur->cmd, "..", 2))
+			{
+				errors(data, cur->args[0], CMD_NOT_FOUND);
+				exit(127);
+			}
 			if (opendir(cur->cmd) != NULL)
 			{
 				errors(data, cur->args[0], DIRECTORY);

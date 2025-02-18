@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 10:27:13 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:28:53 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,6 +151,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				var = ft_substr(line, i, result);
 				next = ft_substr(line, i + result, ft_strlen(line));
 				prev = ft_substr(line, 0, i - 1);
+				printf("var %s\n next %s\n prev %s\n quote_tab %d\n", var, next, prev, quote_tab[dollars]);
 				free(line);
 				if (result == 0 && var[0] == '\0' && quote_tab[dollars] >= 1)
 				{
@@ -164,7 +165,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					}
 					else
 					{
-						if (prev[ft_strlen(prev) - 1] == '"' || prev[ft_strlen(prev) - 1] == '\'')
+						if ((next[0] != '"' || next[0] != '\'') && quote_tab[dollars] == 1)
 							prev = ft_strjoin_free(prev, "$", 1);
 						line = ft_strjoin(prev, next);
 					}
