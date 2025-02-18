@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/14 15:15:08 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:15:46 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int		ft_env(t_data *data, t_cmd *cur);
 
 // // export //
 
-void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var, char *arg);
+void	ft_modif_env_var(t_lst *cur, char *var, char *arg);
 int		ft_export_append(t_data *data, char *arg);
 int		ft_export_assign(t_data *data, char *var, char *value);
 int		ft_export(t_data *data, t_cmd *cur);
@@ -54,7 +54,6 @@ char	*ft_get_pvar(char *argv);
 int		ft_check_env_var(t_data *data, char *var);
 int		ft_check_isalnum(t_data *data, char *var, int i);
 
-void	ft_print_export_env(t_lst *export_env);
 int		print_export(t_data *data, t_cmd *cur);
 
 // // pwd //
@@ -81,7 +80,6 @@ void	*ft_lstlast_generic(void *lst, size_t offset);
 
 // // lst_funct.c //
 char	**ft_convert_lst_to_tab(t_lst *env);
-t_lst	*ft_dup_lst(t_lst *env);
 char	*my_getenv_lst(const char *name, t_lst *env);
 
 // // exec.c //
@@ -101,6 +99,7 @@ void	check_exec_cmd(t_data *data, t_cmd *cur);
 void	parent(t_data *data);
 void	handle_parent_process(t_data *data);
 void	cleanup_execution(t_data *data);
+void	setup_child_process(t_data *data, t_cmd *cur);
 
 // // heredoc //
 

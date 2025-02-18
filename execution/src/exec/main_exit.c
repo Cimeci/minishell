@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 16:37:34 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 17:26:18 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,11 @@ void	ft_error_exit(long long nb, t_data *data, t_cmd *cur, int error)
 			free_all(data, 0);
 			exit(nb % 256);
 		}
-		printf("exit\nexit : too many arguments\n");
+		print_errors("exit\n", "too many arguments", NULL);
 		data->gexit_code = 1;
 		return ;
 	}
-	printf("exit\nbash: exit: %s: numeric argument required\n", cur->args[1]);
+	print_errors("exit\n", cur->args[1], ": numeric argument required", NULL);
 	free_all(data, 0);
 	exit(2);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 10:08:17 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/17 15:31:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ int	setup_execution(t_data *data)
 	signal(SIGQUIT, parent_signal_handler_exec);
 	data->nb_cmd = ft_lstsize_generic((void *)data->cmd, sizeof(t_cmd)
 			- sizeof(t_cmd *));
-	if (handle_unique_builtin(data, data->cmd))
+	int info = handle_unique_builtin(data, data->cmd);
+	// dprintf(2, "|%d|\n", info);
+	if (info)
 		return (1);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 18:38:43 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 09:40:03 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ char	*only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
 	cur = 0;
 	while (line[i + cur] && line[i + cur] == '$' && quote_tab[dollars + cur] >= 1)
 		cur++;
+	}
 	while (line[i] && cur > 0)
 	{
 		if (cur == 1)
@@ -141,6 +142,8 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 			if (line[i] == '$')
 			{
 				i++;
+				if (!line[i])
+					break ;
 				result = 0;
 				while (line[i + result] && !is_separator_env(line[i + result], result))
 					result++;

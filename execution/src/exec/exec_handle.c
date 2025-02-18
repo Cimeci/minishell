@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 13:24:47 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 09:39:31 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,12 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 			}
 			if (access(cur->cmd, X_OK) != 0)
 			{
-				errors(data, cur->args[0], CMD_NOT_FOUND);
+				if (errno == EACCES)
+				{
+					errors(data, cur->cmd, PERM);
+					exit(126);
+				}
+				errors(data, cur->cmd, CMD_NOT_FOUND);
 				exit(127);
 			}
 		}

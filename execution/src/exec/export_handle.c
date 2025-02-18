@@ -6,17 +6,16 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:40:57 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/13 16:41:21 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/17 16:12:54 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	ft_modif_env_var(t_lst *cur, t_lst *env, char *var, char *arg)
+void	ft_modif_env_var(t_lst *cur, char *var, char *arg)
 {
 	char	*path;
 
-	(void)env;
 	while (cur)
 	{
 		path = ft_get_var(cur->str);
@@ -55,8 +54,7 @@ int	ft_export_append(t_data *data, char *arg)
 	{
 		current_value = ft_get_var_and_value(path, data->env);
 		full_var = ft_strjoin(current_value, new_value);
-		ft_modif_env_var(data->env, data->env, var, full_var);
-		ft_modif_env_var(data->export_env, data->export_env, var, full_var);
+		ft_modif_env_var(data->env, var, full_var);
 		free(full_var);
 	}
 	free(var);
@@ -79,13 +77,10 @@ int	ft_export_assign(t_data *data, char *var, char *value)
 	{
 		if (!ft_add_to_list(&data->env, full_arg))
 			return (0);
-		if (!ft_add_to_list(&data->export_env, full_arg))
-			return (0);
 	}
 	else
 	{
-		ft_modif_env_var(data->env, data->env, var, full_arg);
-		ft_modif_env_var(data->export_env, data->export_env, var, full_arg);
+		ft_modif_env_var(data->env, var, full_arg);
 		free(path);
 	}
 	free(full_arg);
