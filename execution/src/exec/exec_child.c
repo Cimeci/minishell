@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:14:09 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 11:13:18 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:08:24 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,20 @@ static void	handle_last_command(t_data *data, t_cmd *cur, int *fd)
 		dup2(cur->fd_outfile, STDOUT_FILENO);
 }
 
-static void	handle_pipe_command(t_data *data, t_cmd *cur)
+static void	handle_pipe_command(t_data *data, t_cmd *cur, int *fd)
 {
 	close(data->fd[0]);
-	if (cur->infile)
-		dup2(cur->fd_infile, STDIN_FILENO);
+	if (cur->infile || cur->here == 1)
+	{
+		if (cur->here == 1)
+		{
+			*fd = open(cur->file, O_RDONLY);
+			unlink(cur->file);
+			dup2(*fd, STDIN_FILENO);
+		}
+		else
+			dup2(cur->fd_infile, STDIN_FILENO);
+	}
 	if (!cur->outfile)
 		dup2(data->fd[1], STDOUT_FILENO);
 	else
@@ -58,7 +67,7 @@ void	child(t_data *data, t_cmd *cur, int i)
 	if (i == data->nb_cmd - 1)
 		handle_last_command(data, cur, &fd);
 	else
-		handle_pipe_command(data, cur);
+		handle_pipe_command(data, cur, &fd);
 	close_files(cur, data, fd);
 	handle_commande_execution(data, cur);
 	exit(EXIT_SUCCESS);

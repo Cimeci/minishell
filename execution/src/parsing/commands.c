@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 10:58:30 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:59:49 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 		if (cur_tok->type == INPUT && cur_tok->next != NULL)
 		{
 			cur_cmd->infile[i] = ft_strdup(cur_tok->next->str);
-			//cur_tok->next->type = INPUT;
 			cur_tok = cur_tok->next->next;
 			i++;
 		}
@@ -61,7 +60,6 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 			|| cur_tok->type == APPEND))
 		{
 			cur_cmd->outfile[j] = ft_strdup(cur_tok->next->str);
-			//cur_tok->next->type = OVERWRITE;
 			cur_tok = cur_tok->next->next;
 			j++;
 		}
@@ -102,6 +100,7 @@ int	is_built_in(char *str)
 t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 {
 	t_token	*tmp;
+	char	*get_env;
 	int		i;
 	int		len;
 
@@ -113,10 +112,12 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	else
 	{
 		cur_cmd->cmd = find_path(data, cur_tok->str);
-		if (!cur_cmd->cmd && !my_getenv_lst("PATH", data->env))
+		get_env = my_getenv_lst("PATH", data->env);
+		if (!cur_cmd->cmd && !get_env)
 			cur_cmd->cmd = ft_strjoin("./", cur_tok->str);
 		else if (!cur_cmd->cmd)
 			cur_cmd->cmd = ft_strdup(cur_tok->str);
+		free(get_env);
 	}
 	while (tmp && tmp->type != PIPE)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 10:09:03 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:14:38 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,14 @@
 
 void	extension_write(t_data *data, t_cmd *cur, char *input, int fd)
 {
+	char *input_cpy;
+
+	input_cpy = ft_strdup(input);
 	if (cur->expand == true)
-		ft_putendl_fd(env_variables(data, ft_strdup(input), true), fd);
+		ft_putendl_fd(env_variables(data, input_cpy, true), fd);
 	else
-		ft_putendl_fd(input, fd);
+		ft_putendl_fd(input_cpy, fd);
+	free(input_cpy);
 }
 
 void	write_tmpfile(t_data *data, t_cmd *cur, int fd)
