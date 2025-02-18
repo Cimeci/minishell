@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 11:28:53 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:09:18 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,17 @@ void	add_env_token(t_data *data, char *line, int flag_expand)
 {
 	t_token	*new;
 
-	if (line[0] == '\0')
-		return ;
 	new = (t_token *)ft_lstnew_generic(sizeof(t_token));
 	if (!new)
 		errors(data, NULL, MALLOC);
-	new->str = remove_quotes(line);
 	new->type = WORD;
+	if (line[0] == '\0')
+	{
+		new->empty_var_tok = true;
+		new->type = EMPTY_QUOTE;
+	}
 	new->expand = flag_expand;
+	new->str = remove_quotes(line);
 	ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token) - sizeof(t_token *)));
 }
 
@@ -151,7 +154,6 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				var = ft_substr(line, i, result);
 				next = ft_substr(line, i + result, ft_strlen(line));
 				prev = ft_substr(line, 0, i - 1);
-				printf("var %s\n next %s\n prev %s\n quote_tab %d\n", var, next, prev, quote_tab[dollars]);
 				free(line);
 				if (result == 0 && var[0] == '\0' && quote_tab[dollars] >= 1)
 				{
@@ -179,6 +181,10 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 						if (!line || line[0] == '\0')
 						{
 							free(line);
+							free(prev);
+							free(var);
+							free(next);
+							free(quote_tab);
 							return (NULL);
 						}
 					}

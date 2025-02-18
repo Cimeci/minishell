@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 11:13:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:03:17 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 {
 	if (!exec_built_in(data, cur))
 	{
-		if (execve(cur->cmd, cur->args, ft_convert_lst_to_tab(data->env)) == -1)
+		if (execve(cur->cmd, cur->args, data->env_cp) == -1)
 		{
 			if (!ft_strncmp(cur->cmd, ".", 1) || !ft_strncmp(cur->cmd, "..", 2))
 			{

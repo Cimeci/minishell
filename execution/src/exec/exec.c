@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 10:39:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:14:51 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	execute_pipeline(t_data *data)
 	cur = data->cmd;
 	while (cur && i < data->nb_cmd)
 	{
-		if (!files(data, cur))
+		if (!files(data, cur) && cur->empty_var_cmd == false)
 		{
 			if (pipe(data->fd) == -1)
 				printf("pipe failed\n");

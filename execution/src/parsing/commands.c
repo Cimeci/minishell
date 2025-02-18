@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 11:00:29 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:14:04 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok)
 		return ;
 	while (cur_tok && cur_tok->type != PIPE)
 	{
-		if (cur_tok->type == HEREDOC)
+		if (cur_tok->type == HEREDOC && cur_tok->next != NULL)
 		{
 			cur_cmd->heredoc[i] = ft_strdup(cur_tok->next->str);
 			if (cur_tok->next->expand == true)
@@ -106,6 +106,9 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	i = 0;
 	len = 0;
 	tmp = cur_tok;
+	cur_cmd->empty_var_cmd = false;
+	if (cur_tok->empty_var_tok == true)
+		cur_cmd->empty_var_cmd = true;
 	if (ft_strchr(cur_tok->str, '/') || cur_tok->type == EMPTY_QUOTE || cur_tok->type == DOT)
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
 	else
@@ -130,7 +133,12 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	while (cur_tok && cur_tok->type != PIPE)
 	{
 		if (cur_tok->type <= 3)
-			cur_tok = cur_tok->next->next;
+		{
+			if (cur_tok->next == NULL)
+				cur_tok = cur_tok->next;
+			else
+				cur_tok = cur_tok->next->next;
+		}
 		else
 		{
 			cur_cmd->args[i] = ft_strdup(cur_tok->str);
@@ -168,7 +176,7 @@ void	get_flag_redir(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	cur_cmd->flag_redir = ft_calloc(sizeof(int), count + 1);
 	if (!cur_cmd->flag_redir)
 		errors(data, NULL, MALLOC);
-	while (cur_tok && cur_tok->type != PIPE)
+	while (cur_tok && cur_tok->type != PIPE && cur_tok->next != NULL)
 	{
 		if (cur_tok->type == OVERWRITE)
 		{
@@ -217,7 +225,12 @@ void	get_cmds(t_data *data)
 		while (cur_tok && cur_tok->type != PIPE)
 		{
 			if (cur_tok->type <= 3)
-				cur_tok = cur_tok->next->next;
+			{
+				if (cur_tok->next == NULL)
+					cur_tok = cur_tok->next;
+				else
+					cur_tok = cur_tok->next->next;
+			}
 			else if (cur_tok->type >= 4)
 				cur_tok = build_cmd(data, cur_cmd, cur_tok);
 		}

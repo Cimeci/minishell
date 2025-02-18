@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 10:25:51 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:10:20 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,10 +120,12 @@ void	rebuild_cmd(t_data *data, char *str)
 			errors(data, NULL, MALLOC);
 		new->str = ft_substr(str, start, len);
 		new->type = WORD;
+		new->empty_var_tok = false;
 		ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token)
 				- sizeof(t_token *)));
 		i += len;
 	}
+	free(str);
 }
 
 void	add_token(t_data *data, int i)
@@ -149,6 +151,7 @@ void	add_token(t_data *data, int i)
 					&& last->type == HEREDOC)
 			cur->expand = false;
 		cur->str = remove_quotes(str);
+		cur->empty_var_tok = false;
 		get_token(data->line + i, cur);
 		if (ft_strlen(cur->str) == 1 && !ft_strncmp(cur->str, ".",
 				ft_strlen(cur->str)))

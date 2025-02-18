@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 09:56:10 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 16:09:35 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,10 @@ int	check_syntax(t_data *data)
 
 int	parsing(t_data *data, char *input)
 {
-	t_cmd	*cur;
+	t_cmd	*cur_cmd;
+	t_token	*cur_tok;
 
-	cur = NULL;
+	cur_cmd = NULL;
 	if (!check_quotes(data, input))
 		return (0);
 	data->env_cp = ft_convert_lst_to_tab(data->env);
@@ -53,12 +54,26 @@ int	parsing(t_data *data, char *input)
 	if (data->token)
 	{
 		get_cmds(data);
-		cur = data->cmd;
-		while (cur)
+		cur_cmd = data->cmd;
+		cur_tok = data->token;
+		if (cur_tok->type == PIPE)
+			return (errors(data, "|", ERROR_SYNTAX));
+		while (cur_cmd)
 		{
-			handle_here_doc(data, cur);
-			setup_child_process(data, cur);
-			cur = cur->next;
+			while (cur_tok->next != NULL)
+			{
+				if (cur_tok->type == PIPE)
+				{
+					cur_tok = cur_tok->next;
+					break ;
+				}
+				if (cur_tok->type == HEREDOC && cur_tok->next->type == HEREDOC)
+					return (errors(data, "<<", ERROR_SYNTAX));
+				cur_tok = cur_tok->next;
+			}
+			handle_here_doc(data, cur_cmd);
+			setup_child_process(data, cur_cmd);
+			cur_cmd = cur_cmd->next;
 		}
 		if (!check_syntax(data))
 			return (0);

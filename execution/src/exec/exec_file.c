@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:58:21 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 11:22:18 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:40:22 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,14 @@ int	files(t_data *data, t_cmd *cur)
 	{
 		if (i == ft_strlen_tab(cur->outfile) - 1)
 			open_redir(cur, type, i);
-		if (cur->fd_outfile < 0)
+		if (cur->flag_redir[type] == 1
+			&& open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644)< 0)
+		{
+			errors(data, cur->outfile[i], ERRNO);
+			return (1);
+		}
+		else if (cur->flag_redir[type] == 2
+			&& open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
 		{
 			errors(data, cur->outfile[i], ERRNO);
 			return (1);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 10:28:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 15:09:12 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ typedef struct s_cmd
 	int				*flag_redir;
 	bool			here;
 	bool			expand;
+	bool			empty_var_cmd;
 	char			*file;
 	struct s_cmd	*next;
 }					t_cmd;
@@ -64,6 +65,7 @@ typedef struct s_token
 	char			*str;
 	int				type;
 	bool			expand;
+	bool			empty_var_tok;
 	struct s_token	*next;
 }					t_token;
 
