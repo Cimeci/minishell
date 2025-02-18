@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 17:07:51 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 09:40:17 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	parsing(t_data *data, char *input)
 	if (data->token)
 	{
 		get_cmds(data);
-		cur = data->cmd; 
+		cur = data->cmd;
 		{
 			handle_here_doc(data, cur);
 			setup_child_process(data, cur);
