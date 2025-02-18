@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 17:53:53 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 11:15:46 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,9 @@ int	ft_cd_root(t_data *data, t_cmd *cur)
 
 int	ft_cd(t_data *data, t_cmd *cur)
 {
-	// char	*root;
-	// root = NULL;
 	if (!cur->args[1] || cur->args[1][0] == '\0')
 	{
-		ft_putendl_fd("cd : No path", 2);
+		ft_putendl_fd("cd : Home not found", 2);
 		data->gexit_code = 2;
 		return (2);
 	}

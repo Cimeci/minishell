@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 09:56:10 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 13:54:06 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ int	parsing(t_data *data, char *input)
 			setup_child_process(data, cur);
 			cur = cur->next;
 		}
+		signal(SIGINT, SIG_DFL);
 		if (!check_syntax(data))
 			return (0);
 	}
@@ -119,7 +120,7 @@ void	prompt(t_data *data)
 		}
 		data->pwd = ft_find_pwd(data);
 		user_read = ft_strjoin(data->pwd, "$ ");
-		// rl_outstream = stderr; // gere ./minishell | cat -e
+		rl_outstream = stderr; // gere ./minishell | cat -e
 		input = readline(user_read);
 		free(user_read);
 		if (!input)
@@ -137,7 +138,7 @@ void	prompt(t_data *data)
 		else
 		{
 			add_history(input);
-			if (parsing(data, input))
+			if (parsing(data, input) && g_exit_code_sig != 130)
 				exec(data);
 			free_all(data, 1);
 		}
