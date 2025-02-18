@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 15:31:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:39:47 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ int	setup_execution(t_data *data)
 	data->nb_cmd = ft_lstsize_generic((void *)data->cmd, sizeof(t_cmd)
 			- sizeof(t_cmd *));
 	int info = handle_unique_builtin(data, data->cmd);
-	// dprintf(2, "|%d|\n", info);
 	if (info)
 		return (1);
 	return (0);
@@ -37,8 +36,6 @@ void	execute_pipeline(t_data *data)
 	cur = data->cmd;
 	while (cur && i < data->nb_cmd)
 	{
-		if (handle_here_doc(data, cur))
-			return ;
 		if (!files(data, cur))
 		{
 			if (pipe(data->fd) == -1)

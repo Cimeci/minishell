@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 16:42:08 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:28:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 
 enum				e_type
 {
-	INPUT,		//<//
-	HEREDOC,	//<<//
-	OVERWRITE,	//>//
-	APPEND,		//>>//
+	INPUT,     //<//
+	HEREDOC,   //<<//
+	OVERWRITE, //>//
+	APPEND,    //>>//
 	PIPE,
 	WORD,
 	EMPTY_QUOTE,
@@ -101,17 +101,17 @@ void				init_data(t_data *data, char **env);
 int					parsing(t_data *data, char *input);
 
 // env_variables.c
-char 	*env_variables(t_data *data, char *line, bool heredoc);
-int		*expansion_quotes(char *line, int nb_var, bool heredoc);
-void	rebuild_cmd(t_data *data, char *str);
+char				*env_variables(t_data *data, char *line, bool heredoc);
+int					*expansion_quotes(char *line, int nb_var, bool heredoc);
+void				rebuild_cmd(t_data *data, char *str);
 
 // token.c
-char	*remove_quotes(char *str);
-int		count_words(char *str);
-int		get_token_len(char *str);
-void	add_token(t_data *data, int i);
-void	get_token(char *str, t_token *cur);
-void	tokenise(t_data *data);
+char				*remove_quotes(char *str);
+int					count_words(char *str);
+int					get_token_len(char *str);
+void				add_token(t_data *data, int i);
+void				get_token(char *str, t_token *cur);
+void				tokenise(t_data *data);
 
 // commands.c
 void				redir_cmd(t_cmd *cur_cmd, t_token *cur_tok);
@@ -130,7 +130,7 @@ void				ft_free_tab(char **table);
 void				free_token(t_token **head);
 void				free_env(t_lst **head);
 void				free_all(t_data *data, int flag);
-char				*ft_strjoin_free(char *s1, char *s2);
+char				*ft_strjoin_free(char *s1, char *s2, int flag);
 void				free_cmd(t_cmd **head);
 
 // errors.c

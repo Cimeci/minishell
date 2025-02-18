@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 09:41:03 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:27:13 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
 		if (cur == 1)
 			break ;
 		tmp = ft_substr(line, 0, i);
-		tmp = ft_strjoin_free(tmp, data->shell_pid);
+		tmp = ft_strjoin_free(tmp, data->shell_pid, 1);
 		save = ft_strdup(line);
 		free(line);
 		line = NULL;
@@ -157,15 +157,15 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					if (next[0] == '?')
 					{
 						if (g_exit_code_sig)
-							prev = ft_strjoin_free(prev, ft_itoa(g_exit_code_sig));
+							prev = ft_strjoin_free(prev, ft_itoa(g_exit_code_sig), 3);
 						else
-							prev = ft_strjoin_free(prev, ft_itoa(data->gexit_code));
+							prev = ft_strjoin_free(prev, ft_itoa(data->gexit_code), 3);
 						line = ft_strjoin(prev, next + 1);
 					}
 					else
 					{
 						if (prev[ft_strlen(prev) - 1] == '"' || prev[ft_strlen(prev) - 1] == '\'')
-							prev = ft_strjoin_free(prev, "$");
+							prev = ft_strjoin_free(prev, "$", 1);
 						line = ft_strjoin(prev, next);
 					}
 				}
@@ -183,7 +183,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					}
 					else
 					{
-						prev = ft_strjoin_free(prev, my_getenv(data, var));
+						prev = ft_strjoin_free(prev, my_getenv(data, var), 1);
 						line = ft_strjoin(prev, next);
 					}
 				}
@@ -191,8 +191,8 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					line = ft_strjoin(prev, next);
 				else if (quote_tab[dollars] == 0)
 				{
-					prev = ft_strjoin_free(prev, "$");
-					prev = ft_strjoin_free(prev, var);
+					prev = ft_strjoin_free(prev, "$", 1);
+					prev = ft_strjoin_free(prev, var, 1);
 					line = ft_strjoin(prev, next);
 				}
 				free(next);

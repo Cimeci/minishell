@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 09:40:24 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:25:51 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 char	*remove_quotes(char *str)
 {
-	char	*tmp;
 	char	*dest;
 	char	quote;
 	int		i;
@@ -24,7 +23,6 @@ char	*remove_quotes(char *str)
 	i = 0;
 	len = 0;
 	start = 0;
-	tmp = NULL;
 	dest = malloc(1);
 	dest[0] = '\0';
 	while (str[i])
@@ -32,11 +30,7 @@ char	*remove_quotes(char *str)
 		start = i;
 		while (str[i + len] && !IS_QUOTE(str[i + len]))
 			len++;
-		tmp = ft_substr(str, start, len);
-		dest = ft_strjoin_free(dest, tmp);
-		if (tmp)
-			free(tmp);
-		tmp = NULL;
+		dest = ft_strjoin_free(dest, ft_substr(str, start, len), 3);
 		i += len;
 		len = 0;
 		if (str[i] && IS_QUOTE(str[i]))
@@ -45,17 +39,11 @@ char	*remove_quotes(char *str)
 			i++;
 			while (str[i + len] && str[i + len] != quote)
 				len++;
-			tmp = ft_substr(str, i, len);
-			dest = ft_strjoin_free(dest, tmp);
-			if (tmp)
-				free(tmp);
-			tmp = NULL;
+			dest = ft_strjoin_free(dest, ft_substr(str, i, len), 3);
 			i += len + 1;
 		}
 		len = 0;
 	}
-	if (tmp)
-		free(tmp);
 	free(str);
 	return (dest);
 }

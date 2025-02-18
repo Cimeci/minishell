@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:46:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 16:28:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:22:02 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,11 +114,19 @@ void	free_all(t_data *data, int flag)
 	data->env_cp = NULL;
 }
 
-char	*ft_strjoin_free(char *s1, char *s2)
+char	*ft_strjoin_free(char *s1, char *s2, int flag)
 {
 	char	*tmp;
 
 	tmp = ft_strjoin(s1, s2);
-	free(s1);
+	if (flag == 1)
+		free(s1);
+	else if (flag == 2)
+		free(s2);
+	else if (flag == 3)
+	{
+		free(s1);
+		free(s2);
+	}
 	return (tmp);
 }

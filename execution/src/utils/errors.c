@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:03 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/11 13:40:02 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 10:23:00 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	print_errors(char *str, ...)
 	arg = va_arg(args, char *);
 	while (arg)
 	{
-		str = ft_strjoin_free(str, arg);
+		str = ft_strjoin_free(str, arg, 1);
 		arg = va_arg(args, char *);
 	}
 	va_end(args);
