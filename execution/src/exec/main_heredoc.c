@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 17:22:45 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:30:56 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	extension_write(t_data *data, t_cmd *cur, char *input, int fd)
 {
-	char *input_cpy;
+	char	*input_cpy;
 
 	input_cpy = NULL;
 	if (cur->expand == true)
@@ -45,7 +45,7 @@ void	write_tmpfile(t_data *data, t_cmd *cur, int fd)
 			if (g_exit_code_sig == 130)
 			{
 				if (input)
-					free (input);
+					free(input);
 				dup2(original_in, STDIN_FILENO);
 				close(original_in);
 				return ;
@@ -83,7 +83,7 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	}
 	if (access(cur->file, F_OK) == -1)
 	{
-		printf("Error tmpfile not find\n");
+		printf("Error tmp file not found\n");
 		return ;
 	}
 	write_tmpfile(data, cur, fd);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 17:22:39 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:30:44 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 
 int	setup_execution(t_data *data)
 {
+	int	info;
+
 	data->original_stdin = dup(STDIN_FILENO);
 	data->original_stdout = dup(STDOUT_FILENO);
 	signal(SIGINT, parent_signal_handler_exec);
 	signal(SIGQUIT, parent_signal_handler_exec);
 	data->nb_cmd = ft_lstsize_generic((void *)data->cmd, sizeof(t_cmd)
 			- sizeof(t_cmd *));
-	int info = handle_unique_builtin(data, data->cmd);
+	info = handle_unique_builtin(data, data->cmd);
 	if (info)
 		return (1);
 	return (0);

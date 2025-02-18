@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:14:09 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 10:08:24 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:31:33 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ void	child(t_data *data, t_cmd *cur, int i)
 	int	fd;
 
 	fd = -1;
-	// setup_child_process(data, cur);
 	if (i == data->nb_cmd - 1)
 		handle_last_command(data, cur, &fd);
 	else

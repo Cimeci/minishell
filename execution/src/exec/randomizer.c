@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 08:38:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/13 14:51:00 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:30:57 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,24 +55,26 @@ int	open_random(void)
 char	*randomizer(void)
 {
 	int		fd;
-	char	*pathname;
+	char	*filename;
 	char	*line;
 
 	fd = open_random();
 	line = get_next_line(fd);
 	while (line)
 	{
-		pathname = convert_ascii(line);
+		filename = convert_ascii(line);
 		free(line);
-		if (ft_strlen(pathname) < 250)
+		if (ft_strlen(filename) < 250)
 		{
-			if (access(pathname, F_OK) <= 0)
+			if (access(filename, F_OK) <= 0)
 			{
 				close(fd);
-				return (pathname);
+				if (filename)
+					return (filename);
+				return (NULL);
 			}
 		}
-		free(pathname);
+		free(filename);
 		line = get_next_line(fd);
 	}
 	close(fd);

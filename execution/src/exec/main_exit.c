@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 17:19:07 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:30:53 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ long long	ft_atoll(char *str, int *error)
 	int			sign;
 	long long	nb;
 	int			inf;
-	
+
 	inf = 0;
 	nb = 0;
 	sign = 1;
@@ -74,7 +74,9 @@ int	check_max_min(long long nb, char *str, int inf)
 	j = 0;
 	nb_check = nb % 10;
 	i = ft_strlen(str) - 1;
-	if (inf && (str[0] == '+' || str[0] == '-'))
+	if (str[0] == '+')
+		j++;
+	if (inf && str[0] == '-')
 		j++;
 	while (i >= j)
 	{

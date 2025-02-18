@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/13 14:29:58 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:30:55 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ void	write_arguments(char **argv, int endl, int save)
 
 	argc = ft_strlen_tab(argv);
 	j = save;
+	if (!argv[j])
+		return ;
 	while (j < argc - 1)
 	{
 		if (argv[j] && argv[j][0] != '\0')

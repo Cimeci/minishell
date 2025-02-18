@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 14:23:03 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/18 18:15:57 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	handle_parent_process(t_data *data)
 
 	while (waitpid(-1, &status, 0) > 0)
 	{
-		if (WIFEXITED(status) && data->gexit_code == 0)
+		if (WIFEXITED(status))
 			data->gexit_code = WEXITSTATUS(status);
 	}
 	signal(SIGINT, parent_signal_handler);
