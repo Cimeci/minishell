@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 18:19:34 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:47:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,10 +109,7 @@ void	add_env_token(t_data *data, char *line, int flag_expand)
 		errors(data, NULL, MALLOC);
 	new->type = WORD;
 	if (line[0] == '\0')
-	{
 		new->empty_var_tok = true;
-		new->type = EMPTY_QUOTE;
-	}
 	new->expand = flag_expand;
 	new->str = remove_quotes(line);
 	ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token) - sizeof(t_token *)));
@@ -170,7 +167,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					}
 					else
 					{
-						if ((next[0] != '"' || next[0] != '\'') && quote_tab[dollars] == 1)
+						if (quote_tab[dollars] == 1 || ((next[0] != '"' && next[0] != '\'') && quote_tab[dollars] == 2))
 							prev = ft_strjoin_free(prev, "$", 1);
 						line = ft_strjoin(prev, next);
 					}

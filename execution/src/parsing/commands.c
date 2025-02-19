@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 15:14:04 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:46:52 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	cur_cmd->empty_var_cmd = false;
 	if (cur_tok->empty_var_tok == true)
 		cur_cmd->empty_var_cmd = true;
-	if (ft_strchr(cur_tok->str, '/') || cur_tok->type == EMPTY_QUOTE || cur_tok->type == DOT)
+	if (ft_strchr(cur_tok->str, '/') || cur_tok->str[0] == '\0' || cur_tok->type == DOT)
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
 	else
 	{
