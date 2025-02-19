@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/18 14:29:22 by inowak--         ###   ########.fr        #
+#    Updated: 2025/02/19 10:21:01 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRC = src/utils/command.c\
 		src/utils/size.c\
 		src/utils/errors.c\
 		src/utils/ft_strsstr.c\
+		src/utils/ft_strcmp.c\
 		src/parsing/commands.c\
 		src/parsing/env_variables.c\
 		src/parsing/main.c\

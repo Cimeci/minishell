@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 11:15:46 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:47:39 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,14 +69,16 @@ void	ft_update_pwd(t_data *data, int info)
 	get_pwd = my_getenv_lst("PWD", tmp);
 	get_oldpwd = my_getenv_lst("OLDPWD", tmp);
 	pwd = ft_find_pwd(data);
+	value = pwd;
 	if (var_value)
 		value = ft_get_value(var_value);
 	if (!get_pwd)
 		ft_unset_extension("OLDPWD", tmp);
 	else if (get_pwd)
 	{
+		ft_export_assign(data, "PWD", pwd);
 		if (!get_oldpwd)
-			ft_export_assign(data, "OLDPWD", "oldpwd");
+			ft_export_assign(data, "OLDPWD", data->pwd);
 	}
 	if (var_value && pwd != value)
 	{
@@ -91,7 +93,7 @@ void	ft_update_pwd(t_data *data, int info)
 			{
 				res = ft_strjoin(var, "=");
 				free(tmp->str);
-				tmp->str = ft_strjoin(res, data->pwd);
+				tmp->str = ft_strjoin(res, value);
 				free(res);
 			}
 			free(var);

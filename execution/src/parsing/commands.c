@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 10:46:52 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:54:45 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 			i++;
 		}
 		else if (cur_tok->next != NULL && (cur_tok->type == OVERWRITE
-			|| cur_tok->type == APPEND))
+				|| cur_tok->type == APPEND))
 		{
 			cur_cmd->outfile[j] = ft_strdup(cur_tok->next->str);
 			cur_tok = cur_tok->next->next;
@@ -75,23 +75,17 @@ int	is_built_in(char *str)
 {
 	if (!ft_strncmp(str, "exit", ft_strlen(str)) && ft_strlen(str) == 4)
 		return (1);
-	if (!ft_strncmp(str, "cd", ft_strlen(str))
-		&& ft_strlen(str) == 2)
+	if (!ft_strncmp(str, "cd", ft_strlen(str)) && ft_strlen(str) == 2)
 		return (1);
-	else if (!ft_strncmp(str, "pwd", ft_strlen(str))
-		&& ft_strlen(str) == 3)
+	else if (!ft_strncmp(str, "pwd", ft_strlen(str)) && ft_strlen(str) == 3)
 		return (1);
-	else if (!ft_strncmp(str, "echo", ft_strlen(str))
-		&& ft_strlen(str) == 4)
+	else if (!ft_strncmp(str, "echo", ft_strlen(str)) && ft_strlen(str) == 4)
 		return (1);
-	else if (!ft_strncmp(str, "env", ft_strlen(str))
-		&& ft_strlen(str) == 3)
+	else if (!ft_strncmp(str, "env", ft_strlen(str)) && ft_strlen(str) == 3)
 		return (1);
-	else if (!ft_strncmp(str, "export", ft_strlen(str))
-		&& ft_strlen(str) == 6)
+	else if (!ft_strncmp(str, "export", ft_strlen(str)) && ft_strlen(str) == 6)
 		return (1);
-	else if (!ft_strncmp(str, "unset", ft_strlen(str))
-		&& ft_strlen(str) == 5)
+	else if (!ft_strncmp(str, "unset", ft_strlen(str)) && ft_strlen(str) == 5)
 		return (1);
 	return (0);
 }
@@ -118,7 +112,20 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 		if (!cur_cmd->cmd && !get_env)
 			cur_cmd->cmd = ft_strjoin("./", cur_tok->str);
 		else if (!cur_cmd->cmd)
-			cur_cmd->cmd = ft_strdup(cur_tok->str);
+		{
+			if (ft_strcmp(cur_tok->str, "echo") || ft_strcmp(cur_tok->str,
+					"pwd") || ft_strcmp(cur_tok->str, "export")
+				|| ft_strcmp(cur_tok->str, "unset") || ft_strcmp(cur_tok->str,
+					"env") || ft_strcmp(cur_tok->str, "exit")
+				|| ft_strcmp(cur_tok->str, "cd"))
+				cur_cmd->cmd = ft_strdup(cur_tok->str);
+			else
+			{
+				errors(data, cur_tok->str, CMD_NOT_FOUND);
+				data->gexit_code = 127;
+				cur_cmd->cmd = NULL;
+			}
+		}
 		free(get_env);
 	}
 	while (tmp && tmp->type != PIPE)
@@ -152,7 +159,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 
 int	count_token(t_token *cur, int token)
 {
-	int		count;
+	int	count;
 
 	count = 0;
 	while (cur && cur->type != PIPE)
@@ -209,13 +216,15 @@ void	get_cmds(t_data *data)
 			errors(data, NULL, MALLOC);
 		if (count_token(cur_tok, 0) > 0)
 		{
-			cur_cmd->infile = malloc((count_token(cur_tok, 0) + 1) * sizeof(char *));
+			cur_cmd->infile = malloc((count_token(cur_tok, 0) + 1)
+					* sizeof(char *));
 			if (!cur_cmd->infile)
 				errors(data, NULL, MALLOC);
 		}
 		if (count_token(cur_tok, 3) > 0)
 		{
-			cur_cmd->outfile = malloc((count_token(cur_tok, 3) + 1) * sizeof(char *));
+			cur_cmd->outfile = malloc((count_token(cur_tok, 3) + 1)
+					* sizeof(char *));
 			if (!cur_cmd->outfile)
 				errors(data, NULL, MALLOC);
 		}
@@ -234,7 +243,8 @@ void	get_cmds(t_data *data)
 			else if (cur_tok->type >= 4)
 				cur_tok = build_cmd(data, cur_cmd, cur_tok);
 		}
-		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, (sizeof(t_cmd) - sizeof(t_cmd *)));
+		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, (sizeof(t_cmd)
+				- sizeof(t_cmd *)));
 		if (cur_tok)
 			cur_tok = cur_tok->next;
 	}

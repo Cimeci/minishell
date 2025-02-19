@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 10:25:30 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:54:51 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,8 @@ int	parsing(t_data *data, char *input)
 				cur_tok = cur_tok->next;
 			}
 			handle_here_doc(data, cur_cmd);
-			setup_child_process(data, cur_cmd);
+			if (cur_cmd->here == 1)
+				ft_heredoc(data, cur_cmd);
 			cur_cmd = cur_cmd->next;
 		}
 		signal(SIGINT, SIG_DFL);
