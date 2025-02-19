@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:58:21 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 18:31:43 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 11:25:59 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ int	files(t_data *data, t_cmd *cur)
 		if (open(cur->infile[i], O_RDONLY) < 0)
 		{
 			errors(data, cur->infile[i], FILES);
+			data->gexit_code = 1;
 			return (1);
 		}
 		i++;
@@ -67,12 +68,14 @@ int	files(t_data *data, t_cmd *cur)
 				O_CREAT | O_WRONLY | O_TRUNC, 0644) < 0)
 		{
 			errors(data, cur->outfile[i], ERRNO);
+			data->gexit_code = 1;
 			return (1);
 		}
 		else if (cur->flag_redir[type] == 2 && open(cur->outfile[i],
 				O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
 		{
 			errors(data, cur->outfile[i], ERRNO);
+			data->gexit_code = 1;
 			return (1);
 		}
 		i++;
