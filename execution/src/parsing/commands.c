@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 10:54:45 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:00:43 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,20 +112,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 		if (!cur_cmd->cmd && !get_env)
 			cur_cmd->cmd = ft_strjoin("./", cur_tok->str);
 		else if (!cur_cmd->cmd)
-		{
-			if (ft_strcmp(cur_tok->str, "echo") || ft_strcmp(cur_tok->str,
-					"pwd") || ft_strcmp(cur_tok->str, "export")
-				|| ft_strcmp(cur_tok->str, "unset") || ft_strcmp(cur_tok->str,
-					"env") || ft_strcmp(cur_tok->str, "exit")
-				|| ft_strcmp(cur_tok->str, "cd"))
-				cur_cmd->cmd = ft_strdup(cur_tok->str);
-			else
-			{
-				errors(data, cur_tok->str, CMD_NOT_FOUND);
-				data->gexit_code = 127;
-				cur_cmd->cmd = NULL;
-			}
-		}
+			cur_cmd->cmd = ft_strdup(cur_tok->str);
 		free(get_env);
 	}
 	while (tmp && tmp->type != PIPE)
@@ -143,6 +130,8 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 		{
 			if (cur_tok->next == NULL)
 				cur_tok = cur_tok->next;
+			else if (cur_tok->next->type <= PIPE)
+				break ;
 			else
 				cur_tok = cur_tok->next->next;
 		}
