@@ -6,16 +6,30 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:14:09 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/19 10:03:49 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:37:33 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-static void	handle_last_command(t_data *data, t_cmd *cur, int *fd)
+void	empty_pipe(void)
+{
+	int	null;
+
+	null = open("/dev/null", O_RDONLY);
+	if (null != -1)
+	{
+		dup2(null, STDIN_FILENO);
+		close(null);
+	}
+}
+
+static void	handle_last_command(t_data *data, t_cmd *cur, int *fd, bool prev_cmd)
 {
 	close(data->fd[1]);
 	close(data->fd[0]);
+	if (prev_cmd == false)
+		empty_pipe();
 	if (cur->infile || cur->here == 1)
 	{
 		if (cur->here == 1)
@@ -31,9 +45,11 @@ static void	handle_last_command(t_data *data, t_cmd *cur, int *fd)
 		dup2(cur->fd_outfile, STDOUT_FILENO);
 }
 
-static void	handle_pipe_command(t_data *data, t_cmd *cur, int *fd)
+static void	handle_pipe_command(t_data *data, t_cmd *cur, int *fd, bool prev_cmd)
 {
 	close(data->fd[0]);
+	if (prev_cmd == false)
+		empty_pipe();
 	if (cur->infile || cur->here == 1)
 	{
 		if (cur->here == 1)
@@ -52,23 +68,15 @@ static void	handle_pipe_command(t_data *data, t_cmd *cur, int *fd)
 	close(data->fd[1]);
 }
 
-// void	setup_child_process(t_data *data, t_cmd *cur)
-// {
-// 	int i;
-// 	char	path;
-
-
-// }
-
-void	child(t_data *data, t_cmd *cur, int i)
+void	child(t_data *data, t_cmd *cur, int i, bool prev_cmd)
 {
 	int	fd;
 
 	fd = -1;
 	if (i == data->nb_cmd - 1)
-		handle_last_command(data, cur, &fd);
+		handle_last_command(data, cur, &fd, prev_cmd);
 	else
-		handle_pipe_command(data, cur, &fd);
+		handle_pipe_command(data, cur, &fd, prev_cmd);
 	close_files(cur, data, fd);
 	handle_commande_execution(data, cur);
 	exit(EXIT_SUCCESS);

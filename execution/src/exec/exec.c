@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 18:30:44 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:49:39 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,13 @@ int	setup_execution(t_data *data)
 void	execute_pipeline(t_data *data)
 {
 	int		i;
+	bool	prev_cmd;
 	t_cmd	*cur;
 	pid_t	p;
 
 	i = 0;
 	cur = data->cmd;
+	prev_cmd = true;
 	while (cur && i < data->nb_cmd)
 	{
 		if (!files(data, cur) && cur->empty_var_cmd == false)
@@ -46,10 +48,13 @@ void	execute_pipeline(t_data *data)
 			if (p < 0)
 				printf("fork failed\n");
 			else if (p == 0)
-				child(data, cur, i);
+				child(data, cur, i, prev_cmd);
 			else
 				parent(data);
+			prev_cmd = true;
 		}
+		else
+			prev_cmd = false;
 		i++;
 		cur = cur->next;
 	}
@@ -65,6 +70,7 @@ void	exec(t_data *data)
 		return ;
 	}
 	execute_pipeline(data);
-	handle_parent_process(data);
+	handle_parent_process(data, ft_lstlast_generic(data->cmd, (sizeof(t_cmd)
+		- sizeof(t_cmd *))));
 	cleanup_execution(data);
 }

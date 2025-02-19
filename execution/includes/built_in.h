@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/17 16:15:46 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:43:37 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ char	*my_getenv_lst(const char *name, t_lst *env);
 int		setup_execution(t_data *data);
 void	execute_pipeline(t_data *data);
 void	exec(t_data *data);
-void	child(t_data *data, t_cmd *cur, int i);
+void	child(t_data *data, t_cmd *cur, int i, bool prev_cmd);
 int		is_built_in(char *str);
 int		handle_unique_builtin(t_data *data, t_cmd *cur);
 int		exec_built_in(t_data *data, t_cmd *cur);
@@ -97,7 +97,7 @@ int		handle_here_doc(t_data *data, t_cmd *cur);
 void	handle_commande_execution(t_data *data, t_cmd *cur);
 void	check_exec_cmd(t_data *data, t_cmd *cur);
 void	parent(t_data *data);
-void	handle_parent_process(t_data *data);
+void	handle_parent_process(t_data *data, t_cmd *last);
 void	cleanup_execution(t_data *data);
 void	setup_child_process(t_data *data, t_cmd *cur);
 

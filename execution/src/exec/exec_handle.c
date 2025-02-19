@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/19 14:29:12 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:07:57 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 			|| (!ft_strncmp(cur->cmd, "..", 2) && ft_strlen(cur->cmd) == 2))
 		{
 			errors(data, cur->args[0], CMD_NOT_FOUND);
-			if (!ft_strncmp(cur->cmd, ".", 1))
+			if (!ft_strncmp(cur->cmd, ".", 1) && ft_strlen(cur->cmd) == 1)
 				exit(2);
 			exit(127);
 		}
@@ -41,6 +41,11 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 				errors(data, cur->args[0], PERM);
 				exit(126);
 			}
+		}
+		if (access(cur->cmd, X_OK))
+		{
+			errors(data, cur->args[0], CMD_NOT_FOUND);
+			exit(127);
 		}
 		execve(cur->cmd, cur->args, data->env_cp);
 	}

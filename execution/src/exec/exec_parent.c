@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 18:15:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 16:58:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	parent(t_data *data)
 	close(data->fd[0]);
 }
 
-void	handle_parent_process(t_data *data)
+void	handle_parent_process(t_data *data, t_cmd *last)
 {
 	int	status;
 
@@ -28,6 +28,8 @@ void	handle_parent_process(t_data *data)
 		if (WIFEXITED(status))
 			data->gexit_code = WEXITSTATUS(status);
 	}
+	if (last->fd_infile < 0 || last->fd_outfile < 0)
+		data->gexit_code = 1;
 	signal(SIGINT, parent_signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 }
