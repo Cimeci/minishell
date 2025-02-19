@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 13:00:43 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/19 14:35:29 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,19 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 		if (cur_tok->type == INPUT && cur_tok->next != NULL)
 		{
 			cur_cmd->infile[i] = ft_strdup(cur_tok->next->str);
-			cur_tok = cur_tok->next->next;
 			i++;
+			if (access(cur_tok->next->str, R_OK) != 0)
+				break ;
+			cur_tok = cur_tok->next->next;
 		}
 		else if (cur_tok->next != NULL && (cur_tok->type == OVERWRITE
 				|| cur_tok->type == APPEND))
 		{
 			cur_cmd->outfile[j] = ft_strdup(cur_tok->next->str);
-			cur_tok = cur_tok->next->next;
 			j++;
+			if (access(cur_tok->next->str, F_OK) == 0 && access(cur_tok->next->str, W_OK) != 0)
+				break ;
+			cur_tok = cur_tok->next->next;
 		}
 		else if (cur_tok)
 			cur_tok = cur_tok->next;
