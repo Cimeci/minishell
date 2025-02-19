@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 15:10:20 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:47:34 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,9 +150,9 @@ void	add_token(t_data *data, int i)
 		if ((ft_strnstr(str, "\"", len) || ft_strnstr(str, "'", len)) && last
 					&& last->type == HEREDOC)
 			cur->expand = false;
+		get_token(str, cur);
 		cur->str = remove_quotes(str);
 		cur->empty_var_tok = false;
-		get_token(data->line + i, cur);
 		if (ft_strlen(cur->str) == 1 && !ft_strncmp(cur->str, ".",
 				ft_strlen(cur->str)))
 			cur->type = DOT;
@@ -181,9 +181,6 @@ void	get_token(char *str, t_token *cur)
 		cur->type = APPEND;
 	else if (ft_strlen(only_token) == 1 && !ft_strncmp(str, ">", len))
 		cur->type = OVERWRITE;
-	else if (ft_strlen(only_token) == 2 && (!ft_strncmp(str, "''", len)
-			|| !ft_strncmp(str, "\"\"", len)))
-		cur->type = EMPTY_QUOTE;
 	else
 		cur->type = WORD;
 	free(only_token);
@@ -201,10 +198,6 @@ void	tokenise(t_data *data)
 			i++;
 		if (data->line[i])
 		{
-			// cur->str = ft_calloc(1, 1);
-			// if (!cur->str)
-			// 	errors(data, NULL, MALLOC);
-			// cur->expand = true;
 			add_token(data, i);
 			i += get_token_len(data->line + i);
 		}

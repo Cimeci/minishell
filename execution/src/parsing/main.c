@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 09:58:38 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:54:51 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ void	prompt(t_data *data)
 		}
 		data->pwd = ft_find_pwd(data);
 		user_read = ft_strjoin(data->pwd, "$ ");
-		rl_outstream = stderr; // gere ./minishell | cat -e
+		// rl_outstream = stderr;
 		input = readline(user_read);
 		free(user_read);
 		if (!input)
