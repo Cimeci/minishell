@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 16:15:35 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:21:34 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ int			ft_strlen_tab(char **table);
 // utils/ft_strsstr.c //
 
 char		*ft_strsstr(char *pwd, char *cmd);
+int         ft_strcmp(char *s1, char *s2);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:14:09 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 18:31:33 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 10:03:49 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,13 @@ static void	handle_pipe_command(t_data *data, t_cmd *cur, int *fd)
 	close(data->fd[1]);
 }
 
-void	setup_child_process(t_data *data, t_cmd *cur)
-{
-	if (cur->here == 1)
-		ft_heredoc(data, cur);
-}
+// void	setup_child_process(t_data *data, t_cmd *cur)
+// {
+// 	int i;
+// 	char	path;
+
+
+// }
 
 void	child(t_data *data, t_cmd *cur, int i)
 {
