@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 14:07:02 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 14:35:29 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,8 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 		{
 			if (cur_tok->next == NULL)
 				cur_tok = cur_tok->next;
+			else if (cur_tok->next->type <= PIPE)
+				break ;
 			else
 				cur_tok = cur_tok->next->next;
 		}
