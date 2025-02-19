@@ -105,8 +105,15 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	len = 0;
 	tmp = cur_tok;
 	cur_cmd->empty_var_cmd = false;
-	if (cur_tok->empty_var_tok == true)
-		cur_cmd->empty_var_cmd = true;
+	while (cur_tok && cur_tok->empty_var_tok == true)
+	{
+		cur_tok = cur_tok->next;
+		if (cur_tok == NULL)
+		{
+			cur_cmd->empty_var_cmd = true;
+			return (cur_tok);
+		}
+	}
 	if (ft_strchr(cur_tok->str, '/') || cur_tok->str[0] == '\0' || cur_tok->type == DOT)
 		cur_cmd->cmd = ft_strdup(cur_tok->str);
 	else
@@ -121,7 +128,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	}
 	while (tmp && tmp->type != PIPE)
 	{
-		if (cur_tok->type > 3)
+		if (cur_tok->type > 3 && cur_tok->empty_var_tok == false)
 			len++;
 		tmp = tmp->next;
 	}
@@ -139,12 +146,14 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 			else
 				cur_tok = cur_tok->next->next;
 		}
-		else
+		else if (cur_tok->empty_var_tok == false)
 		{
 			cur_cmd->args[i] = ft_strdup(cur_tok->str);
 			i++;
 			cur_tok = cur_tok->next;
 		}
+		else if (cur_tok)
+			cur_tok = cur_tok->next;
 	}
 	cur_cmd->args[i] = NULL;
 	return (cur_tok);

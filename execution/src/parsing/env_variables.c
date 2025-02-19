@@ -206,6 +206,7 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 				free(prev);
 				free(var);
 				dollars++;
+				i = 0;
 			}
 		}
 		else
