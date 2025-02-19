@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 18:30:53 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/19 13:09:37 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,8 @@ void	ft_exit(t_data *data, t_cmd *cur)
 	error = 0;
 	len = ft_strlen_tab(cur->args) - 1;
 	i = 0;
+	if (files(data, cur))
+		return ;
 	if (!strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd))
 	{
 		ft_unique_exit(len, data);
