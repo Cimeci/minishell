@@ -6,7 +6,7 @@
 #    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/20 11:04:22 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/02/20 19:08:39 by ncharbog         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -30,16 +30,21 @@ CFLAGS = -Wall -Werror -Wextra -g -I/usr/local/opt/readline/include
 
 NAME = minishell
 
-SRC = src/utils/command.c\
+SRC = src/utils/errors.c\
 		src/utils/free.c\
-		src/utils/size.c\
-		src/utils/errors.c\
-		src/utils/ft_strsstr.c\
-		src/utils/ft_strcmp.c\
+		src/utils/free_lst.c\
+		src/utils/utils_libft.c\
+		src/utils/utils_path.c\
+		src/parsing/parsing_utils.c\
 		src/parsing/commands.c\
+		src/parsing/commands_redir.c\
+		src/parsing/commands_utils.c\
 		src/parsing/env_variables.c\
 		src/parsing/main.c\
 		src/parsing/parsing_utils.c\
+		src/parsing/parsing.c\
+		src/parsing/prompt.c\
+		src/parsing/token_utils.c\
 		src/parsing/token.c\
 		src/exec/main_cd.c\
 		src/exec/main_pwd.c\

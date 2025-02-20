@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:03 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/18 10:23:00 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 18:56:00 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	print_errors(char *str, ...)
 {

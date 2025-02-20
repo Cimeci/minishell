@@ -6,11 +6,11 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:40:02 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/01/28 16:08:36 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 19:04:12 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	check_quotes(t_data *data, char *input)
 {
@@ -60,4 +60,11 @@ void	get_shell_pid(t_data *data)
 	}
 	wait(NULL);
 	return ;
+}
+
+int	is_white_space(char c)
+{
+	if (c == ' ' || (c >= 7 && c <= 13))
+		return (1);
+	return (0);
 }

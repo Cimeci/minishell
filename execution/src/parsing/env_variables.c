@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 10:02:38 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 17:26:16 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ void	add_env_token(t_data *data, char *line, int flag_expand)
 	if (line[0] == '\0')
 		new->empty_var_tok = true;
 	new->expand = flag_expand;
-	new->str = remove_quotes(line);
+	new->str = remove_quotes(data, line);
 	ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token) - sizeof(t_token *)));
 }
 

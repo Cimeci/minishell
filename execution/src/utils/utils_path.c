@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   command.c                                          :+:      :+:    :+:   */
+/*   utils_path.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:49:30 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 10:10:18 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 16:22:15 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 char	*my_getenv(t_data *data, char *name)
 {
@@ -39,8 +39,8 @@ char	*my_getenv(t_data *data, char *name)
 
 char	*extend_find(char *str, char **path_split, int i)
 {
-	char *tmp;
-	char *pathname;
+	char	*tmp;
+	char	*pathname;
 
 	tmp = ft_strjoin(path_split[i], "/");
 	pathname = ft_strjoin(tmp, str);

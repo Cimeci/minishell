@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 11:04:14 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 18:59:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "../libft/libft.h"
 # include "parsing.h"
 # include "built_in.h"
+# include "utils.h"
 # include <stdio.h>
 # include <dirent.h>
 # include <errno.h>

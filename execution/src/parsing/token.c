@@ -6,47 +6,11 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 10:47:34 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 17:26:11 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-char	*remove_quotes(char *str)
-{
-	char	*dest;
-	char	quote;
-	int		i;
-	int		start;
-	int		len;
-
-	i = 0;
-	len = 0;
-	start = 0;
-	dest = malloc(1);
-	dest[0] = '\0';
-	while (str[i])
-	{
-		start = i;
-		while (str[i + len] && !IS_QUOTE(str[i + len]))
-			len++;
-		dest = ft_strjoin_free(dest, ft_substr(str, start, len), 3);
-		i += len;
-		len = 0;
-		if (str[i] && IS_QUOTE(str[i]))
-		{
-			quote = str[i];
-			i++;
-			while (str[i + len] && str[i + len] != quote)
-				len++;
-			dest = ft_strjoin_free(dest, ft_substr(str, i, len), 3);
-			i += len + 1;
-		}
-		len = 0;
-	}
-	free(str);
-	return (dest);
-}
 
 int	get_token_len(char *str)
 {
@@ -56,14 +20,14 @@ int	get_token_len(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (IS_QUOTE(str[i]))
+		if (str[i] == SINGLE_QUOTE || str[i] == DOUBLE_QUOTE)
 		{
 			quote = str[i];
 			i++;
 			while (str[i] != quote)
 				i++;
 		}
-		if (IS_SEPARATOR_TOKEN(str[i]))
+		if (is_separator_token(str[i]))
 		{
 			if (i == 0)
 				i++;
@@ -77,61 +41,36 @@ int	get_token_len(char *str)
 	return (i);
 }
 
-int	count_words(char *str)
-{
-	int	i;
-	int	words;
-
-	i = 0;
-	words = 0;
-	while (str[i])
-	{
-		while (str[i] && str[i] == ' ')
-			i++;
-		if (str[i] && str[i] != ' ')
-			words++;
-		while (str[i] && str[i] != ' ')
-			i++;
-	}
-	free(str);
-	return (words);
-}
-
-void	rebuild_cmd(t_data *data, char *str)
+void	new_token_node(t_data *data, char *str, int len)
 {
 	t_token	*new;
-	int		i;
-	int		start;
-	int		len;
+	t_token	*last;
 
-	i = 0;
-	start = 0;
-	len = 0;
-	while (str[i])
-	{
-		while (str[i] && str[i] == ' ')
-			i++;
-		start = i;
-		len = 0;
-		while (str[i + len] && str[i + len] != ' ')
-			len++;
-		new = (t_token *)ft_lstnew_generic(sizeof(t_token));
-		if (!new)
-			errors(data, NULL, MALLOC);
-		new->str = ft_substr(str, start, len);
-		new->type = WORD;
-		new->empty_var_tok = false;
-		ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token)
+	last = ft_lstlast_generic(data->token, (sizeof(t_token)
 				- sizeof(t_token *)));
-		i += len;
-	}
-	free(str);
+	new = (t_token *)ft_lstnew_generic(sizeof(t_token));
+	if (!new)
+		errors(data, NULL, MALLOC);
+	new->expand = true;
+	if ((ft_strnstr(str, "\"", len) || ft_strnstr(str, "'", len)) && last
+		&& last->type == HEREDOC)
+		new->expand = false;
+	get_token(str, new);
+	new->str = remove_quotes(data, str);
+	new->empty_var_tok = false;
+	if (ft_strlen(new->str) == 1 && !ft_strncmp(new->str, ".",
+			ft_strlen(new->str)))
+		new->type = DOT;
+	if (ft_strlen(new->str) == 2 && !ft_strncmp(new->str, "..",
+			ft_strlen(new->str)))
+		new->type = DOT;
+	ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token)
+			- sizeof(t_token *)));
 }
 
 void	add_token(t_data *data, int i)
 {
 	t_token	*last;
-	t_token	*cur;
 	int		len;
 	char	*str;
 
@@ -142,26 +81,7 @@ void	add_token(t_data *data, int i)
 	if (ft_strchr(str, '$') && (!last || last->type != HEREDOC))
 		env_variables(data, str, false);
 	else
-	{
-		cur = (t_token *)ft_lstnew_generic(sizeof(t_token));
-		if (!cur)
-			errors(data, NULL, MALLOC);
-		cur->expand = true;
-		if ((ft_strnstr(str, "\"", len) || ft_strnstr(str, "'", len)) && last
-					&& last->type == HEREDOC)
-			cur->expand = false;
-		get_token(str, cur);
-		cur->str = remove_quotes(str);
-		cur->empty_var_tok = false;
-		if (ft_strlen(cur->str) == 1 && !ft_strncmp(cur->str, ".",
-				ft_strlen(cur->str)))
-			cur->type = DOT;
-		if (ft_strlen(cur->str) == 2 && !ft_strncmp(cur->str, "..",
-				ft_strlen(cur->str)))
-			cur->type = DOT;
-		ft_lstadd_back_generic((void **)&data->token, cur, (sizeof(t_token)
-				- sizeof(t_token *)));
-	}
+		new_token_node(data, str, len);
 }
 
 void	get_token(char *str, t_token *cur)

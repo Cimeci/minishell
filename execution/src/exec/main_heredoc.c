@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 13:43:25 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 16:54:16 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,20 +74,24 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 {
 	int	fd;
 
-	(void)data;
-	// dprintf(2, "\033[1;31mtmpfile: %s\n\033[0m", cur->file);
-	fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
-	if (fd < 0)
+	if (cur->here == 1)
 	{
-		printf("Error fd\n");
-		return ;
+		cur->file = randomizer();
+		if (!cur->file)
+		{
+			data->gexit_code = 1;
+			return ;
+		}
+		fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
+		if (fd < 0 || access(cur->file, F_OK) == -1)
+		{
+			printf("Error: heredoc's temporary file not found\n");
+			return ;
+		}
+		write_tmpfile(data, cur, fd);
+		signal(SIGINT, SIG_DFL);
+		close(fd);
 	}
-	if (access(cur->file, F_OK) == -1)
-	{
-		printf("Error tmp file not found\n");
+	else
 		return ;
-	}
-	write_tmpfile(data, cur, fd);
-	signal(SIGINT, SIG_DFL);
-	close(fd);
 }
