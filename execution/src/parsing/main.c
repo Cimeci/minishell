@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 14:38:14 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:42:48 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,16 +40,15 @@ int	check_syntax(t_data *data)
 	return (1);
 }
 
-int	parsing(t_data *data, char *input)
+int	parsing(t_data *data)
 {
 	t_cmd	*cur_cmd;
 	t_token	*cur_tok;
 
 	cur_cmd = NULL;
-	if (!check_quotes(data, input))
+	if (!check_quotes(data, data->line))
 		return (0);
 	data->env_cp = ft_convert_lst_to_tab(data->env);
-	data->line = input;
 	tokenise(data);
 	if (data->token)
 	{
@@ -124,7 +123,6 @@ void	init_data(t_data *data, char **env)
 
 void	prompt(t_data *data)
 {
-	char	*input;
 	char	*user_read;
 
 	while (1)
@@ -134,30 +132,29 @@ void	prompt(t_data *data)
 		data->pwd = ft_find_pwd(data);
 		user_read = ft_strjoin(data->pwd, "$ ");
 		// rl_outstream = stderr;
-		input = readline(user_read);
+		data->line = readline(user_read);
 		if (g_exit_code_sig)
 		{
 			data->gexit_code = g_exit_code_sig;
 			g_exit_code_sig = 0;
 		}
 		free(user_read);
-		if (!input)
+		if (!data->line)
 		{
 			printf("exit\n");
 			break ;
 		}
-		if (input[0] == '\0')
-			free(input);
-		else if ((input[0] == '!' || input[0] == ':') && ft_strlen(input) == 1)
+		if (data->line[0] == '\0')
+			;
+		else if ((data->line[0] == '!' || data->line[0] == ':') && ft_strlen(data->line) == 1)
 		{
-			if (input[0] == '!')
+			if (data->line[0] == '!')
 				data->gexit_code = 1;
-			free(input);
 		}
 		else
 		{
-			add_history(input);
-			if (parsing(data, input) && g_exit_code_sig != 130)
+			add_history(data->line);
+			if (parsing(data) && g_exit_code_sig != 130)
 				exec(data);
 		}
 		free_all(data, 1);
