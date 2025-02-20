@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 09:04:22 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:02:38 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ char	*only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
 		free(line);
 		line = NULL;
 		line = ft_strjoin(tmp, save + i + 2);
+		free(save);
 		i = ft_strlen(tmp);
 		free(tmp);
 		tmp = NULL;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/19 16:07:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:16:08 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,11 @@
 
 void	handle_commande_execution(t_data *data, t_cmd *cur)
 {
+	char	*get_env;
+	DIR		*directory;
+
+	get_env = NULL;
+	rl_clear_history();
 	if (!exec_built_in(data, cur))
 	{
 		if ((!ft_strncmp(cur->cmd, ".", 1) && ft_strlen(cur->cmd) == 1)
@@ -21,34 +26,48 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 		{
 			errors(data, cur->args[0], CMD_NOT_FOUND);
 			if (!ft_strncmp(cur->cmd, ".", 1) && ft_strlen(cur->cmd) == 1)
+			{
+				free_all(data, 0);
 				exit(2);
+			}
+			free_all(data, 0);
 			exit(127);
 		}
-		if (opendir(cur->cmd) != NULL)
+		directory = opendir(cur->cmd);
+		if (directory != NULL)
 		{
 			errors(data, cur->args[0], DIRECTORY);
+			closedir(directory);
+			free_all(data, 0);
 			exit(126);
 		}
-		if (my_getenv_lst("PATH", data->env) && !ft_strnstr(cur->cmd, "/", ft_strlen(cur->cmd)))
+		get_env = my_getenv_lst("PATH", data->env);
+		if (get_env && !ft_strnstr(cur->cmd, "/", ft_strlen(cur->cmd)))
 		{
+			free(get_env);
 			errors(data, cur->args[0], CMD_NOT_FOUND);
+			free_all(data, 0);
 			exit(127);
 		}
+		free(get_env);
 		if (access(cur->cmd, F_OK) == 0)
 		{
 			if (access(cur->cmd, X_OK) != 0)
 			{
 				errors(data, cur->args[0], PERM);
+				free_all(data, 0);
 				exit(126);
 			}
 		}
 		if (access(cur->cmd, X_OK))
 		{
 			errors(data, cur->args[0], CMD_NOT_FOUND);
+			free_all(data, 0);
 			exit(127);
 		}
 		execve(cur->cmd, cur->args, data->env_cp);
 	}
+	free_all(data, 0);
 }
 
 int	handle_here_doc(t_data *data, t_cmd *cur)

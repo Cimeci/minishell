@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/19 10:21:34 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 11:04:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../gnl/get_next_line.h"
 # include "../libft/libft.h"
 # include "parsing.h"
 # include "built_in.h"

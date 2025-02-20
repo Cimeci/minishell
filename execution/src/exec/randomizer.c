@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   randomizer.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 08:38:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 18:30:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 11:47:48 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,14 @@ char	*randomizer(void)
 {
 	int		fd;
 	char	*filename;
-	char	*line;
+	char	buffer[1000];
 
+	filename = NULL;
 	fd = open_random();
-	line = get_next_line(fd);
-	while (line)
+	while (1)
 	{
-		filename = convert_ascii(line);
-		free(line);
+		read(fd, buffer, 1000);
+		filename = convert_ascii(buffer);
 		if (ft_strlen(filename) < 250)
 		{
 			if (access(filename, F_OK) <= 0)
@@ -75,7 +75,6 @@ char	*randomizer(void)
 			}
 		}
 		free(filename);
-		line = get_next_line(fd);
 	}
 	close(fd);
 	return (NULL);

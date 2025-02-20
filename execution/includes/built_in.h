@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 16:43:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:41:33 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,8 +90,8 @@ void	child(t_data *data, t_cmd *cur, int i, bool prev_cmd);
 int		is_built_in(char *str);
 int		handle_unique_builtin(t_data *data, t_cmd *cur);
 int		exec_built_in(t_data *data, t_cmd *cur);
-void	close_files(t_cmd *cur, t_data *data, int fd);
-void	open_redir(t_cmd *cur, int type, int i);
+void	close_files(t_cmd *cur, t_data *data, int fd, bool child);
+bool	open_redir(t_data *data, t_cmd *cur, int type, int i);
 int		files(t_data *data, t_cmd *cur);
 int		handle_here_doc(t_data *data, t_cmd *cur);
 void	handle_commande_execution(t_data *data, t_cmd *cur);

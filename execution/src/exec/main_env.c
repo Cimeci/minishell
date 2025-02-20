@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_env.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/11 16:28:40 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:09:16 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,14 @@ int	ft_env(t_data *data, t_cmd *cur)
 	if (!path)
 	{
 		errors(data, "env", FILES);
+		free_all(data, 0);
 		exit(127);
 	}
 	free(path);
 	if (ft_strlen_tab(cur->args) != 1)
 	{
 		errors(data, "env", ARGS);
+		free_all(data, 0);
 		exit(1);
 	}
 	tmp = data->env;

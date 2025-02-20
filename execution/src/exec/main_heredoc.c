@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_heredoc.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 18:30:56 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:54:37 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	int	fd;
 
 	(void)data;
+	dprintf(2, "\033[1;31mtmpfile: %s\n\033[0m", cur->file);
 	fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
 	if (fd < 0)
 	{

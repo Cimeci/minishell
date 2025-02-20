@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 14:00:30 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 12:29:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,20 +131,20 @@ void	prompt(t_data *data)
 	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
+		data->pwd = ft_find_pwd(data);
+		user_read = ft_strjoin(data->pwd, "$ ");
+		// rl_outstream = stderr;
+		input = readline(user_read);
 		if (g_exit_code_sig)
 		{
 			data->gexit_code = g_exit_code_sig;
 			g_exit_code_sig = 0;
 		}
-		data->pwd = ft_find_pwd(data);
-		user_read = ft_strjoin(data->pwd, "$ ");
-		// rl_outstream = stderr;
-		input = readline(user_read);
 		free(user_read);
 		if (!input)
 		{
 			printf("exit\n");
-			return ;
+			break ;
 		}
 		if (input[0] == '\0')
 			free(input);
@@ -152,14 +152,15 @@ void	prompt(t_data *data)
 		{
 			if (input[0] == '!')
 				data->gexit_code = 1;
+			free(input);
 		}
 		else
 		{
 			add_history(input);
 			if (parsing(data, input) && g_exit_code_sig != 130)
 				exec(data);
-			free_all(data, 1);
 		}
+		free_all(data, 1);
 	}
 	rl_clear_history();
 }

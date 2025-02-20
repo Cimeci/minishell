@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_child.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:14:09 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/19 16:37:33 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 10:41:12 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ void	child(t_data *data, t_cmd *cur, int i, bool prev_cmd)
 		handle_last_command(data, cur, &fd, prev_cmd);
 	else
 		handle_pipe_command(data, cur, &fd, prev_cmd);
-	close_files(cur, data, fd);
+	close_files(cur, data, fd, true);
 	handle_commande_execution(data, cur);
 	exit(EXIT_SUCCESS);
 }

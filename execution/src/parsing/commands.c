@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 14:35:29 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 09:58:56 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok)
 	int	i;
 
 	i = 0;
+	cur_cmd->here = 0;
 	cur_cmd->heredoc = malloc((count_token(cur_tok, 1) + 1) * sizeof(char *));
 	if (!cur_cmd->heredoc)
 		return ;
