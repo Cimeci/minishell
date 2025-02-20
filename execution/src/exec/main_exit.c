@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/19 13:09:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:39:57 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,12 +100,18 @@ void	ft_error_exit(long long nb, t_data *data, t_cmd *cur, int error)
 	{
 		print_errors("exit\nexit: ", str, ": numeric argument required", NULL);
 		free(str);
+		close_files(cur, data, -1, true);
 		free_all(data, 0);
+		rl_clear_history();
 		exit(2);
 	}
 	if (ft_strlen_tab(cur->args) - 1 == 1)
 	{
+		close_files(cur, data, -1, true);
 		free_all(data, 0);
+		rl_clear_history();
+		free(str);
+
 		exit(nb % 256);
 	}
 	print_errors("exit\nexit :", "too many arguments", NULL);
@@ -113,11 +119,13 @@ void	ft_error_exit(long long nb, t_data *data, t_cmd *cur, int error)
 	free(str);
 }
 
-void	ft_unique_exit(int len, t_data *data)
+void	ft_unique_exit(int len, t_data *data, t_cmd *cur)
 {
 	if (len + 1 == 1)
 	{
+		close_files(cur, data, -1, true);
 		free_all(data, 0);
+		rl_clear_history();
 		exit(data->gexit_code);
 	}
 }
@@ -137,10 +145,13 @@ void	ft_exit(t_data *data, t_cmd *cur)
 		return ;
 	if (!strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd))
 	{
-		ft_unique_exit(len, data);
+		ft_unique_exit(len, data, cur);
 		str = ft_remove_space(cur->args[1]);
 		if (!str || str[0] == '\0')
+		{
+			free(str);
 			return ;
+		}
 		if (str[0] == '-' || str[0] == '+')
 			i++;
 		while (str[i])

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:58:21 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 10:42:09 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:55:45 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,14 +63,26 @@ int	files(t_data *data, t_cmd *cur)
 	while (cur->infile && cur->infile[i])
 	{
 		if (i == ft_strlen_tab(cur->infile) - 1)
-			cur->fd_infile = open(cur->infile[i], O_RDONLY);
-		fd = open(cur->infile[i], O_RDONLY);
-		if (fd < 0)
 		{
-			errors(data, cur->infile[i], FILES);
-			data->gexit_code = 1;
-			error = true;
-			break ;
+			cur->fd_infile = open(cur->infile[i], O_RDONLY);
+			if (cur->fd_infile < 0)
+			{
+				errors(data, cur->infile[i], FILES);
+				data->gexit_code = 1;
+				error = true;
+				break ;
+			}
+		}
+		else
+		{
+			fd = open(cur->infile[i], O_RDONLY);
+			if (fd < 0)
+			{
+				errors(data, cur->infile[i], FILES);
+				data->gexit_code = 1;
+				error = true;
+				break ;
+			}
 		}
 		if (i < ft_strlen_tab(cur->infile) - 1)
 			close(fd);

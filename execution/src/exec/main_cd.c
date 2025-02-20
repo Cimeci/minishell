@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 10:07:59 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:58:32 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -123,8 +123,8 @@ int	ft_cd(t_data *data, t_cmd *cur)
 {
 	if (!cur->args[1] || cur->args[1][0] == '\0')
 	{
-		ft_putendl_fd("cd : Home not found", 2);
-		data->gexit_code = 2;
+		ft_putendl_fd("cd : expected a relative or absolute path", 2);
+		data->gexit_code = 1;
 		return (2);
 	}
 	if (ft_strlen_tab(cur->args) != 2)

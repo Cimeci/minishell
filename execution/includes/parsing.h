@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 10:48:11 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:45:06 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ typedef struct s_data
 int					check_pipes(t_data *data);
 void				prompt(t_data *data);
 void				init_data(t_data *data, char **env);
-int					parsing(t_data *data, char *input);
+int					parsing(t_data *data);
 
 // env_variables.c
 char				*env_variables(t_data *data, char *line, bool heredoc);
