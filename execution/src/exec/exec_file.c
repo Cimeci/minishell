@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_file.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:58:21 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 13:55:45 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 15:20:24 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ bool	open_redir(t_data *data, t_cmd *cur, int type, int i)
 				0644);
 	if (cur->fd_outfile < 0)
 	{
-		errors(data, cur->infile[i], FILES);
+		errors(data, cur->outfile[i], ERRNO);
 		data->gexit_code = 1;
 		return (true);
 	}
@@ -67,7 +67,7 @@ int	files(t_data *data, t_cmd *cur)
 			cur->fd_infile = open(cur->infile[i], O_RDONLY);
 			if (cur->fd_infile < 0)
 			{
-				errors(data, cur->infile[i], FILES);
+				errors(data, cur->infile[i], ERRNO);
 				data->gexit_code = 1;
 				error = true;
 				break ;
@@ -78,7 +78,7 @@ int	files(t_data *data, t_cmd *cur)
 			fd = open(cur->infile[i], O_RDONLY);
 			if (fd < 0)
 			{
-				errors(data, cur->infile[i], FILES);
+				errors(data, cur->infile[i], ERRNO);
 				data->gexit_code = 1;
 				error = true;
 				break ;
