@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 13:43:25 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 18:20:27 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 	int	fd;
 
 	(void)data;
-	// dprintf(2, "\033[1;31mtmpfile: %s\n\033[0m", cur->file);
 	fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
 	if (fd < 0)
 	{
