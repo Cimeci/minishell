@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/08 09:10:04 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 17:16:05 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:28:22 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ int	ft_export(t_data *data, t_cmd *cur)
 {
 	int	i;
 
+	data->gexit_code = 0;
 	if (ft_strlen_tab(cur->args) == 1)
 	{
 		print_errors(cur->cmd, ": no argument", NULL);

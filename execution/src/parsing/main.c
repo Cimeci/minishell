@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:13 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 12:29:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:38:14 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	parsing(t_data *data, char *input)
 		cur_tok = data->token;
 		if (cur_tok->type == PIPE)
 			return (errors(data, "|", ERROR_SYNTAX));
-		while (cur_cmd)
+		while (cur_cmd && g_exit_code_sig != 130)
 		{
 			while (cur_tok->next != NULL)
 			{
@@ -127,10 +127,10 @@ void	prompt(t_data *data)
 	char	*input;
 	char	*user_read;
 
-	signal(SIGINT, parent_signal_handler);
-	signal(SIGQUIT, SIG_IGN);
 	while (1)
 	{
+		signal(SIGINT, parent_signal_handler);
+		signal(SIGQUIT, SIG_IGN);
 		data->pwd = ft_find_pwd(data);
 		user_read = ft_strjoin(data->pwd, "$ ");
 		// rl_outstream = stderr;
