@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   randomizer.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 08:38:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 11:47:48 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:46:21 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ char	*convert_ascii(char *str)
 		i++;
 	}
 	line = malloc(sizeof(char) * (j + 1));
+	if (!line)
+		return (NULL);
 	i = 0;
 	j = 0;
 	while (str[i])
@@ -47,7 +49,7 @@ int	open_random(void)
 	if (fd < 0)
 	{
 		printf("Error fd\n");
-		exit(1);
+		return (-1);
 	}
 	return (fd);
 }
@@ -60,18 +62,18 @@ char	*randomizer(void)
 
 	filename = NULL;
 	fd = open_random();
+	if (fd < 0)
+		return (NULL);
 	while (1)
 	{
 		read(fd, buffer, 1000);
 		filename = convert_ascii(buffer);
-		if (ft_strlen(filename) < 250)
+		if (filename && (ft_strlen(filename) < 50))
 		{
-			if (access(filename, F_OK) <= 0)
+			if (access(filename, F_OK))
 			{
 				close(fd);
-				if (filename)
-					return (filename);
-				return (NULL);
+				return (filename);
 			}
 		}
 		free(filename);

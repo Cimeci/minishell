@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 10:16:08 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:02:09 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 
 	get_env = NULL;
 	rl_clear_history();
+	if (!cur->cmd)
+	{
+		free_all(data, 0);
+		return ;
+	}
 	if (!exec_built_in(data, cur))
 	{
 		if ((!ft_strncmp(cur->cmd, ".", 1) && ft_strlen(cur->cmd) == 1)
