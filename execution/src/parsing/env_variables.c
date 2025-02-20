@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/19 10:47:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 09:04:22 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,11 +202,11 @@ char *env_variables(t_data *data, char *line, bool heredoc)
 					prev = ft_strjoin_free(prev, var, 1);
 					line = ft_strjoin(prev, next);
 				}
+				i = ft_strlen(prev);
 				free(next);
 				free(prev);
 				free(var);
 				dollars++;
-				i = 0;
 			}
 		}
 		else
