@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 09:58:56 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:15:06 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	{
 		cur_cmd->cmd = find_path(data, cur_tok->str);
 		get_env = my_getenv_lst("PATH", data->env);
-		if (!cur_cmd->cmd && !get_env)
+		if (!cur_cmd->cmd && !get_env && !is_built_in(cur_tok->str))
 			cur_cmd->cmd = ft_strjoin("./", cur_tok->str);
 		else if (!cur_cmd->cmd)
 			cur_cmd->cmd = ft_strdup(cur_tok->str);

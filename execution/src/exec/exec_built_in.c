@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:00:08 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 15:20:57 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 14:01:20 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 int	exec_built_in(t_data *data, t_cmd *cur)
 {
+
 	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 4)
 		ft_exit(data, cur);

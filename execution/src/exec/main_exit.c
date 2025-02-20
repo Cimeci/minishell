@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/19 13:09:37 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 13:39:32 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ void	ft_error_exit(long long nb, t_data *data, t_cmd *cur, int error)
 	if (ft_strlen_tab(cur->args) - 1 == 1)
 	{
 		free_all(data, 0);
+		free(str);
 		exit(nb % 256);
 	}
 	print_errors("exit\nexit :", "too many arguments", NULL);
@@ -140,7 +141,10 @@ void	ft_exit(t_data *data, t_cmd *cur)
 		ft_unique_exit(len, data);
 		str = ft_remove_space(cur->args[1]);
 		if (!str || str[0] == '\0')
+		{
+			free(str);
 			return ;
+		}
 		if (str[0] == '-' || str[0] == '+')
 			i++;
 		while (str[i])
