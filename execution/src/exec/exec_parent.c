@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 16:01:40 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 17:42:21 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,12 @@ void	handle_parent_process(t_data *data, t_cmd *last)
 	while (waitpid(-1, &status, 0) > 0)
 	{
 		if (WIFEXITED(status))
-		{
 			data->gexit_code = WEXITSTATUS(status);
-			dprintf(2, "exit code %d\n", data->gexit_code);
-		}
 	}
-	if ((last->infile && access(last->infile[ft_strlen_tab(last->infile) -1], R_OK) != 0)
-		|| (last->outfile && access(last->outfile[ft_strlen_tab(last->outfile) -1], W_OK) != 0))
+	if ((last->infile && access(last->infile[ft_strlen_tab(last->infile) - 1],
+				R_OK) != 0) || (last->outfile
+			&& access(last->outfile[ft_strlen_tab(last->outfile) - 1],
+				W_OK) != 0))
 		data->gexit_code = 1;
 	signal(SIGINT, parent_signal_handler);
 	signal(SIGQUIT, SIG_IGN);

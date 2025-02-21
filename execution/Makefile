@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
+#    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/20 11:04:22 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/02/20 18:45:56 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ SRC = src/utils/command.c\
 		src/parsing/parsing_utils.c\
 		src/parsing/token.c\
 		src/exec/main_cd.c\
+		src/exec/update_pwd.c\
 		src/exec/main_pwd.c\
 		src/exec/main_echo.c\
 		src/exec/main_env.c\
@@ -51,6 +52,7 @@ SRC = src/utils/command.c\
 		src/exec/main_export.c\
 		src/exec/main_unset.c\
 		src/exec/exec_file.c\
+		src/exec/exec_handle_file.c\
 		src/exec/exec_built_in.c\
 		src/exec/exec_handle.c\
 		src/exec/exec_parent.c\
@@ -62,6 +64,7 @@ SRC = src/utils/command.c\
 		src/exec/signal.c\
 		src/exec/randomizer.c\
 		src/exec/main_exit.c\
+		src/exec/exit_utils.c\
 
 OBJ_DIR = .objects
 INCLUDE_DIR = includes

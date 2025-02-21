@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:14:09 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 15:55:48 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/20 17:08:02 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	empty_pipe(void)
 	}
 }
 
-static void	handle_last_command(t_data *data, t_cmd *cur, int *fd, bool prev_cmd)
+static void	handle_last_command(t_data *data, t_cmd *cur, int *fd,
+		bool prev_cmd)
 {
 	close(data->fd[1]);
 	close(data->fd[0]);
@@ -45,7 +46,8 @@ static void	handle_last_command(t_data *data, t_cmd *cur, int *fd, bool prev_cmd
 		dup2(cur->fd_outfile, STDOUT_FILENO);
 }
 
-static void	handle_pipe_command(t_data *data, t_cmd *cur, int *fd, bool prev_cmd)
+static void	handle_pipe_command(t_data *data, t_cmd *cur, int *fd,
+		bool prev_cmd)
 {
 	close(data->fd[0]);
 	if (prev_cmd == false)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 14:42:27 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/20 18:05:07 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,62 +49,6 @@ void	ft_update_extension(t_data *data, t_lst *tmp, char *var)
 		free(pwd);
 	}
 	free(var);
-}
-
-void	ft_update_pwd(t_data *data, int info)
-{
-	t_lst	*tmp;
-	char	*var;
-	char	*get_pwd;
-	char	*get_oldpwd;
-	char	*res;
-	char	*pwd;
-	char	*var_value;
-	char	*value;
-
-	res = NULL;
-	tmp = data->env;
-	var = NULL;
-	var_value = ft_get_var_and_value("PWD", tmp);
-	get_pwd = my_getenv_lst("PWD", tmp);
-	get_oldpwd = my_getenv_lst("OLDPWD", tmp);
-	pwd = ft_find_pwd(data);
-	value = pwd;
-	if (var_value)
-		value = ft_get_value(var_value);
-	if (!get_pwd)
-		ft_unset_extension("OLDPWD", tmp);
-	else if (get_pwd)
-	{
-		ft_export_assign(data, "PWD", pwd);
-		if (!get_oldpwd)
-			ft_export_assign(data, "OLDPWD", data->pwd);
-	}
-	if (var_value && pwd != value)
-	{
-		while (tmp)
-		{
-			var = ft_get_var(tmp->str);
-			if (!ft_strncmp(var, "PWD", ft_strlen(var)) && ft_strlen(var) == 3
-				&& info == 1)
-				ft_update_extension(data, tmp, var);
-			else if (!ft_strncmp(var, "OLDPWD", ft_strlen(var))
-				&& ft_strlen(var) == 6 && info == 0)
-			{
-				res = ft_strjoin(var, "=");
-				free(tmp->str);
-				tmp->str = ft_strjoin(res, value);
-				free(res);
-			}
-			free(var);
-			tmp = tmp->next;
-		}
-	}
-	if (var_value)
-		free(value);
-	free(pwd);
-	free(get_pwd);
-	free(get_oldpwd);
 }
 
 int	ft_cd_root(t_data *data, t_cmd *cur)
