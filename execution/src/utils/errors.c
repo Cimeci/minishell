@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:03 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 18:56:00 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:43:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,6 @@ void	errors_exec(char *msg, char *cmd, int type)
 		print_errors(cmd, ": ", msg, ": No such file or directory", NULL);
 	if (type == IDENTIFIER)
 		print_errors(cmd, ": '", msg, "': not a valid identifier", NULL);
+	if (type == NUM_ARG)
+		print_errors(msg, cmd, ": numeric argument required", NULL);
 }

@@ -6,7 +6,7 @@
 #    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/21 11:51:46 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/02/21 14:44:07 by ncharbog         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -49,6 +49,7 @@ SRC = src/utils/errors.c\
 		src/parsing/env_variables_utils.c\
 		src/parsing/expand_line.c\
 		src/exec/main_cd.c\
+		src/exec/update_pwd.c\
 		src/exec/main_pwd.c\
 		src/exec/main_echo.c\
 		src/exec/main_env.c\
@@ -58,6 +59,7 @@ SRC = src/utils/errors.c\
 		src/exec/main_export.c\
 		src/exec/main_unset.c\
 		src/exec/exec_file.c\
+		src/exec/exec_handle_file.c\
 		src/exec/exec_built_in.c\
 		src/exec/exec_handle.c\
 		src/exec/exec_parent.c\
@@ -69,6 +71,7 @@ SRC = src/utils/errors.c\
 		src/exec/signal.c\
 		src/exec/randomizer.c\
 		src/exec/main_exit.c\
+		src/exec/exit_utils.c\
 
 OBJ_DIR = .objects
 INCLUDE_DIR = includes

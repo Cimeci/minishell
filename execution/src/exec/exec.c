@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 14:32:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:45:14 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,26 @@ int	setup_execution(t_data *data)
 	return (0);
 }
 
+void	exec_fork(t_data *data, t_cmd *cur, int i, bool prev_cmd)
+{
+	pid_t	p;
+
+	if (pipe(data->fd) == -1)
+		printf("pipe failed\n");
+	p = fork();
+	if (p < 0)
+		printf("fork failed\n");
+	else if (p == 0)
+		child(data, cur, i, prev_cmd);
+	else
+		parent(data);
+}
+
 void	execute_pipeline(t_data *data)
 {
 	int		i;
 	bool	prev_cmd;
 	t_cmd	*cur;
-	pid_t	p;
 
 	i = 0;
 	cur = data->cmd;
@@ -42,15 +56,7 @@ void	execute_pipeline(t_data *data)
 	{
 		if (!files(data, cur) && cur->empty_var_cmd == false)
 		{
-			if (pipe(data->fd) == -1)
-				printf("pipe failed\n");
-			p = fork();
-			if (p < 0)
-				printf("fork failed\n");
-			else if (p == 0)
-				child(data, cur, i, prev_cmd);
-			else
-				parent(data);
+			exec_fork(data, cur, i, prev_cmd);
 			prev_cmd = true;
 		}
 		else
@@ -72,6 +78,6 @@ void	exec(t_data *data)
 	}
 	execute_pipeline(data);
 	handle_parent_process(data, ft_lstlast_generic(data->cmd, (sizeof(t_cmd)
-		- sizeof(t_cmd *))));
+				- sizeof(t_cmd *))));
 	cleanup_execution(data);
 }
