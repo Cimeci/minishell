@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:15:29 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 12:48:18 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:47:25 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ char	*is_var(t_data *data, char *line, t_env_var *info)
 {
 	info->i++;
 	if (!line[info->i])
-		return (NULL);
+		return (line);
 	line = expand_line(data, line, info);
 	if ((!line || line[0] == '\0') && info->stop == true)
 		return (NULL);

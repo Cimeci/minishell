@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 12:21:40 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:09:55 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	len = 0;
 	tmp = cur_tok;
 	cur_cmd->empty_var_cmd = false;
-	while (cur_tok && cur_tok->empty_var_tok == true)
+	while (cur_tok && cur_tok->empty_var_tok == true && cur_tok->type != PIPE)
 	{
 		cur_tok = cur_tok->next;
-		if (cur_tok == NULL)
+		if (cur_tok == NULL || cur_tok->type == PIPE)
 		{
 			cur_cmd->empty_var_cmd = true;
 			return (cur_tok);

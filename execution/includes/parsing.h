@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 12:47:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:59:07 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ typedef struct s_env_var
 
 // commands_redir.c
 void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok);
-void	save_files(t_cmd *cur_cmd, t_token *cur_tok, int i, int j);
+void	save_files(t_cmd *cur_cmd, t_token *cur_tok, int *i, int *j);
 void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok);
 void	get_flag_redir(t_data *data, t_cmd *cur_cmd, t_token *cur_tok);
 void	manage_redirs(t_data *data, t_cmd *cur_cmd, t_token *cur_tok);

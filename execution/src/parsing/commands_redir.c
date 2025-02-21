@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 18:47:04 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 11:54:34 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:58:36 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok)
 		cur_cmd->heredoc[i] = NULL;
 }
 
-void	save_files(t_cmd *cur_cmd, t_token *cur_tok, int i, int j)
+void	save_files(t_cmd *cur_cmd, t_token *cur_tok, int *i, int *j)
 {
 	while (cur_tok && cur_tok->type != PIPE)
 	{
 		if (cur_tok->type == INPUT && cur_tok->next != NULL)
 		{
-			cur_cmd->infile[i] = ft_strdup(cur_tok->next->str);
-			i++;
+			cur_cmd->infile[*i] = ft_strdup(cur_tok->next->str);
+			(*i)++;
 			if (access(cur_tok->next->str, R_OK) != 0)
 				return ;
 			cur_tok = cur_tok->next->next;
@@ -56,8 +56,8 @@ void	save_files(t_cmd *cur_cmd, t_token *cur_tok, int i, int j)
 		else if (cur_tok->next != NULL && (cur_tok->type == OVERWRITE
 				|| cur_tok->type == APPEND))
 		{
-			cur_cmd->outfile[j] = ft_strdup(cur_tok->next->str);
-			j++;
+			cur_cmd->outfile[*j] = ft_strdup(cur_tok->next->str);
+			(*j)++;
 			if (access(cur_tok->next->str, F_OK) == 0
 				&& access(cur_tok->next->str, W_OK) != 0)
 				return ;
@@ -75,7 +75,7 @@ void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
 
 	i = 0;
 	j = 0;
-	save_files(cur_cmd, cur_tok, i, j);
+	save_files(cur_cmd, cur_tok, &i, &j);
 	if (cur_cmd->infile)
 		cur_cmd->infile[i] = NULL;
 	if (cur_cmd->outfile)

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 12:51:09 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 13:43:09 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ char	*env_variables(t_data *data, char *line, bool heredoc)
 				line = is_var(data, line, info);
 				if ((!line || line[0] == '\0') && info->stop == true)
 					return (NULL);
-				if (!line[info->i])
+				if (line && !line[info->i])
 					break ;
 			}
 		}
