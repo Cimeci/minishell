@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   built_in.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 11:42:19 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:12:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ long long	ft_atoll(char *str, int *error);
 int			check_max_min(long long nb, char *str, int inf);
 char		*ft_remove_space(char *str);
 int			ft_char_is_digit(char *str);
+void		clean_error_exit(t_data *data, char *str1, char *str2, int info);
 
 // // lst_funct_utils.c //
 

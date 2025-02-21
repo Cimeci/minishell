@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 14:47:19 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:07:56 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,10 @@
 
 enum				e_type
 {
-	INPUT,     //<//
-	HEREDOC,   //<<//
-	OVERWRITE, //>//
-	APPEND,    //>>//
+	INPUT,
+	HEREDOC,
+	OVERWRITE,
+	APPEND,
 	PIPE,
 	WORD,
 	DOT,

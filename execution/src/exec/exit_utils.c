@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:19:29 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 14:00:58 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:11:44 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 long long	ft_atoll(char *str, int *error)
 {
@@ -74,7 +74,6 @@ char	*ft_remove_space(char *str)
 	int		len;
 	char	*res;
 
-	
 	i = 0;
 	if (!str)
 		return (NULL);
@@ -98,7 +97,7 @@ char	*ft_remove_space(char *str)
 
 int	ft_char_is_digit(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!str)
@@ -112,4 +111,17 @@ int	ft_char_is_digit(char *str)
 		i++;
 	}
 	return (0);
+}
+
+void	clean_error_exit(t_data *data, char *str1, char *str2, int info)
+{
+	if (str1)
+		free(str1);
+	if (str2)
+		free(str2);
+	if (info)
+	{
+		free_all(data, 0);
+		rl_clear_history();
+	}
 }

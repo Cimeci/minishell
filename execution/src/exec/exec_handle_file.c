@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_file.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 18:28:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 11:01:11 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:09:04 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	check_fd_outfile(t_data *data, char *file_to_open, t_file *file)
 {
@@ -24,8 +24,9 @@ int	check_fd_outfile(t_data *data, char *file_to_open, t_file *file)
 	return (0);
 }
 
-int	check_fd_infile(t_data *data, char *file_to_open, t_file *file)
+int	check_fd_infile(t_data *data, int fd, char *file_to_open, t_file *file)
 {
+	file->fd_i = fd;
 	if (file->fd_i < 0)
 	{
 		errors(data, file_to_open, ERRNO);
@@ -46,13 +47,13 @@ void	infile(t_data *data, t_cmd *cur, t_file *file)
 		if (i == ft_strlen_tab(cur->infile) - 1)
 		{
 			cur->fd_infile = open(cur->infile[i], O_RDONLY);
-			if (check_fd_infile(data, cur->infile[i], file))
+			if (check_fd_infile(data, cur->fd_infile, cur->infile[i], file))
 				break ;
 		}
 		else
 		{
 			file->fd_i = open(cur->infile[i], O_RDONLY);
-			if (check_fd_infile(data, cur->infile[i], file))
+			if (check_fd_infile(data, file->fd_i, cur->infile[i], file))
 				break ;
 		}
 		if (i < ft_strlen_tab(cur->infile) - 1)

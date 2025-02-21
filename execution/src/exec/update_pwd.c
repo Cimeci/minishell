@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   update_pwd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 17:49:28 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 18:06:33 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:10:15 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_update_pwd(t_data *data, int info)
 {

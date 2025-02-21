@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export_handle.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 16:40:57 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 16:12:54 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:09:31 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_modif_env_var(t_lst *cur, char *var, char *arg)
 {

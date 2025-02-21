@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   lst_funct.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:22:33 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/17 16:15:41 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:09:38 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 char	**ft_convert_lst_to_tab(t_lst *env)
 {

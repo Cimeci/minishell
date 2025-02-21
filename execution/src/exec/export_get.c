@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export_get.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:17:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/13 15:21:23 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:09:28 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 char	*ft_get_var(char *str)
 {

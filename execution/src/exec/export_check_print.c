@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   export_check_print.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:19:07 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/18 18:31:58 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:09:24 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	ft_check_isalnum(t_data *data, char *var, int i)
 {

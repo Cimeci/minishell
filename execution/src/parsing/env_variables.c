@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 13:43:09 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:15:12 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	*expansion_quotes(char *line, int nb_var, bool heredoc)
 	return (quote_tab);
 }
 
-char	*add_env_token(t_data *data, char *line, t_env_var *info, int flag_expand)
+char	*add_env_token(t_data *data, char *line, t_env_var *info, int flag)
 {
 	t_token	*new;
 
@@ -75,7 +75,7 @@ char	*add_env_token(t_data *data, char *line, t_env_var *info, int flag_expand)
 	new->type = WORD;
 	if (line[0] == '\0')
 		new->empty_var_tok = true;
-	new->expand = flag_expand;
+	new->expand = flag;
 	new->str = remove_quotes(data, line);
 	free(line);
 	ft_lstadd_back_generic((void **)&data->token, new,

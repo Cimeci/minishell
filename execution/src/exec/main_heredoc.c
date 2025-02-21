@@ -6,11 +6,11 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 14:47:52 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:21:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	extension_write(t_data *data, t_cmd *cur, t_tmp_file *tmpfile)
 {
@@ -77,29 +77,42 @@ void	write_tmpfile(t_data *data, t_cmd *cur, t_tmp_file *tmpfile)
 	close(tmpfile->original_in);
 }
 
+int	init_tmpfile(t_tmp_file **tmpfile)
+{
+	*tmpfile = malloc(sizeof(t_tmp_file));
+	if (!*tmpfile)
+		return (1);
+	(*tmpfile)->fd = -1;
+	(*tmpfile)->input = NULL;
+	(*tmpfile)->original_in = -1;
+	return (0);
+}
+
 void	ft_heredoc(t_data *data, t_cmd *cur)
 {
-	int	fd;
+	t_tmp_file	*tmpfile;
 
-	fd = -1;
+	if (init_tmpfile(&tmpfile))
+		return ;
 	if (cur->here == 1)
 	{
 		cur->file = randomizer();
 		if (!cur->file)
 		{
 			data->gexit_code = 1;
+			free(tmpfile);
 			return ;
 		}
-		fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
-		if (fd < 0 || access(cur->file, F_OK) == -1)
+		tmpfile->fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
+		if (tmpfile->fd < 0 || access(cur->file, F_OK) == -1)
 		{
 			printf("Error: heredoc's temporary file not found\n");
+			free(tmpfile);
 			return ;
 		}
-		write_tmpfile(data, cur, fd);
+		write_tmpfile(data, cur, tmpfile);
 		signal(SIGINT, SIG_DFL);
-		close(fd);
+		close(tmpfile->fd);
 	}
-	else
-		return ;
+	free(tmpfile);
 }

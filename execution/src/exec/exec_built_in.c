@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   exec_built_in.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:00:08 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 10:44:29 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:08:53 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 int	exec_built_in(t_data *data, t_cmd *cur)
 {

@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:16:33 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 16:17:39 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:22:16 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	free_cmd(t_cmd **head)
 	{
 		next_node = cur->next;
 		free(cur->cmd);
-		cur->cmd = NULL;
 		ft_free_tab(cur->args);
 		ft_free_tab(cur->outfile);
 		ft_free_tab(cur->infile);

@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main_unset.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:12:58 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/13 14:51:19 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 15:10:09 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
 void	ft_unset_extension(char *unset_path, t_lst *env)
 {
