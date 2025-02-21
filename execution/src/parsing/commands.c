@@ -3,139 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 14:15:06 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:09:55 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-void	parse_heredoc(t_cmd *cur_cmd, t_token *cur_tok)
+t_token	*get_args(t_cmd *cur_cmd, t_token *cur_tok)
 {
 	int	i;
 
 	i = 0;
-	cur_cmd->here = 0;
-	cur_cmd->heredoc = malloc((count_token(cur_tok, 1) + 1) * sizeof(char *));
-	if (!cur_cmd->heredoc)
-		return ;
-	while (cur_tok && cur_tok->type != PIPE)
-	{
-		if (cur_tok->type == HEREDOC && cur_tok->next != NULL)
-		{
-			cur_cmd->heredoc[i] = ft_strdup(cur_tok->next->str);
-			if (cur_tok->next->expand == true)
-				cur_cmd->expand = true;
-			else
-				cur_cmd->expand = false;
-			cur_cmd->here = 1;
-			cur_tok = cur_tok->next->next;
-			i++;
-		}
-		else if (cur_tok)
-			cur_tok = cur_tok->next;
-	}
-	if (cur_cmd->heredoc)
-		cur_cmd->heredoc[i] = NULL;
-}
-
-void	redir_cmd(t_cmd *cur_cmd, t_token *cur_tok)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (cur_tok && cur_tok->type != PIPE)
-	{
-		if (cur_tok->type == INPUT && cur_tok->next != NULL)
-		{
-			cur_cmd->infile[i] = ft_strdup(cur_tok->next->str);
-			i++;
-			if (access(cur_tok->next->str, R_OK) != 0)
-				break ;
-			cur_tok = cur_tok->next->next;
-		}
-		else if (cur_tok->next != NULL && (cur_tok->type == OVERWRITE
-				|| cur_tok->type == APPEND))
-		{
-			cur_cmd->outfile[j] = ft_strdup(cur_tok->next->str);
-			j++;
-			if (access(cur_tok->next->str, F_OK) == 0 && access(cur_tok->next->str, W_OK) != 0)
-				break ;
-			cur_tok = cur_tok->next->next;
-		}
-		else if (cur_tok)
-			cur_tok = cur_tok->next;
-	}
-	if (cur_cmd->infile)
-		cur_cmd->infile[i] = NULL;
-	if (cur_cmd->outfile)
-		cur_cmd->outfile[j] = NULL;
-}
-
-int	is_built_in(char *str)
-{
-	if (!ft_strncmp(str, "exit", ft_strlen(str)) && ft_strlen(str) == 4)
-		return (1);
-	if (!ft_strncmp(str, "cd", ft_strlen(str)) && ft_strlen(str) == 2)
-		return (1);
-	else if (!ft_strncmp(str, "pwd", ft_strlen(str)) && ft_strlen(str) == 3)
-		return (1);
-	else if (!ft_strncmp(str, "echo", ft_strlen(str)) && ft_strlen(str) == 4)
-		return (1);
-	else if (!ft_strncmp(str, "env", ft_strlen(str)) && ft_strlen(str) == 3)
-		return (1);
-	else if (!ft_strncmp(str, "export", ft_strlen(str)) && ft_strlen(str) == 6)
-		return (1);
-	else if (!ft_strncmp(str, "unset", ft_strlen(str)) && ft_strlen(str) == 5)
-		return (1);
-	return (0);
-}
-
-t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
-{
-	t_token	*tmp;
-	char	*get_env;
-	int		i;
-	int		len;
-
-	i = 0;
-	len = 0;
-	tmp = cur_tok;
-	cur_cmd->empty_var_cmd = false;
-	while (cur_tok && cur_tok->empty_var_tok == true)
-	{
-		cur_tok = cur_tok->next;
-		if (cur_tok == NULL)
-		{
-			cur_cmd->empty_var_cmd = true;
-			return (cur_tok);
-		}
-	}
-	if (ft_strchr(cur_tok->str, '/') || cur_tok->str[0] == '\0' || cur_tok->type == DOT)
-		cur_cmd->cmd = ft_strdup(cur_tok->str);
-	else
-	{
-		cur_cmd->cmd = find_path(data, cur_tok->str);
-		get_env = my_getenv_lst("PATH", data->env);
-		if (!cur_cmd->cmd && !get_env && !is_built_in(cur_tok->str))
-			cur_cmd->cmd = ft_strjoin("./", cur_tok->str);
-		else if (!cur_cmd->cmd)
-			cur_cmd->cmd = ft_strdup(cur_tok->str);
-		free(get_env);
-	}
-	while (tmp && tmp->type != PIPE)
-	{
-		if (cur_tok->type > 3 && cur_tok->empty_var_tok == false)
-			len++;
-		tmp = tmp->next;
-	}
-	cur_cmd->args = malloc((len + 1) * sizeof(char *));
-	if (!cur_cmd->args)
-		return (NULL);
 	while (cur_tok && cur_tok->type != PIPE)
 	{
 		if (cur_tok->type <= 3)
@@ -160,49 +41,65 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	return (cur_tok);
 }
 
-int	count_token(t_token *cur, int token)
+void	save_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 {
-	int	count;
+	char	*get_env;
 
-	count = 0;
-	while (cur && cur->type != PIPE)
+	get_env = NULL;
+	if (ft_strchr(cur_tok->str, '/') || cur_tok->str[0] == '\0'
+		|| cur_tok->type == DOT)
+		cur_cmd->cmd = ft_strdup(cur_tok->str);
+	else
 	{
-		if (cur->type == token || cur->type == token - 1)
-			count++;
-		cur = cur->next;
+		cur_cmd->cmd = find_path(data, cur_tok->str);
+		get_env = my_getenv_lst("PATH", data->env);
+		if (!cur_cmd->cmd && !get_env && !is_built_in(cur_tok->str))
+			cur_cmd->cmd = ft_strjoin("./", cur_tok->str);
+		else if (!cur_cmd->cmd)
+			cur_cmd->cmd = ft_strdup(cur_tok->str);
+		free(get_env);
 	}
-	return (count);
 }
 
-void	get_flag_redir(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
+t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 {
-	int	count;
-	int	i;
+	t_token	*tmp;
+	int		i;
+	int		len;
 
 	i = 0;
-	count = (count_token(cur_tok, 1) + count_token(cur_tok, 3));
-	if (!count)
-		return ;
-	cur_cmd->flag_redir = ft_calloc(sizeof(int), count + 1);
-	if (!cur_cmd->flag_redir)
-		errors(data, NULL, MALLOC);
-	while (cur_tok && cur_tok->type != PIPE && cur_tok->next != NULL)
+	len = 0;
+	tmp = cur_tok;
+	cur_cmd->empty_var_cmd = false;
+	while (cur_tok && cur_tok->empty_var_tok == true && cur_tok->type != PIPE)
 	{
-		if (cur_tok->type == OVERWRITE)
+		cur_tok = cur_tok->next;
+		if (cur_tok == NULL || cur_tok->type == PIPE)
 		{
-			cur_cmd->flag_redir[i] = 1;
-			cur_tok = cur_tok->next->next;
-			i++;
+			cur_cmd->empty_var_cmd = true;
+			return (cur_tok);
 		}
-		else if (cur_tok->type == APPEND)
-		{
-			cur_cmd->flag_redir[i] = 2;
-			cur_tok = cur_tok->next->next;
-			i++;
-		}
-		else if (cur_tok)
+	}
+	save_cmd(data, cur_cmd, cur_tok);
+	len = count_args(cur_tok);
+	cur_cmd->args = malloc((len + 1) * sizeof(char *));
+	if (!cur_cmd->args)
+		errors(data, NULL, MALLOC);
+	cur_tok = get_args(cur_cmd, cur_tok);
+	return (cur_tok);
+}
+
+t_token	*find_cmd(t_data *data, t_token *cur_tok, t_cmd *cur_cmd)
+{
+	if (cur_tok->type <= 3)
+	{
+		cur_tok = cur_tok->next;
+		if (cur_tok)
 			cur_tok = cur_tok->next;
 	}
+	else if (cur_tok->type >= 4)
+		cur_tok = build_cmd(data, cur_cmd, cur_tok);
+	return (cur_tok);
 }
 
 void	get_cmds(t_data *data)
@@ -217,35 +114,9 @@ void	get_cmds(t_data *data)
 		cur_cmd = (t_cmd *)ft_lstnew_generic(sizeof(t_cmd));
 		if (!cur_cmd)
 			errors(data, NULL, MALLOC);
-		if (count_token(cur_tok, 0) > 0)
-		{
-			cur_cmd->infile = malloc((count_token(cur_tok, 0) + 1)
-					* sizeof(char *));
-			if (!cur_cmd->infile)
-				errors(data, NULL, MALLOC);
-		}
-		if (count_token(cur_tok, 3) > 0)
-		{
-			cur_cmd->outfile = malloc((count_token(cur_tok, 3) + 1)
-					* sizeof(char *));
-			if (!cur_cmd->outfile)
-				errors(data, NULL, MALLOC);
-		}
-		redir_cmd(cur_cmd, cur_tok);
-		parse_heredoc(cur_cmd, cur_tok);
-		get_flag_redir(data, cur_cmd, cur_tok);
+		manage_redirs(data, cur_cmd, cur_tok);
 		while (cur_tok && cur_tok->type != PIPE)
-		{
-			if (cur_tok->type <= 3)
-			{
-				if (cur_tok->next == NULL)
-					cur_tok = cur_tok->next;
-				else
-					cur_tok = cur_tok->next->next;
-			}
-			else if (cur_tok->type >= 4)
-				cur_tok = build_cmd(data, cur_cmd, cur_tok);
-		}
+			cur_tok = find_cmd(data, cur_tok, cur_cmd);
 		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, (sizeof(t_cmd)
 				- sizeof(t_cmd *)));
 		if (cur_tok)

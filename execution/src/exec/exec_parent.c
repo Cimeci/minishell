@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_parent.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 17:42:21 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:45:05 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,26 @@ void	parent(t_data *data)
 	close(data->fd[0]);
 }
 
-void	handle_parent_process(t_data *data, t_cmd *last)
+void    handle_parent_process(t_data *data, t_cmd *last)
 {
-	int	status;
+	int status;
+	int last_error;
 
+	last_error = 0;
 	while (waitpid(-1, &status, 0) > 0)
 	{
 		if (WIFEXITED(status))
-			data->gexit_code = WEXITSTATUS(status);
+		{
+			if (WEXITSTATUS(status) != 0)
+				last_error = WEXITSTATUS(status);
+			else if (last_error == 0)
+				data->gexit_code = WEXITSTATUS(status);
+		}
 	}
-	if ((last->infile && access(last->infile[ft_strlen_tab(last->infile) - 1],
-				R_OK) != 0) || (last->outfile
-			&& access(last->outfile[ft_strlen_tab(last->outfile) - 1],
-				W_OK) != 0))
+	if (last_error != 0)
+		data->gexit_code = last_error;
+	if ((last->infile && access(last->infile[ft_strlen_tab(last->infile) -1], R_OK) != 0)
+		|| (last->outfile && access(last->outfile[ft_strlen_tab(last->outfile) -1], W_OK) != 0))
 		data->gexit_code = 1;
 	signal(SIGINT, parent_signal_handler);
 	signal(SIGQUIT, SIG_IGN);

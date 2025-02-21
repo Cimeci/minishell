@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 09:24:08 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:44:49 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,18 +84,4 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 		execve(cur->cmd, cur->args, data->env_cp);
 	}
 	free_all(data, 0);
-}
-
-int	handle_here_doc(t_data *data, t_cmd *cur)
-{
-	if (cur->here == 1)
-	{
-		cur->file = randomizer();
-		if (!cur->file)
-		{
-			data->gexit_code = 1;
-			return (1);
-		}
-	}
-	return (0);
 }
