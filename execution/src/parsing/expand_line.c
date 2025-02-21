@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:15:29 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 11:36:06 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:48:18 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ char	*var_ok(t_data *data, char *line, t_env_var *info)
 			free(info->var);
 			free(info->next);
 			free(info->quote_tab);
+			info->stop = true;
 			return (NULL);
 		}
 	}
@@ -103,7 +104,7 @@ char	*is_var(t_data *data, char *line, t_env_var *info)
 	if (!line[info->i])
 		return (NULL);
 	line = expand_line(data, line, info);
-	if (!line || line[0] == '\0')
+	if ((!line || line[0] == '\0') && info->stop == true)
 		return (NULL);
 	info->i = ft_strlen(info->prev);
 	info->dollars++;

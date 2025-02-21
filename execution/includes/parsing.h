@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 11:49:05 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:47:41 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ typedef struct s_env_var
 	int			*quote_tab;
 	int			dollars;
 	size_t		i;
+	bool		stop;
 	bool		heredoc;
 }				t_env_var;
 

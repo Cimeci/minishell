@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 12:30:02 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:51:09 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void	init_info(t_env_var **info, char *line, bool heredoc)
 	if (!*info)
 		return ;
 	(*info)->i = 0;
+	(*info)->stop = false;
 	(*info)->dollars = count_char(line, '$');
 	(*info)->quote_tab = expansion_quotes(line, (*info)->dollars, heredoc);
 	(*info)->heredoc = heredoc;
@@ -111,7 +112,7 @@ char	*env_variables(t_data *data, char *line, bool heredoc)
 			if (line[info->i] == '$')
 			{
 				line = is_var(data, line, info);
-				if (!line || line[0] == '\0')
+				if ((!line || line[0] == '\0') && info->stop == true)
 					return (NULL);
 				if (!line[info->i])
 					break ;
