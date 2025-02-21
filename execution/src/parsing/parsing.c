@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:36:53 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 16:54:26 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:48:57 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void	launch_heredoc(t_data *data)
 	cur_cmd = data->cmd;
 	cur_tok = data->token;
 	if (cur_tok->type == PIPE)
-		return (errors(data, "|", ERROR_SYNTAX));
+		return (errors(data, "|", ERROR_SYNTAX), (void)0);
 	while (cur_cmd && g_exit_code_sig != 130)
 	{
 		while (cur_tok->next != NULL)
@@ -59,12 +59,12 @@ void	launch_heredoc(t_data *data)
 				break ;
 			}
 			if (cur_tok->type == HEREDOC && cur_tok->next->type == HEREDOC)
-				return (errors(data, "<<", ERROR_SYNTAX));
+				return (errors(data, "<<", ERROR_SYNTAX), (void)0);
 			cur_tok = cur_tok->next;
 		}
 		ft_heredoc(data, cur_cmd);
 		if (cur_tok->type == PIPE)
-			return (errors(data, "|", ERROR_SYNTAX));
+			return (errors(data, "|", ERROR_SYNTAX), (void)0);
 		cur_cmd = cur_cmd->next;
 	}
 }
@@ -72,7 +72,6 @@ void	launch_heredoc(t_data *data)
 int	parsing(t_data *data)
 {
 	t_cmd	*cur_cmd;
-	t_token	*cur_tok;
 
 	cur_cmd = NULL;
 	if (!check_quotes(data, data->line))

@@ -6,7 +6,7 @@
 #    By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/20 19:08:39 by ncharbog         ###   ########.fr        #
+#    Updated: 2025/02/21 11:51:46 by ncharbog         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,16 +36,18 @@ SRC = src/utils/errors.c\
 		src/utils/utils_libft.c\
 		src/utils/utils_path.c\
 		src/parsing/parsing_utils.c\
+		src/parsing/init.c\
 		src/parsing/commands.c\
 		src/parsing/commands_redir.c\
 		src/parsing/commands_utils.c\
 		src/parsing/env_variables.c\
 		src/parsing/main.c\
-		src/parsing/parsing_utils.c\
 		src/parsing/parsing.c\
 		src/parsing/prompt.c\
 		src/parsing/token_utils.c\
 		src/parsing/token.c\
+		src/parsing/env_variables_utils.c\
+		src/parsing/expand_line.c\
 		src/exec/main_cd.c\
 		src/exec/main_pwd.c\
 		src/exec/main_echo.c\

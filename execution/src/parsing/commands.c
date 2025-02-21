@@ -6,13 +6,13 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 18:49:36 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:21:40 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*get_args(t_data *data, t_cmd *cur_cmd, t_token *cur_tok, int len)
+t_token	*get_args(t_cmd *cur_cmd, t_token *cur_tok)
 {
 	int	i;
 
@@ -85,7 +85,20 @@ t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 	cur_cmd->args = malloc((len + 1) * sizeof(char *));
 	if (!cur_cmd->args)
 		errors(data, NULL, MALLOC);
-	cur_tok = get_args(data, cur_cmd, cur_tok, len);
+	cur_tok = get_args(cur_cmd, cur_tok);
+	return (cur_tok);
+}
+
+t_token	*find_cmd(t_data *data, t_token *cur_tok, t_cmd *cur_cmd)
+{
+	if (cur_tok->type <= 3)
+	{
+		cur_tok = cur_tok->next;
+		if (cur_tok)
+			cur_tok = cur_tok->next;
+	}
+	else if (cur_tok->type >= 4)
+		cur_tok = build_cmd(data, cur_cmd, cur_tok);
 	return (cur_tok);
 }
 
@@ -98,18 +111,12 @@ void	get_cmds(t_data *data)
 	cur_tok = data->token;
 	while (cur_tok)
 	{
+		cur_cmd = (t_cmd *)ft_lstnew_generic(sizeof(t_cmd));
+		if (!cur_cmd)
+			errors(data, NULL, MALLOC);
 		manage_redirs(data, cur_cmd, cur_tok);
 		while (cur_tok && cur_tok->type != PIPE)
-		{
-			if (cur_tok->type <= 3)
-			{
-				cur_tok = cur_tok->next;
-				if (cur_tok)
-					cur_tok = cur_tok->next;
-			}
-			else if (cur_tok->type >= 4)
-				cur_tok = build_cmd(data, cur_cmd, cur_tok);
-		}
+			cur_tok = find_cmd(data, cur_tok, cur_cmd);
 		ft_lstadd_back_generic((void **)&(data->cmd), cur_cmd, (sizeof(t_cmd)
 				- sizeof(t_cmd *)));
 		if (cur_tok)

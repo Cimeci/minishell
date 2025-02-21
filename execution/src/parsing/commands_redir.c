@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 18:47:04 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 18:48:05 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:54:34 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,9 +112,6 @@ void	get_flag_redir(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 
 void	manage_redirs(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 {
-	cur_cmd = (t_cmd *)ft_lstnew_generic(sizeof(t_cmd));
-	if (!cur_cmd)
-		errors(data, NULL, MALLOC);
 	if (count_token(cur_tok, 0) > 0)
 	{
 		cur_cmd->infile = malloc((count_token(cur_tok, 0) + 1)

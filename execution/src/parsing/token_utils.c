@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 17:08:00 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 17:48:51 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:24:03 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,12 @@ char	*remove_quotes(t_data *data, char *str)
 		dest = ft_strjoin_free(dest, ft_substr(str, start, i - start), 3);
 		if (str[i] && (str[i] == SINGLE_QUOTE || str[i] == DOUBLE_QUOTE))
 		{
+			start = i + 1;
 			i = skip_in_quotes(str, i);
 			dest = ft_strjoin_free(dest, ft_substr(str, start, i - start), 3);
 			i++;
 		}
 	}
-	free(str);
 	return (dest);
 }
 

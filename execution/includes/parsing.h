@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 19:07:17 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:49:05 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define PARSING_H
 
 # include "minishell.h"
+# include <stdbool.h>
 
 enum				e_type
 {
@@ -87,6 +88,17 @@ typedef struct s_data
 	t_lst			*env;
 }					t_data;
 
+typedef struct s_env_var
+{
+	char		*var;
+	char		*next;
+	char		*prev;
+	int			*quote_tab;
+	int			dollars;
+	size_t		i;
+	bool		heredoc;
+}				t_env_var;
+
 # define BUFFER_SIZE 1000
 # define DOUBLE_QUOTE 34
 # define SINGLE_QUOTE 39
@@ -104,7 +116,7 @@ int		count_token(t_token *cur, int token);
 int		count_args(t_token *tmp);
 
 // commands.c
-t_token	*get_args(t_data *data, t_cmd *cur_cmd, t_token *cur_tok, int len);
+t_token	*get_args(t_cmd *cur_cmd, t_token *cur_tok);
 void	save_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok);
 t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok);
 void	get_cmds(t_data *data);
@@ -142,8 +154,16 @@ void	get_token(char *str, t_token *cur);
 void	tokenise(t_data *data);
 
 // env_variables.c
-char				*env_variables(t_data *data, char *line, bool heredoc);
-int					*expansion_quotes(char *line, int nb_var, bool heredoc);
-void				rebuild_cmd(t_data *data, char *str);
+char	*env_variables(t_data *data, char *line, bool heredoc);
+int		*expansion_quotes(char *line, int nb_var, bool heredoc);
+
+// expand_line.c
+char	*expand_line(t_data *data, char *line, t_env_var *info);
+char	*is_var(t_data *data, char *line, t_env_var *info);
+
+// env_variables_utils.c
+char	*only_dollars(t_data *data, char *line, t_env_var *info);
+int		is_separator_env(char c, int pos);
+int		count_char(char *str, char c);
 
 #endif

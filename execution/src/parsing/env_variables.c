@@ -6,35 +6,30 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 17:26:16 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:30:02 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "minishell.h"
 
-int	*expansion_quotes(char *line, int nb_var, bool heredoc)
+int	*fill_quote_tab(char *line, int *quote_tab, char quote, bool heredoc)
 {
 	int		i;
 	int		j;
-	int		*quote_tab;
-	char	quote;
 
 	i = 0;
 	j = 0;
-	quote_tab = malloc(nb_var * sizeof(int));
-	if (!quote_tab)
-		return (0);
 	while (line[i])
 	{
-		if (IS_QUOTE(line[i]))
+		if (line[i] == SINGLE_QUOTE || line[i] == DOUBLE_QUOTE)
 		{
 			quote = line[i];
 			i++;
 			while (line[i] && line[i] != quote)
 			{
-				if (line[i] == '$' && (quote == SINGLE_QUOTE && heredoc == false))
+				if (line[i] == '$' && (quote == '\'' && heredoc == false))
 					quote_tab[j++] = 0;
-				if (line[i] == '$' && (quote == DOUBLE_QUOTE || heredoc == true))
+				if (line[i] == '$' && (quote == '"' || heredoc == true))
 					quote_tab[j++] = 1;
 				i++;
 			}
@@ -46,65 +41,34 @@ int	*expansion_quotes(char *line, int nb_var, bool heredoc)
 	return (quote_tab);
 }
 
-char	*only_dollars(t_data *data, char *line, int *quote_tab, int dollars, int i)
+int	*expansion_quotes(char *line, int nb_var, bool heredoc)
 {
-	char	*tmp;
-	char	*save;
-	int		cur;
-
-	cur = 0;
-	while (line[i + cur] && line[i + cur] == '$' && quote_tab[dollars + cur] >= 1)
-		cur++;
-	while (line[i] && cur > 0)
-	{
-		if (cur == 1)
-			break ;
-		tmp = ft_substr(line, 0, i);
-		tmp = ft_strjoin_free(tmp, data->shell_pid, 1);
-		save = ft_strdup(line);
-		free(line);
-		line = NULL;
-		line = ft_strjoin(tmp, save + i + 2);
-		free(save);
-		i = ft_strlen(tmp);
-		free(tmp);
-		tmp = NULL;
-		cur -= 2;
-	}
-	return (line);
-}
-
-int	is_separator_env(char c, int pos)
-{
-	if (c == '_')
-		return (0);
-	if (pos == 0 && !ft_isalpha(c))
-		return (1);
-	if (!ft_isalnum(c))
-		return (1);
-	return (0);
-}
-
-int	count_char(char *str, char c)
-{
-	int	i;
-	int	count;
+	int		i;
+	int		j;
+	int		*quote_tab;
+	char	quote;
 
 	i = 0;
-	count = 0;
-	while (str[i])
-	{
-		if (str[i] == c)
-			count++;
-		i++;
-	}
-	return (count);
+	j = 0;
+	quote = 0;
+	quote_tab = malloc(nb_var * sizeof(int));
+	if (!quote_tab)
+		return (0);
+	quote_tab = fill_quote_tab(line, quote_tab, quote, heredoc);
+	return (quote_tab);
 }
 
-void	add_env_token(t_data *data, char *line, int flag_expand)
+char	*add_env_token(t_data *data, char *line, t_env_var *info, int flag_expand)
 {
 	t_token	*new;
 
+	free(info->quote_tab);
+	if (info->heredoc == true)
+	{
+		free(info);
+		return (line);
+	}
+	free(info);
 	new = (t_token *)ft_lstnew_generic(sizeof(t_token));
 	if (!new)
 		errors(data, NULL, MALLOC);
@@ -113,110 +77,48 @@ void	add_env_token(t_data *data, char *line, int flag_expand)
 		new->empty_var_tok = true;
 	new->expand = flag_expand;
 	new->str = remove_quotes(data, line);
-	ft_lstadd_back_generic((void **)&data->token, new, (sizeof(t_token) - sizeof(t_token *)));
+	free(line);
+	ft_lstadd_back_generic((void **)&data->token, new,
+		(sizeof(t_token) - sizeof(t_token *)));
+	return (NULL);
 }
 
-char *env_variables(t_data *data, char *line, bool heredoc)
+void	init_info(t_env_var **info, char *line, bool heredoc)
 {
-	size_t	i;
-	int		result;
-	int		dollars;
-	int		*quote_tab;
-	char	*var;
-	char	*next;
-	char	*prev;
+	*info = malloc(sizeof(t_env_var));
+	if (!*info)
+		return ;
+	(*info)->i = 0;
+	(*info)->dollars = count_char(line, '$');
+	(*info)->quote_tab = expansion_quotes(line, (*info)->dollars, heredoc);
+	(*info)->heredoc = heredoc;
+	(*info)->dollars = 0;
+}
 
-	i = 0;
-	dollars = count_char(line, '$');
-	result = 0;
-	quote_tab = expansion_quotes(line, dollars, heredoc);
-	dollars = 0;
-	i = 0;
-	while (i < ft_strlen(line) && line[i])
+char	*env_variables(t_data *data, char *line, bool heredoc)
+{
+	t_env_var	*info;
+
+	info = NULL;
+	init_info(&info, line, heredoc);
+	while (info->i < ft_strlen(line) && line[info->i])
 	{
-		if (line[i] == '$')
+		if (line[info->i] == '$')
 		{
-			line = only_dollars(data, line, quote_tab, dollars, i);
-			while (line[i] && !is_separator_env(line[i], 1))
-				i++;
-			if (line[i] == '$')
+			line = only_dollars(data, line, info);
+			while (line[info->i] && !is_separator_env(line[info->i], 1))
+				info->i++;
+			if (line[info->i] == '$')
 			{
-				i++;
-				if (!line[i])
+				line = is_var(data, line, info);
+				if (!line || line[0] == '\0')
+					return (NULL);
+				if (!line[info->i])
 					break ;
-				result = 0;
-				while (line[i + result] && !is_separator_env(line[i + result], result))
-					result++;
-				if (line[i + result] == '_')
-					result--;
-				var = ft_substr(line, i, result);
-				next = ft_substr(line, i + result, ft_strlen(line));
-				prev = ft_substr(line, 0, i - 1);
-				free(line);
-				if (result == 0 && var[0] == '\0' && quote_tab[dollars] >= 1)
-				{
-					if (next[0] == '?')
-					{
-						if (g_exit_code_sig)
-						{
-							prev = ft_strjoin_free(prev, ft_itoa(g_exit_code_sig), 3);
-							g_exit_code_sig = 0;
-						}
-						else
-							prev = ft_strjoin_free(prev, ft_itoa(data->gexit_code), 3);
-						line = ft_strjoin(prev, next + 1);
-					}
-					else
-					{
-						if (quote_tab[dollars] == 1 || ((next[0] != '"' && next[0] != '\'') && quote_tab[dollars] == 2))
-							prev = ft_strjoin_free(prev, "$", 1);
-						line = ft_strjoin(prev, next);
-					}
-				}
-				else if (my_getenv(data, var) && quote_tab[dollars] >= 1)
-				{
-					if (heredoc == false && quote_tab[dollars] == 2 && count_words(ft_strjoin(prev, my_getenv(data, var))) > 1)
-					{
-						rebuild_cmd(data, ft_strjoin(prev, my_getenv(data, var)));
-						line = ft_strdup(next);
-						if (!line || line[0] == '\0')
-						{
-							free(line);
-							free(prev);
-							free(var);
-							free(next);
-							free(quote_tab);
-							return (NULL);
-						}
-					}
-					else
-					{
-						prev = ft_strjoin_free(prev, my_getenv(data, var), 1);
-						line = ft_strjoin(prev, next);
-					}
-				}
-				else if (!my_getenv(data, var) && quote_tab[dollars] >= 1)
-					line = ft_strjoin(prev, next);
-				else if (quote_tab[dollars] == 0)
-				{
-					prev = ft_strjoin_free(prev, "$", 1);
-					prev = ft_strjoin_free(prev, var, 1);
-					line = ft_strjoin(prev, next);
-				}
-				i = ft_strlen(prev);
-				free(next);
-				free(prev);
-				free(var);
-				dollars++;
 			}
 		}
 		else
-			i++;
+			info->i++;
 	}
-	free(quote_tab);
-	if (heredoc == true)
-		return (line);
-	else
-		add_env_token(data, line, true);
-	return (NULL);
+	return (add_env_token(data, line, info, true));
 }

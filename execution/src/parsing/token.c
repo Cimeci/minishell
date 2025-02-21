@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:34:49 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 17:26:11 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:23:56 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ void	new_token_node(t_data *data, char *str, int len)
 		new->expand = false;
 	get_token(str, new);
 	new->str = remove_quotes(data, str);
+	free(str);
 	new->empty_var_tok = false;
 	if (ft_strlen(new->str) == 1 && !ft_strncmp(new->str, ".",
 			ft_strlen(new->str)))

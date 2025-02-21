@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 13:15:22 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 18:59:14 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/21 12:32:35 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,13 +36,5 @@
 # include <unistd.h>
 
 extern int	g_exit_code_sig;
-
-// void	execution_cmd(t_data *data);
-int			ft_strlen_tab(char **table);
-
-// utils/ft_strsstr.c //
-
-char		*ft_strsstr(char *pwd, char *cmd);
-int         ft_strcmp(char *s1, char *s2);
 
 #endif
