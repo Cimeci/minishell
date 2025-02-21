@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 18:54:05 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 16:38:46 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 16:42:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,16 +42,16 @@ char	*find_path(t_data *data, char *str);
 
 // lst_funct_utils.c //
 
-int			ft_add_to_list(t_lst **list, char *arg);
-void		*ft_lstnew_generic(size_t data_size);
-void		ft_lstadd_back_generic(void **lst, void *new_node,
-				size_t next_offset);
-int			ft_lstsize_generic(void *lst, size_t offset);
-void		*ft_lstlast_generic(void *lst, size_t offset);
+int		ft_add_to_list(t_lst **list, char *arg);
+void	*ft_lstnew_generic(size_t data_size);
+void	ft_lstadd_back_generic(void **lst, void *new_node,
+			size_t next_offset);
+int		ft_lstsize_generic(void *lst, size_t offset);
+void	*ft_lstlast_generic(void *lst, size_t offset);
 
 // lst_funct.c //
 
-char		**ft_convert_lst_to_tab(t_lst *env);
-char		*my_getenv_lst(const char *name, t_lst *env);
+char	**ft_convert_lst_to_tab(t_lst *env);
+char	*my_getenv_lst(const char *name, t_lst *env);
 
 #endif

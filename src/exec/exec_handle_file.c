@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 18:28:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 16:32:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 16:43:09 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ static int	check_fd_outfile(t_data *data, char *file_to_open, t_file *file)
 	return (0);
 }
 
-static int	check_fd_infile(t_data *data, int fd, char *file_to_open, t_file *file)
+int	check_fd_infile(t_data *data, int fd, char *file_to_open, t_file *file)
 {
 	file->fd_i = fd;
 	if (file->fd_i < 0)

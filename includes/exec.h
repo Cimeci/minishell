@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 16:38:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 16:42:39 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,5 @@ char		*randomizer(void);
 void		child_signal_handler(int signum);
 void		parent_signal_handler_exec(int signum);
 void		parent_signal_handler(int signum);
-
 
 #endif
