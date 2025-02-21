@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:00:08 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 18:24:51 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:44:29 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	exec_built_in(t_data *data, t_cmd *cur)
 	if (!ft_strncmp(cur->cmd, "exit", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 4)
 		ft_exit(data, cur);
-	if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
+	else if (!ft_strncmp(cur->cmd, "cd", ft_strlen(cur->cmd))
 		&& ft_strlen(cur->cmd) == 2)
 		ft_cd(data, cur);
 	else if (!ft_strncmp(cur->args[0], "pwd", ft_strlen(cur->args[0]))
@@ -58,6 +58,7 @@ int	handle_unique_builtin(t_data *data, t_cmd *cur)
 			ft_unset(data, cur);
 		else
 			return (0);
+		return (1);
 	}
-	return (1);
+	return (0);
 }

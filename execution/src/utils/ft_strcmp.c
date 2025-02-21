@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/19 10:05:57 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/19 10:29:08 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:19:15 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int ft_strcmp(char *s1, char *s2)
     i = 0;
     if (!s1 || !s2)
         return (0);
-    // printf("\nft_strcmp\ns1: |%s|\ns2: |%s|\n", s1, s2);
     while (s1[i] == s2[i] && s1[i] && s2[i])
         i++;
     if (!s1[i] && !s2[i])

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:19:29 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 17:07:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:00:58 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,11 @@ char	*ft_remove_space(char *str)
 	int		len;
 	char	*res;
 
+	
 	i = 0;
-	j = ft_strlen(str) - 1;
+	if (!str)
+		return (NULL);
+	j = ft_strlen(str);
 	k = 0;
 	len = 0;
 	res = NULL;
@@ -86,10 +89,27 @@ char	*ft_remove_space(char *str)
 	if (j == 0)
 		return (NULL);
 	len = j - i + 1;
-	dprintf(2, "\033[1;31m%d|%d|%d\033[0m\n", j, i, len);
 	res = malloc(sizeof(char) * len + 1);
 	while (k < len)
 		res[k++] = str[i++];
 	res[k] = '\0';
 	return (res);
+}
+
+int	ft_char_is_digit(char *str)
+{
+	int i;
+
+	i = 0;
+	if (!str)
+		return (1);
+	if (str[i] == '+' || str[i] == '-')
+		i++;
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (1);
+		i++;
+	}
+	return (0);
 }

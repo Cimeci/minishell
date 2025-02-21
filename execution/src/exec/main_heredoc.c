@@ -6,77 +6,87 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 18:20:27 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 10:15:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	extension_write(t_data *data, t_cmd *cur, char *input, int fd)
+void	extension_write(t_data *data, t_cmd *cur, t_tmp_file *tmpfile)
 {
 	char	*input_cpy;
 
 	input_cpy = NULL;
 	if (cur->expand == true)
 	{
-		input_cpy = env_variables(data, ft_strdup(input), true);
-		ft_putendl_fd(input_cpy, fd);
+		input_cpy = env_variables(data, ft_strdup(tmpfile->input), true);
+		ft_putendl_fd(input_cpy, tmpfile->fd);
 		free(input_cpy);
 	}
 	else
-		ft_putendl_fd(input, fd);
+		ft_putendl_fd(tmpfile->input, tmpfile->fd);
 }
 
-void	write_tmpfile(t_data *data, t_cmd *cur, int fd)
+int	check_tmp_file(t_data *data, t_cmd *cur, t_tmp_file *tmpfile, int i)
 {
-	char	*input;
-	int		original_in;
-	int		i;
+	if (g_exit_code_sig == 130)
+	{
+		if (tmpfile->input)
+			free(tmpfile->input);
+		dup2(tmpfile->original_in, STDIN_FILENO);
+		close(tmpfile->original_in);
+		return (2);
+	}
+	if (!tmpfile->input)
+		return (1);
+	if (!ft_strncmp(tmpfile->input, cur->heredoc[i], ft_strlen(tmpfile->input))
+		&& ft_strlen(tmpfile->input) == ft_strlen(cur->heredoc[i]))
+	{
+		free(tmpfile->input);
+		return (1);
+	}
+	if (i == ft_strlen_tab(cur->heredoc) - 1)
+		extension_write(data, cur, tmpfile);
+	return (0);
+}
+
+void	write_tmpfile(t_data *data, t_cmd *cur, t_tmp_file *tmpfile)
+{
+	int	i;
+	int	error;
 
 	i = 0;
-	original_in = dup(STDIN_FILENO);
+	error = 0;
+	tmpfile->original_in = dup(STDIN_FILENO);
 	signal(SIGINT, child_signal_handler);
 	signal(SIGQUIT, SIG_IGN);
 	while (cur->heredoc[i])
 	{
 		while (1)
 		{
-			input = readline("> ");
-			if (g_exit_code_sig == 130)
-			{
-				if (input)
-					free(input);
-				dup2(original_in, STDIN_FILENO);
-				close(original_in);
+			tmpfile->input = readline("> ");
+			error = check_tmp_file(data, cur, tmpfile, i);
+			if (error == 1)
+				break ;
+			else if (error == 2)
 				return ;
-			}
-			if (!input)
-			{
-				data->gexit_code = 0;
-				break ;
-			}
-			if (!ft_strncmp(input, cur->heredoc[i], ft_strlen(input))
-				&& ft_strlen(input) == ft_strlen(cur->heredoc[i]))
-			{
-				free(input);
-				break ;
-			}
-			if (i == ft_strlen_tab(cur->heredoc) - 1)
-				extension_write(data, cur, input, fd);
-			free(input);
+			free(tmpfile->input);
 		}
 		i++;
 	}
-	close(original_in);
+	close(tmpfile->original_in);
 }
 
 void	ft_heredoc(t_data *data, t_cmd *cur)
 {
-	int	fd;
+	t_tmp_file	*tmpfile;
 
 	(void)data;
-	fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
-	if (fd < 0)
+	tmpfile = malloc(sizeof(t_tmp_file));
+	if (!tmpfile)
+		return ;
+	tmpfile->fd = open(cur->file, O_TRUNC | O_CREAT | O_WRONLY, 0664);
+	if (tmpfile->fd < 0)
 	{
 		printf("Error fd\n");
 		return ;
@@ -86,7 +96,10 @@ void	ft_heredoc(t_data *data, t_cmd *cur)
 		printf("Error tmp file not found\n");
 		return ;
 	}
-	write_tmpfile(data, cur, fd);
+	tmpfile->original_in = 0;
+	tmpfile->input = NULL;
+	write_tmpfile(data, cur, tmpfile);
 	signal(SIGINT, SIG_DFL);
-	close(fd);
+	close(tmpfile->fd);
+	free(tmpfile);
 }

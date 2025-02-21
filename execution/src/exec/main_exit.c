@@ -6,37 +6,49 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 17:07:28 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 14:27:35 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+void	clean_error_exit(t_data *data, char *str1, char *str2, int info)
+{
+	if (str1)
+		free(str1);
+	if (str2)
+		free(str2);
+	if (info)
+	{
+		free_all(data, 0);
+		rl_clear_history();
+	}
+}
+
 void	ft_error_exit(long long nb, t_data *data, t_cmd *cur, int error)
 {
-	char	*str;
+	char	*str1;
+	char	*str2;
 
-	str = ft_remove_space(cur->args[1]);
-	if (error == 1)
+	str1 = ft_remove_space(cur->args[1]);
+	str2 = ft_remove_space(cur->args[2]);
+	if (error == 1 && (ft_char_is_digit(str2) || ft_char_is_digit(str1)))
 	{
 		errors_exec("exit:\nexit: ", cur->args[1], NUM_ARG);
-		free(str);
 		close_files(cur, data, -1, true);
-		free_all(data, 0);
-		rl_clear_history();
+		clean_error_exit(data, str1, str2, 1);
 		exit(2);
 	}
-	if (ft_strlen_tab(cur->args) - 1 == 1)
+	else if (ft_strlen_tab(cur->args) - 1 != 1 && !ft_char_is_digit(str1))
 	{
-		close_files(cur, data, -1, true);
-		free_all(data, 0);
-		rl_clear_history();
-		free(str);
-		exit(nb % 256);
+		clean_error_exit(data, str1, str2, 0);
+		errors(data, "exit\nexit: ", ARGS);
+		data->gexit_code = 1;
+		return ;
 	}
-	errors(data, "exit\nexit: ", ARGS);
-	data->gexit_code = 1;
-	free(str);
+	close_files(cur, data, -1, true);
+	clean_error_exit(data, str1, str2, 1);
+	exit(nb % 256);
 }
 
 void	ft_unique_exit(int len, t_data *data, t_cmd *cur)

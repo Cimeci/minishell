@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 18:22:02 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:42:19 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,21 @@
 # define BUILT_IN_H
 
 # include "minishell.h"
+
+typedef struct s_file
+{
+	int		fd_o;
+	int		fd_i;
+	int		type;
+	bool	error;
+}			t_file;
+
+typedef struct s_tmp_file
+{
+	int		fd;
+	char	*input;
+	int		original_in;
+}			t_tmp_file;
 
 // cd //
 
@@ -82,6 +97,7 @@ void		ft_exit(t_data *data, t_cmd *cur);
 long long	ft_atoll(char *str, int *error);
 int			check_max_min(long long nb, char *str, int inf);
 char		*ft_remove_space(char *str);
+int			ft_char_is_digit(char *str);
 
 // // lst_funct_utils.c //
 

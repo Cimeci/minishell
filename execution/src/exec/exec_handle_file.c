@@ -6,25 +6,37 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 18:28:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 19:00:15 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/21 11:01:11 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-bool	check_fd_file(t_data *data, char *file, int fd, bool **error)
+int	check_fd_outfile(t_data *data, char *file_to_open, t_file *file)
 {
-	if (fd < 0)
+	if (file->fd_o < 0)
 	{
-		errors(data, file, ERRNO);
+		errors(data, file_to_open, ERRNO);
 		data->gexit_code = 1;
-		**error = true;
-		return (false);
+		file->error = true;
+		return (1);
 	}
-	return (**error);
+	return (0);
 }
 
-void	infile(t_data *data, t_cmd *cur, int fd, bool *error)
+int	check_fd_infile(t_data *data, char *file_to_open, t_file *file)
+{
+	if (file->fd_i < 0)
+	{
+		errors(data, file_to_open, ERRNO);
+		data->gexit_code = 1;
+		file->error = true;
+		return (1);
+	}
+	return (0);
+}
+
+void	infile(t_data *data, t_cmd *cur, t_file *file)
 {
 	int	i;
 
@@ -34,61 +46,65 @@ void	infile(t_data *data, t_cmd *cur, int fd, bool *error)
 		if (i == ft_strlen_tab(cur->infile) - 1)
 		{
 			cur->fd_infile = open(cur->infile[i], O_RDONLY);
-			if (check_fd_file(data, cur->infile[i], fd, &error) == false)
+			if (check_fd_infile(data, cur->infile[i], file))
 				break ;
 		}
 		else
 		{
-			fd = open(cur->infile[i], O_RDONLY);
-			if (check_fd_file(data, cur->infile[i], fd, &error) == false)
+			file->fd_i = open(cur->infile[i], O_RDONLY);
+			if (check_fd_infile(data, cur->infile[i], file))
 				break ;
 		}
 		if (i < ft_strlen_tab(cur->infile) - 1)
-			close(fd);
+			close(file->fd_i);
 		i++;
 	}
 }
 
-void	outfile(t_data *data, t_cmd *cur, int fd, bool *error)
+void	outfile(t_data *data, t_cmd *cur, t_file *f)
 {
-	int	type;
 	int	i;
 
-	type = 0;
 	i = 0;
 	while (cur->outfile && cur->outfile[i])
 	{
 		if (i == ft_strlen_tab(cur->outfile) - 1)
-			*error = open_redir(data, cur, type, i);
-		else if (cur->flag_redir[type] == 1)
+			f->error = open_redir(data, cur, f->type, i);
+		else if (cur->flag_redir[f->type] == 1)
 		{
-			fd = open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-			if (check_fd_file(data, cur->outfile[i], fd, &error) == false)
+			f->fd_o = open(cur->outfile[i], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+			if (check_fd_outfile(data, cur->outfile[i], f))
 				break ;
 		}
-		else if (cur->flag_redir[type] == 2 && open(cur->outfile[i],
-				O_CREAT | O_WRONLY | O_APPEND, 0644) < 0)
+		else if (cur->flag_redir[f->type] == 2)
 		{
-			fd = open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND, 0644);
-			if (check_fd_file(data, cur->outfile[i], fd, &error) == false)
+			f->fd_o = open(cur->outfile[i], O_CREAT | O_WRONLY | O_APPEND,
+					0644);
+			if (check_fd_outfile(data, cur->outfile[i], f))
 				break ;
 		}
 		if (i < ft_strlen_tab(cur->outfile) - 1)
-			close(fd);
+			close(f->fd_o);
 		i++;
-		type++;
+		f->type++;
 	}
 }
 
 int	files(t_data *data, t_cmd *cur)
 {
-	int		fd;
+	t_file	*file;
 	bool	error;
 
-	fd = -1;
 	error = false;
-	infile(data, cur, fd, &error);
-	outfile(data, cur, fd, &error);
-	printf("error : %d\n", error);
+	file = malloc(sizeof(t_file));
+	file->error = false;
+	file->fd_o = -1;
+	file->fd_i = -1;
+	file->type = 0;
+	infile(data, cur, file);
+	outfile(data, cur, file);
+	if (error != file->error)
+		error = file->error;
+	free(file);
 	return (error);
 }
