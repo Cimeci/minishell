@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/24 08:40:08 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/25 09:25:16 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,24 @@ void	parent(t_data *data)
 	close(data->fd[1]);
 	dup2(data->fd[0], STDIN_FILENO);
 	close(data->fd[0]);
+}
+
+void	check_signal_131(t_data *data, int status)
+{
+	data->gexit_code = WTERMSIG(status);
+	if (data->gexit_code == 3)
+		parent_signal_handler_exec(SIGQUIT);
+	else if (data->gexit_code == 2)
+		parent_signal_handler_exec(SIGINT);
+}
+
+int	check_signal_130(t_data *data, int status, int last_error)
+{
+	if (WEXITSTATUS(status) != 0)
+		last_error = WEXITSTATUS(status);
+	else if (last_error == 0)
+		data->gexit_code = WEXITSTATUS(status);
+	return (last_error);
 }
 
 void	handle_parent_process(t_data *data, t_cmd *last)
@@ -30,12 +48,9 @@ void	handle_parent_process(t_data *data, t_cmd *last)
 	while (waitpid(-1, &status, 0) > 0)
 	{
 		if (WIFEXITED(status))
-		{
-			if (WEXITSTATUS(status) != 0)
-				last_error = WEXITSTATUS(status);
-			else if (last_error == 0)
-				data->gexit_code = WEXITSTATUS(status);
-		}
+			last_error = check_signal_130(data, status, last_error);
+		if (WIFSIGNALED(status))
+			check_signal_131(data, status);
 	}
 	if (last_error != 0)
 		data->gexit_code = last_error;

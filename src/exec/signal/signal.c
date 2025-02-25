@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 11:22:29 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 14:34:39 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/25 09:18:26 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	parent_signal_handler_exec(int signum)
 		write(1, "\n", 1);
 		g_exit_code_sig = 130;
 	}
-	if (signum == SIGQUIT)
+	else if (signum == SIGQUIT)
 	{
 		write(1, "Quit\n", 5);
 		g_exit_code_sig = 131;
