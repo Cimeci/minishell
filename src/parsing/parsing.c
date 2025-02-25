@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:36:53 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 11:48:57 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/25 09:53:26 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,21 @@ int	check_syntax(t_data *data)
 			return (errors(data, "|", ERROR_SYNTAX));
 		if (last_token->type <= 3 && last_token->next->type <= 3)
 			return (errors(data, last_token->str, ERROR_SYNTAX));
+		if (last_token->type == PIPE && last_token->next->type == PIPE)
+			return (errors(data, last_token->str, ERROR_SYNTAX));
 		last_token = last_token->next;
 	}
 	if (last_token->next == NULL && last_token->type <= 3)
 		return (errors(data, "newline", ERROR_SYNTAX));
-	while (i < 5)
+	while (i++ < 5)
 	{
 		if (last_token->type == i)
 			return (errors(data, last_token->str, ERROR_SYNTAX));
-		i++;
 	}
 	return (1);
 }
 
-void	launch_heredoc(t_data *data)
+int	launch_heredoc(t_data *data)
 {
 	t_cmd	*cur_cmd;
 	t_token	*cur_tok;
@@ -48,7 +49,7 @@ void	launch_heredoc(t_data *data)
 	cur_cmd = data->cmd;
 	cur_tok = data->token;
 	if (cur_tok->type == PIPE)
-		return (errors(data, "|", ERROR_SYNTAX), (void)0);
+		return (errors(data, "|", ERROR_SYNTAX));
 	while (cur_cmd && g_exit_code_sig != 130)
 	{
 		while (cur_tok->next != NULL)
@@ -58,15 +59,16 @@ void	launch_heredoc(t_data *data)
 				cur_tok = cur_tok->next;
 				break ;
 			}
-			if (cur_tok->type == HEREDOC && cur_tok->next->type == HEREDOC)
-				return (errors(data, "<<", ERROR_SYNTAX), (void)0);
+			if (cur_tok->type == HEREDOC && cur_tok->next->type <= PIPE)
+				return (errors(data, "<<", ERROR_SYNTAX));
 			cur_tok = cur_tok->next;
 		}
 		ft_heredoc(data, cur_cmd);
 		if (cur_tok->type == PIPE)
-			return (errors(data, "|", ERROR_SYNTAX), (void)0);
+			return (errors(data, "|", ERROR_SYNTAX));
 		cur_cmd = cur_cmd->next;
 	}
+	return (1);
 }
 
 int	parsing(t_data *data)
@@ -81,7 +83,8 @@ int	parsing(t_data *data)
 	if (data->token)
 	{
 		get_cmds(data);
-		launch_heredoc(data);
+		if (!launch_heredoc(data))
+			return (0);
 		signal(SIGINT, SIG_DFL);
 		if (!check_syntax(data))
 			return (0);

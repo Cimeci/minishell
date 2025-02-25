@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_handle_file.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 18:28:59 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 16:43:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/25 09:27:54 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,8 @@ int	files(t_data *data, t_cmd *cur)
 	file->fd_o = -1;
 	file->fd_i = -1;
 	file->type = 0;
-	infile(data, cur, file);
 	outfile(data, cur, file);
+	infile(data, cur, file);
 	if (error != file->error)
 		error = file->error;
 	free(file);
