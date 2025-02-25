@@ -3,24 +3,44 @@
 /*                                                        :::      ::::::::   */
 /*   main_cd.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 15:09:41 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/25 10:01:03 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+void	ft_error_cd(t_data *data, t_cmd *cur, DIR *check_dir)
+{
+	char	*error;
+
+	error = ft_strjoin("cd: ", cur->args[1]);
+	if (check_dir == NULL)
+	{
+		errors(data, error, PERM);
+		closedir(check_dir);
+	}
+	else
+		errors_exec(cur->args[1], "cd", FILES);
+	free(error);
+	data->gexit_code = 1;
+}
+
 void	ft_absolut_path(t_data *data, t_cmd *cur)
 {
 	char	*path;
 	char	*target_path;
+	DIR		*check_dir;
 
 	path = NULL;
+	target_path = NULL;
+	check_dir = NULL;
 	if (ft_strlen(data->pwd) == ft_strlen(cur->args[1])
 		&& !ft_strncmp(data->pwd, cur->args[1], ft_strlen(data->pwd)))
 		return ;
+	check_dir = opendir(cur->args[1]);
 	target_path = ft_strdup(ft_strsstr(data->pwd, cur->args[1]));
 	if (!target_path)
 	{
@@ -29,10 +49,7 @@ void	ft_absolut_path(t_data *data, t_cmd *cur)
 		free(path);
 	}
 	if (chdir(target_path))
-	{
-		errors_exec(cur->args[1], "cd", FILES);
-		data->gexit_code = 1;
-	}
+		ft_error_cd(data, cur, check_dir);
 	free(target_path);
 }
 

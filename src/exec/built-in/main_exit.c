@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 16:25:23 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/25 10:02:11 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static void	ft_error_exit(long long nb, t_data *data, t_cmd *cur, int error)
 	str2 = ft_remove_space(cur->args[2]);
 	if (error == 1 && (ft_char_is_digit(str2) || ft_char_is_digit(str1)))
 	{
-		errors_exec("exit:\nexit: ", cur->args[1], NUM_ARG);
+		errors_exec("exit\nexit: ", cur->args[1], NUM_ARG);
 		close_files(cur, data, -1, true);
 		clean_error_exit(data, str1, str2, 1);
 		exit(2);
@@ -51,7 +51,7 @@ static void	ft_unique_exit(int len, t_data *data, t_cmd *cur)
 
 static void	ft_clean_exit(t_data *data, t_cmd *cur)
 {
-	errors_exec("exit:\nexit: ", cur->args[1], NUM_ARG);
+	errors_exec("exit\nexit: ", cur->args[1], NUM_ARG);
 	cleanup_execution(data);
 	rl_clear_history();
 	free_all(data, 0);
