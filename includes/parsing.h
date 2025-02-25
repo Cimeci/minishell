@@ -6,7 +6,7 @@
 /*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 15:07:56 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/25 09:49:32 by ncharbog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int		is_white_space(char c);
 
 // parsing.c
 int		check_syntax(t_data *data);
-void	launch_heredoc(t_data *data);
+int		launch_heredoc(t_data *data);
 int		parsing(t_data *data);
 
 // prompt.c
