@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:17:25 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 11:34:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:52:44 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,12 @@ int	count_char(char *str, char c)
 		i++;
 	}
 	return (count);
+}
+
+char	*before_expand(t_data *data, char *line, t_env_var *info)
+{
+	line = only_dollars(data, line, info);
+	while (line[info->i] && !is_separator_env(line[info->i], 1))
+		info->i++;
+	return (line);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/06 14:33:31 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/25 09:49:32 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:55:10 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,7 +134,7 @@ int		is_white_space(char c);
 
 // parsing.c
 int		check_syntax(t_data *data);
-int		launch_heredoc(t_data *data);
+int		launch_heredoc(t_data *data, t_cmd *cur_cmd, t_token *cur_tok);
 int		parsing(t_data *data);
 
 // prompt.c
@@ -167,5 +167,6 @@ char	*is_var(t_data *data, char *line, t_env_var *info);
 char	*only_dollars(t_data *data, char *line, t_env_var *info);
 int		is_separator_env(char c, int pos);
 int		count_char(char *str, char c);
+char	*before_expand(t_data *data, char *line, t_env_var *info);
 
 #endif

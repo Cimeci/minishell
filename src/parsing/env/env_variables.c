@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/25 09:25:38 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/25 14:52:41 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,7 @@ char	*env_variables(t_data *data, char *line, bool heredoc)
 	{
 		if (line[info->i] == '$')
 		{
-			line = only_dollars(data, line, info);
-			while (line[info->i] && !is_separator_env(line[info->i], 1))
-				info->i++;
+			line = before_expand(data, line, info);
 			if (line[info->i] == '$')
 			{
 				line = is_var(data, line, info);
