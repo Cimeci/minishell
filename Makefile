@@ -6,7 +6,7 @@
 #    By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/01/13 12:50:03 by inowak--          #+#    #+#              #
-#    Updated: 2025/02/21 16:17:21 by inowak--         ###   ########.fr        #
+#    Updated: 2025/02/26 18:57:02 by inowak--         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -83,7 +83,7 @@ OBJ_LIBFT = $(LIBFT_DIR)/libft.a
 all: $(NAME)
 
 $(OBJ_LIBFT):
-	@cd $(LIBFT_DIR) && make >> /dev/null
+	@cd $(LIBFT_DIR) && make bonus >> /dev/null
 
 $(NAME): $(OBJ) $(OBJ_LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ) $(OBJ_LIBFT) -L$(LIBFT_DIR) -I$(LIBFT_DIR) -L/usr/local/opt/readline/lib -I/usr/local/opt/readline/include -lreadline -o $(NAME)

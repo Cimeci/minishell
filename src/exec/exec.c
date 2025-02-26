@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/22 11:15:03 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/24 08:37:53 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 18:59:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,22 @@ int	setup_execution(t_data *data)
 
 static void	exec_fork(t_data *data, t_cmd *cur, int i, bool prev_cmd)
 {
+	t_list	*new;
 	pid_t	p;
+	pid_t	*new_content;
 
 	if (pipe(data->fd) == -1)
 		printf("pipe failed\n");
 	p = fork();
 	if (p < 0)
 		printf("fork failed\n");
-	else if (p == 0)
+	new_content = malloc(sizeof(pid_t));
+	*new_content = p;
+	new = ft_lstnew((void *)new_content);
+	if (!new)
+		return ;
+	ft_lstadd_back(&data->pid, new);
+	if (p == 0)
 		child(data, cur, i, prev_cmd);
 	else
 		parent(data);

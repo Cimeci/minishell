@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/26 13:33:40 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 18:59:32 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,21 +41,25 @@ int	check_exit(t_data *data, int status, int last_error)
 
 void	handle_parent_process(t_data *data, t_cmd *last)
 {
-	int	status;
-	int	last_error;
+	t_list	*pid;
+	int		status;
+	int		last_error;
 
 	last_error = 0;
+	pid = data->pid;
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);
-	while (waitpid(-1, &status, 0) > 0)
+	while (pid)
 	{
-		if (WIFEXITED(status))
-			last_error = check_exit(data, status, last_error);
-		if (WIFSIGNALED(status))
-			check_signal(data, status);
+		while (waitpid(*(pid_t *)pid->content, &status, 0) > 0)
+		{
+			if (WIFEXITED(status))
+				data->gexit_code = WEXITSTATUS(status);
+			if (WIFSIGNALED(status))
+				check_signal(data, status);
+		}
+		pid = pid->next;
 	}
-	if (last_error != 0)
-		data->gexit_code = last_error;
 	if ((last->infile && access(last->infile[ft_strlen_tab(last->infile) - 1],
 				R_OK) != 0) || (last->outfile
 			&& access(last->outfile[ft_strlen_tab(last->outfile) - 1],

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   errors.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:03 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/25 09:47:26 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/26 17:19:17 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,4 +69,6 @@ void	errors_exec(char *msg, char *cmd, int type)
 		print_errors(cmd, ": '", msg, "': not a valid identifier", NULL);
 	if (type == NUM_ARG)
 		print_errors(msg, cmd, ": numeric argument required", NULL);
+	if (type == NOT_DIR)
+		print_errors(cmd, ": ", msg, ": Not a directory", NULL);
 }
