@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:14:09 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 16:31:05 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:10:43 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,6 @@ void	child(t_data *data, t_cmd *cur, int i, bool prev_cmd)
 	else
 		handle_pipe_command(data, cur, &fd, prev_cmd);
 	close_files(cur, data, fd, true);
-	handle_commande_execution(data, cur);
+	handle_command_execution(data, cur);
 	exit(EXIT_SUCCESS);
 }

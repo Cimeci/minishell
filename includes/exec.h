@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 13:52:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/26 10:15:38 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:10:21 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int			ft_pwd(t_data *data);
 
 // unset //
 
-t_lst		*ft_unset_extension(char *unset_path, t_lst *env);
+t_lst		*ft_unset_extension(char *unset_path, t_lst *env, char *var);
 int			ft_unset(t_data *data, t_cmd *cur);
 
 // exit //
@@ -126,7 +126,7 @@ int			files(t_data *data, t_cmd *cur);
 
 // exec_handle.c //
 
-void		handle_commande_execution(t_data *data, t_cmd *cur);
+void		handle_command_execution(t_data *data, t_cmd *cur);
 
 // exec_parent.c //
 

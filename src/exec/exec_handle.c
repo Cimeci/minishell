@@ -6,13 +6,13 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 16:33:05 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:52:09 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	check_commande_execution(t_data *data, t_cmd *cur)
+static void	check_command_execution(t_data *data, t_cmd *cur)
 {
 	DIR	*directory;
 
@@ -38,8 +38,24 @@ static void	check_commande_execution(t_data *data, t_cmd *cur)
 	}
 }
 
-static void	check_commande_access(t_data *data, t_cmd *cur, char *get_env)
+static void	check_command_access(t_data *data, t_cmd *cur, char *get_env)
 {
+	char	*var;
+	t_lst	*tmp;
+	
+	var = NULL;	
+	tmp = data->env;
+	while (tmp)
+	{
+		if (tmp->str && ft_strcmp(tmp->str, "PATH="))
+		{
+			var = ft_get_value(tmp->str);
+			break; 
+		}
+		tmp = tmp->next;
+	}
+	if (var && var[0] == '\0' && !access(cur->cmd, X_OK))
+		return ;
 	if (get_env && !ft_strnstr(cur->cmd, "/", ft_strlen(cur->cmd)))
 	{
 		free(get_env);
@@ -65,7 +81,7 @@ static void	check_commande_access(t_data *data, t_cmd *cur, char *get_env)
 	}
 }
 
-void	handle_commande_execution(t_data *data, t_cmd *cur)
+void	handle_command_execution(t_data *data, t_cmd *cur)
 {
 	char	*get_env;
 
@@ -78,9 +94,9 @@ void	handle_commande_execution(t_data *data, t_cmd *cur)
 	}
 	if (!exec_built_in(data, cur))
 	{
-		check_commande_execution(data, cur);
+		check_command_execution(data, cur);
 		get_env = my_getenv_lst("PATH", data->env);
-		check_commande_access(data, cur, get_env);
+		check_command_access(data, cur, get_env);
 		execve(cur->cmd, cur->args, data->env_cp);
 	}
 	free_all(data, 0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_get.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:17:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 15:09:28 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/26 11:34:00 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,12 +71,22 @@ char	*ft_get_var_and_value(char *var, t_lst *env)
 
 char	*ft_get_value(char *argv)
 {
+	char *dest;
 	int	i;
 
 	i = 0;
+	dest = NULL;
 	while (argv[i] != '=' && argv[i])
 		i++;
 	if (argv[i] == '=')
+	{
+		if (!argv[i + 1])
+		{
+			dest = malloc(1);
+			dest[0] = '\0';
+			return (dest);
+		}
 		return (ft_substr(argv, i + 1, ft_strlen(argv) - i));
+	}
 	return (NULL);
 }

@@ -6,55 +6,52 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:12:58 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/26 10:16:22 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 10:54:20 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_lst	*ft_unset_extension(char *unset_path, t_lst *env)
+t_lst	*ft_unset_extension(char *unset_path, t_lst *env, char *var)
 {
-	t_lst	*tmp;
 	t_lst	*prev;
-	char	*var;
+	t_lst	*head;
 
-	tmp = env;
+	head = env;
 	prev = NULL;
-	while (tmp)
+	while (env)
 	{
-		var = ft_get_var(tmp->str);
+		var = ft_get_var(env->str);
 		if (ft_strcmp(var, unset_path))
 		{
 			if (prev == NULL)
-				env = tmp->next;
+				head = env->next;
 			else
-				prev->next = tmp->next;
-			free(tmp->str);
-			free(tmp);
+				prev->next = env->next;
+			free(env->str);
+			free(env);
 			free(var);
-			tmp = NULL;
-			return (env);
+			env = NULL;
+			return (head);
 		}
 		free(var);
-		prev = tmp;
-		tmp = tmp->next;
+		prev = env;
+		env = env->next;
 	}
-	return (NULL);
+	return (head);
 }
 
 int	ft_unset(t_data *data, t_cmd *cur)
 {
-	int	i;
+	int		i;
+	char	*var;
 
+	var = NULL;
 	i = 1;
 	while (cur->args[i])
-	{
-		data->env = ft_unset_extension(cur->args[i], data->env);
+	{	
+		data->env = ft_unset_extension(cur->args[i], data->env, var);
 		i++;
-	}
-	if (data->env && data->env->str && data->env->str[0] == '\0')
-	{
-		data->env = NULL;
 	}
 	return (1);
 }
