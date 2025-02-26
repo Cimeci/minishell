@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   main_unset.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:12:58 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 15:10:09 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/26 10:16:22 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_unset_extension(char *unset_path, t_lst *env)
+t_lst	*ft_unset_extension(char *unset_path, t_lst *env)
 {
 	t_lst	*tmp;
 	t_lst	*prev;
@@ -23,7 +23,7 @@ void	ft_unset_extension(char *unset_path, t_lst *env)
 	while (tmp)
 	{
 		var = ft_get_var(tmp->str);
-		if (!ft_strncmp(var, unset_path, ft_strlen(var)))
+		if (ft_strcmp(var, unset_path))
 		{
 			if (prev == NULL)
 				env = tmp->next;
@@ -33,12 +33,13 @@ void	ft_unset_extension(char *unset_path, t_lst *env)
 			free(tmp);
 			free(var);
 			tmp = NULL;
-			break ;
+			return (env);
 		}
 		free(var);
 		prev = tmp;
 		tmp = tmp->next;
 	}
+	return (NULL);
 }
 
 int	ft_unset(t_data *data, t_cmd *cur)
@@ -48,8 +49,12 @@ int	ft_unset(t_data *data, t_cmd *cur)
 	i = 1;
 	while (cur->args[i])
 	{
-		ft_unset_extension(cur->args[i], data->env);
+		data->env = ft_unset_extension(cur->args[i], data->env);
 		i++;
+	}
+	if (data->env && data->env->str && data->env->str[0] == '\0')
+	{
+		data->env = NULL;
 	}
 	return (1);
 }

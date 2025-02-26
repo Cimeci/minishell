@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:28:32 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/20 16:28:53 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/26 10:20:32 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,6 @@ void	init_data(t_data *data, char **env)
 	data->fd[0] = -1;
 	data->fd[1] = -1;
 	data->gexit_code = 0;
+	data->env = NULL;
 	init_env(data, env);
 }

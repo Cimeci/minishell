@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:36:53 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/25 14:57:29 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 09:49:19 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,9 @@ int	parsing(t_data *data)
 	cur_cmd = NULL;
 	cur_tok = NULL;
 	if (!check_quotes(data, data->line))
-	return (0);
-	data->env_cp = ft_convert_lst_to_tab(data->env);
+		return (0);
+	if (data->env)
+		data->env_cp = ft_convert_lst_to_tab(data->env);
 	tokenise(data);
 	if (data->token)
 	{
@@ -83,7 +84,7 @@ int	parsing(t_data *data)
 		cur_cmd = data->cmd;
 		cur_tok = data->token;
 		if (!launch_heredoc(data, cur_cmd, cur_tok))
-		return (0);
+			return (0);
 		signal(SIGINT, SIG_DFL);
 		if (!check_syntax(data))
 			return (0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_path.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 10:49:30 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/20 16:22:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/26 09:50:59 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ char	*my_getenv(t_data *data, char *name)
 	char	*tmp;
 	int		i;
 
+	if (!data->env)
+		return (NULL);
 	cur = data->env;
 	i = 0;
 	while (cur)
