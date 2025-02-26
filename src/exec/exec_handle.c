@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:02:20 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/26 11:52:09 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 13:17:25 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,23 +38,35 @@ static void	check_command_execution(t_data *data, t_cmd *cur)
 	}
 }
 
-static void	check_command_access(t_data *data, t_cmd *cur, char *get_env)
+static int	check_empty_path(t_data *data, t_cmd *cur, char *get_env)
 {
 	char	*var;
 	t_lst	*tmp;
-	
-	var = NULL;	
+
+	var = NULL;
 	tmp = data->env;
 	while (tmp)
 	{
 		if (tmp->str && ft_strcmp(tmp->str, "PATH="))
 		{
 			var = ft_get_value(tmp->str);
-			break; 
+			break ;
 		}
 		tmp = tmp->next;
 	}
 	if (var && var[0] == '\0' && !access(cur->cmd, X_OK))
+	{
+		free(var);
+		free(get_env);
+		return (1);
+	}
+	free(var);
+	return (0);
+}
+
+static void	check_command_access(t_data *data, t_cmd *cur, char *get_env)
+{
+	if (check_empty_path(data, cur, get_env))
 		return ;
 	if (get_env && !ft_strnstr(cur->cmd, "/", ft_strlen(cur->cmd)))
 	{

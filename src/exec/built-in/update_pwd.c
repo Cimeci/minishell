@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   update_pwd.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 17:49:28 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 15:10:15 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/26 13:09:55 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_update_pwd(t_data *data, int info)
 void	ft_handle_pwd_update(t_data *data, t_lst *tmp, char *pwd, char *get_pwd)
 {
 	if (!get_pwd)
-		ft_unset_extension("OLDPWD", tmp);
+		ft_unset_extension("OLDPWD", tmp, NULL);
 	else
 		ft_export_assign(data, "PWD", pwd);
 }

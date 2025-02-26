@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 15:17:41 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/26 11:34:00 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 13:07:29 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,8 @@ char	*ft_get_var_and_value(char *var, t_lst *env)
 
 char	*ft_get_value(char *argv)
 {
-	char *dest;
-	int	i;
+	char	*dest;
+	int		i;
 
 	i = 0;
 	dest = NULL;

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/21 16:12:58 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/26 10:54:20 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/26 13:07:25 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	ft_unset(t_data *data, t_cmd *cur)
 	var = NULL;
 	i = 1;
 	while (cur->args[i])
-	{	
+	{
 		data->env = ft_unset_extension(cur->args[i], data->env, var);
 		i++;
 	}
