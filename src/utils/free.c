@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/13 11:46:10 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 14:44:02 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/02/27 10:44:32 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,24 @@ void	ft_free_tab(char **table)
 	table = NULL;
 }
 
+void	free_pid(t_list **head)
+{
+	t_list	*current;
+	t_list	*next_node;
+
+	current = *head;
+	next_node = NULL;
+	while (current)
+	{
+		next_node = current->next;
+		free(current->content);
+		current->content = NULL;
+		free(current);
+		current = next_node;
+	}
+	*head = NULL;
+}
+
 void	free_all(t_data *data, int flag)
 {
 	if (data->token)
@@ -41,6 +59,8 @@ void	free_all(t_data *data, int flag)
 		free(data->pwd);
 	if (data->env_cp)
 		ft_free_tab(data->env_cp);
+	if (data->pid)
+		free_pid(&data->pid);
 	data->line = NULL;
 	data->token = NULL;
 	data->cmd = NULL;

@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/26 18:59:32 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/27 10:41:36 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,6 @@ void	handle_parent_process(t_data *data, t_cmd *last)
 				W_OK) != 0))
 		data->gexit_code = 1;
 	signal(SIGINT, parent_signal_handler);
-	signal(SIGQUIT, SIG_IGN);
 }
 
 void	cleanup_execution(t_data *data)

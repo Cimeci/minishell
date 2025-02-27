@@ -6,7 +6,7 @@
 /*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/26 17:29:47 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/02/27 10:58:33 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,7 @@ void	ft_error_cd(t_data *data, t_cmd *cur, DIR *check_dir)
 
 	error = ft_strjoin("cd: ", cur->args[1]);
 	if (check_dir == NULL && errno == EACCES)
-	{
 		errors(data, error, PERM);
-		closedir(check_dir);
-	}
 	else if (!access(cur->args[1], F_OK))
 		errors_exec(cur->args[1], "cd", NOT_DIR);
 	else if (access(cur->args[1], F_OK))
@@ -52,6 +49,7 @@ void	ft_absolut_path(t_data *data, t_cmd *cur)
 	}
 	if (chdir(target_path))
 		ft_error_cd(data, cur, check_dir);
+	closedir(check_dir);
 	free(target_path);
 }
 
