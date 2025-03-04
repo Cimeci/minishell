@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:19:29 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/21 15:11:44 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/03/04 14:39:24 by inowak--         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ char	*ft_remove_space(char *str)
 	i = 0;
 	if (!str)
 		return (NULL);
-	j = ft_strlen(str);
+	j = ft_strlen(str) - 1;
 	k = 0;
 	len = 0;
 	res = NULL;
