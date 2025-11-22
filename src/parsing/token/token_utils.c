@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   token_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilan <ilan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 17:08:00 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/21 12:24:03 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/11/22 23:46:33 by ilan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,9 @@ void	rebuild_cmd(t_data *data, char *str)
 int	skip_in_quotes(char *str, int i)
 {
 	char	quote;
-	int		start;
 
 	quote = str[i];
 	i++;
-	start = i;
 	while (str[i] && str[i] != quote)
 		i++;
 	return (i);

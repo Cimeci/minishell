@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_exit.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilan <ilan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/07 07:56:31 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/25 10:02:11 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/11/22 23:47:00 by ilan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ static char	*ft_check_exit(t_data *data, t_cmd *cur, int len, int *error)
 
 void	ft_exit(t_data *data, t_cmd *cur)
 {
-	int			i;
 	int			len;
 	int			error;
 	long long	nb;
@@ -95,7 +94,6 @@ void	ft_exit(t_data *data, t_cmd *cur)
 
 	error = 0;
 	len = ft_strlen_tab(cur->args) - 1;
-	i = 0;
 	if (files(data, cur))
 		return ;
 	if (!strncmp(cur->cmd, "exit", ft_strlen(cur->cmd)) && ft_strlen(cur->cmd))

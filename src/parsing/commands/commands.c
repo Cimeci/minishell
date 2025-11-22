@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilan <ilan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:38:56 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/26 11:19:07 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/11/22 23:43:58 by ilan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,9 @@ void	save_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 
 t_token	*build_cmd(t_data *data, t_cmd *cur_cmd, t_token *cur_tok)
 {
-	t_token	*tmp;
-	int		i;
 	int		len;
 
-	i = 0;
 	len = 0;
-	tmp = cur_tok;
 	cur_cmd->empty_var_cmd = false;
 	while (cur_tok && cur_tok->empty_var_tok == true && cur_tok->type != PIPE)
 	{

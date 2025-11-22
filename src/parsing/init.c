@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilan <ilan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/20 16:28:32 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/26 18:10:29 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/11/22 23:44:26 by ilan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,9 @@ void	init_env(t_data *data, char **env)
 
 void	init_data(t_data *data, char **env)
 {
-	int		i;
 	char	buffer[BUFFER_SIZE];
 	char	*check;
 
-	i = 0;
 	check = getcwd(buffer, BUFFER_SIZE);
 	if (check)
 		data->pwd = NULL;

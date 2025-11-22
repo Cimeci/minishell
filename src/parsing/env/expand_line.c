@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_line.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ncharbog <ncharbog@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilan <ilan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/21 11:15:29 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/25 09:25:19 by ncharbog         ###   ########.fr       */
+/*   Updated: 2025/11/22 23:45:59 by ilan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,7 @@ char	*expand_line(t_data *data, char *line, t_env_var *info)
 	info->next = ft_substr(line, info->i + result, ft_strlen(line));
 	info->prev = ft_substr(line, 0, info->i - 1);
 	free(line);
+	line = NULL;
 	if (result == 0 && info->var[0] == '\0'
 		&& info->quote_tab[info->dollars] >= 1)
 		line = no_var(data, line, info);

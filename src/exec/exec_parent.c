@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_parent.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilan <ilan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/13 17:08:15 by inowak--          #+#    #+#             */
-/*   Updated: 2025/02/27 10:41:36 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/11/22 23:47:20 by ilan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,7 @@ void	handle_parent_process(t_data *data, t_cmd *last)
 {
 	t_list	*pid;
 	int		status;
-	int		last_error;
 
-	last_error = 0;
 	pid = data->pid;
 	signal(SIGINT, SIG_IGN);
 	signal(SIGQUIT, SIG_IGN);

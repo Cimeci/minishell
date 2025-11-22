@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_variables.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inowak-- <inowak--@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ilan <ilan@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/17 10:32:27 by ncharbog          #+#    #+#             */
-/*   Updated: 2025/02/25 14:52:41 by inowak--         ###   ########.fr       */
+/*   Updated: 2025/11/22 23:44:53 by ilan             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,13 +43,9 @@ int	*fill_quote_tab(char *line, int *quote_tab, char quote, bool heredoc)
 
 int	*expansion_quotes(char *line, int nb_var, bool heredoc)
 {
-	int		i;
-	int		j;
 	int		*quote_tab;
 	char	quote;
 
-	i = 0;
-	j = 0;
 	quote = 0;
 	quote_tab = malloc(nb_var * sizeof(int));
 	if (!quote_tab)
